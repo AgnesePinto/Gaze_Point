@@ -1,0 +1,18 @@
+﻿<Window x:Class="Gaze_Point.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Test Form" Height="600" Width="800" 
+        Loaded="Window_Loaded" Closing="Window_Closing">
+
+    <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="300">
+            <Label Content="Nome:"/>
+            <TextBox Name="TxtNome" Height="50" Margin="10"/>
+        </StackPanel>
+
+        <Canvas IsHitTestVisible="False">
+            <Ellipse Name="GazeCursor" Width="20" Height="20" Fill="Red" Opacity="0.5"/>
+        </Canvas>
+    </Grid>
+</Window>
+
