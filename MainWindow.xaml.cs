@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gaze_Point.GPViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -25,6 +26,8 @@ namespace Gaze_Point
         public MainWindow()
         {
             InitializeComponent();
+
+            this.DataContext = new Gaze_Point.GPViewModel.MainViewModel();
 
         }
     }

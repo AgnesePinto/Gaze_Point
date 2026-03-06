@@ -69,6 +69,7 @@
     <Compile Include="GPModel\GPRecord\GPParser.cs" />
     <Compile Include="GPModel\GPService\GPService.cs" />
     <Compile Include="GPViewModel\GPViewModel.cs" />
+    <Compile Include="GPViewModel\RelayCommand.cs" />
     <Compile Include="MainTest\StringReaderTest.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
