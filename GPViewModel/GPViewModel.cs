@@ -6,6 +6,7 @@ using System.Windows;
 
 namespace Gaze_Point.GPViewModel
 {
+    // Collega i pulsanti della finestra alle azioni del codice
     public class MainViewModel : INotifyPropertyChanged         // Implementa l'interfaccia Notify per comunicare le modifiche alla view
     {
         private readonly GPService _gpService;

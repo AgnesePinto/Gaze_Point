@@ -10,21 +10,19 @@ namespace Gaze_Point.Services
 {
     public class GPService
     {
-        // Importazione API Windows per muovere il cursore fisico
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll")]       // Importazione API Windows per forzare la posizione del cursore fisico
         private static extern bool SetCursorPos(int x, int y);
 
         private readonly GPClient _client;
         private readonly DispatcherTimer _timer;
 
-        // Evento per passare i dati al ViewModel
-        public event Action<GPData> OnDataReceived;
+        public event Action<GPData> OnDataReceived;            // Evento che allerta dell'arrivo di un nuovo punto dello sguardo per passare i dati al ViewModel
 
         public GPService()
         {
             _client = new GPClient();
 
-            // Setup del timer (esegue il Tick sul thread UI)
+            // Setup del timer (esegue il Tick sul thread UI per 100 volte al secondo)
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromMilliseconds(10); // 100Hz
             _timer.Tick += OnTick;
