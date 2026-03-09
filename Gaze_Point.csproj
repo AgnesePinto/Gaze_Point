@@ -67,6 +67,7 @@
     <Compile Include="GPModel\GPRecord\GPConverter.cs" />
     <Compile Include="GPModel\GPRecord\GPData.cs" />
     <Compile Include="GPModel\GPRecord\GPParser.cs" />
+    <Compile Include="GPModel\GPRecord\GPValidationFilter.cs" />
     <Compile Include="GPModel\GPService\GPService.cs" />
     <Compile Include="GPViewModel\GPViewModel.cs" />
     <Compile Include="GPViewModel\RelayCommand.cs" />

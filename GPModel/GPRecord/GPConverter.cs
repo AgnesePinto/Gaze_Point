@@ -11,10 +11,8 @@ namespace Gaze_Point.GPModel.GPRecord
         /// </summary>
         public static (int X, int Y) ToPhysicalScreenPoint(GPData data)
         {
-            // 1. CHECK VALIDITA' COORDINATE (Sicurezza)
-            // Forza i valori tra 0.0 e 1.0 per evitare errori se l'utente guarda fuori dal monitor, per evitare che compaiano coordinate negative
-            double gpX = Math.Max(0, Math.Min(1, data.BPOGX));
-            double gpY = Math.Max(0, Math.Min(1, data.BPOGY));
+            double gpX = data.BPOGX;  
+            double gpY = data.BPOGY;
 
             // Inizializza i fattori di scala ad 1, cioè a 100% su windows
             double scaleX = 1.0;
@@ -52,17 +50,15 @@ namespace Gaze_Point.GPModel.GPRecord
         
         public static Point ToWindowPoint(GPData data, Window window)
         {
-            // 1. CHECK VALIDITA' COORDINATE (Sicurezza)
-            // Forza i valori tra 0.0 e 1.0 per evitare errori se l'utente guarda fuori dal monitor, per evitare che compaiano coordinate negative
-            double gpX = Math.Max(0, Math.Min(1, data.FPOGX));
-            double gpY = Math.Max(0, Math.Min(1, data.FPOGY));
+            double gpX = data.FPOGX;
+            double gpY = data.FPOGY;
 
-            // 2. CONVERSIONE IN DIP (Rispetto allo Schermo Intero)
+            // 1. CONVERSIONE IN DIP (Rispetto allo Schermo Intero)
             // Moltiplichiamo il dato 0-1 per la larghezza logica (già scalata in base allo zoom) del monitor
             double screenX = gpX * SystemParameters.PrimaryScreenWidth;
             double screenY = gpY * SystemParameters.PrimaryScreenHeight;
 
-            // 3. OFFSET FINESTRA (Rispetto alla Finestra)
+            // 2. OFFSET FINESTRA (Rispetto alla Finestra)
             // Sottraiamo la posizione della finestra per ottenere lo (0,0) locale
             double windowX = screenX - window.Left;
             double windowY = screenY - window.Top;

@@ -15,6 +15,7 @@ namespace Gaze_Point.Services
 
         private readonly GPClient _client;
         private readonly DispatcherTimer _timer;
+        private readonly GPValidationFilter _validationFilter;
 
         public event Action<GPData> OnDataReceived;            // Evento che allerta dell'arrivo di un nuovo punto dello sguardo per passare i dati al ViewModel
 
@@ -22,9 +23,11 @@ namespace Gaze_Point.Services
         {
             _client = new GPClient();
 
-            // Setup del timer (esegue il Tick sul thread UI per 100 volte al secondo)
+            _validationFilter = new GPValidationFilter();
+
+            // Setup del timer (esegue il Tick sul thread UI per 150 volte al secondo)
             _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromMilliseconds(10); // 100Hz
+            _timer.Interval = TimeSpan.FromMilliseconds(15); // 150Hz
             _timer.Tick += OnTick;
         }
 
@@ -42,23 +45,32 @@ namespace Gaze_Point.Services
             }
         }
 
-        // Esegue questa operazione ogni volta che il timer esegue un tick (impostato a 100Hz nel nostro caso
+        // Esegue questa operazione ogni volta che il timer esegue un tick (impostato a 150Hz nel nostro caso
         private void OnTick(object sender, EventArgs e)
         {
-            List<string> packets = _client.ReadData();       // Recupera i dati grezzi XML ricevuti dall'eye tracker
+            // 1. Recupera i dati grezzi XML dal buffer del client
+            List<string> packets = _client.ReadData();
 
             foreach (string packet in packets)
             {
-                GPData data = GPParser.Parse(packet);       // Trasforma i packet XML in un oggetto C# facile da leggere
+                // 2. Trasforma l'XML in un oggetto GPData (Grezzo)
+                GPData rawData = GPParser.Parse(packet);
 
-                if (data != null && data.IsValid)
+                // 3. PASSO FONDAMENTALE: Sanificazione del dato
+                // Il filtro gestisce internamente i blink e i confini del display
+                GPData validData = _validationFilter.ValidationFilter(rawData);
+
+                // Se il filtro restituisce un dato valido (non nullo)
+                if (validData != null)
                 {
-                    // 1. Muove il cursore fisico usando i pixel calcolati dal Converter
-                    var (physX, physY) = GPConverter.ToPhysicalScreenPoint(data);           // Converto le coodinate dell'eye tracker in pixel
-                    SetCursorPos(physX, physY);                                             // Passo al cursore le coordinate convertite
+                    // 4. Conversione in pixel fisici (ora senza ridondanze nel Converter)
+                    var (physX, physY) = GPConverter.ToPhysicalScreenPoint(validData);
 
-                    // 2. Notifica il ViewModel per eventuali aggiornamenti grafici
-                    OnDataReceived?.Invoke(data);
+                    // 5. Spostamento fisico del cursore del mouse
+                    SetCursorPos(physX, physY);
+
+                    // 6. Notifica agli altri componenti dell'applicazione
+                    OnDataReceived?.Invoke(validData);
                 }
             }
         }

@@ -29,19 +29,5 @@ namespace Gaze_Point.GPModel.GPRecord
         // Saccadi
         public double SACCADE_MAG { get; set; }
         public double SACCADE_DIR { get; set; }
-
-
-        // Controllo per dato affidabile
-        public bool IsValid
-        {
-            get
-            {
-                if (BPOGV == 1)
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
     }
 }
