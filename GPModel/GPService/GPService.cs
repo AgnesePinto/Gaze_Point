@@ -16,6 +16,7 @@ namespace Gaze_Point.Services
         private readonly GPClient _client;
         private readonly DispatcherTimer _timer;
         private readonly GPValidationFilter _validationFilter;
+        private readonly GPSmoothingFilter _smoothingFilter;
 
         public event Action<GPData> OnDataReceived;            // Evento che allerta dell'arrivo di un nuovo punto dello sguardo per passare i dati al ViewModel
 
@@ -24,6 +25,8 @@ namespace Gaze_Point.Services
             _client = new GPClient();
 
             _validationFilter = new GPValidationFilter();
+
+            _smoothingFilter = new GPSmoothingFilter();
 
             // Setup del timer (esegue il Tick sul thread UI per 150 volte al secondo)
             _timer = new DispatcherTimer();
@@ -45,7 +48,7 @@ namespace Gaze_Point.Services
             }
         }
 
-        // Esegue questa operazione ogni volta che il timer esegue un tick (impostato a 150Hz nel nostro caso
+        // Esegue questa operazione ogni volta che il timer esegue un tick (impostato a 150Hz nel nostro caso)
         private void OnTick(object sender, EventArgs e)
         {
             // 1. Recupera i dati grezzi XML dal buffer del client
@@ -56,20 +59,23 @@ namespace Gaze_Point.Services
                 // 2. Trasforma l'XML in un oggetto GPData (Grezzo)
                 GPData rawData = GPParser.Parse(packet);
 
-                // 3. PASSO FONDAMENTALE: Sanificazione del dato
+                // 3. Pulizia del dato dal rumore
                 // Il filtro gestisce internamente i blink e i confini del display
                 GPData validData = _validationFilter.ValidationFilter(rawData);
 
                 // Se il filtro restituisce un dato valido (non nullo)
                 if (validData != null)
                 {
-                    // 4. Conversione in pixel fisici (ora senza ridondanze nel Converter)
+                    // 4. Smoothing (Fluidità e Stop al tremore)
+                    GPData smoothData = _smoothingFilter.AdaptiveSmoothing(validData);
+
+                    // 5. Conversione in pixel fisici (ora senza ridondanze nel Converter)
                     var (physX, physY) = GPConverter.ToPhysicalScreenPoint(validData);
 
-                    // 5. Spostamento fisico del cursore del mouse
+                    // 6. Spostamento fisico del cursore del mouse
                     SetCursorPos(physX, physY);
 
-                    // 6. Notifica agli altri componenti dell'applicazione
+                    // 7. Notifica agli altri componenti dell'applicazione
                     OnDataReceived?.Invoke(validData);
                 }
             }
