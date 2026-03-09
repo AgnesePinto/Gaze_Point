@@ -50,8 +50,8 @@ namespace Gaze_Point.GPModel.GPRecord
         
         public static Point ToWindowPoint(GPData data, Window window)
         {
-            double gpX = data.FPOGX;
-            double gpY = data.FPOGY;
+            double gpX = data.BPOGX;
+            double gpY = data.BPOGY;
 
             // 1. CONVERSIONE IN DIP (Rispetto allo Schermo Intero)
             // Moltiplichiamo il dato 0-1 per la larghezza logica (già scalata in base allo zoom) del monitor

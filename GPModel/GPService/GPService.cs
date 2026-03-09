@@ -4,6 +4,8 @@ using System.Windows.Threading;
 using Gaze_Point.Connection;
 using Gaze_Point.GPModel.GPRecord;
 using System.Collections.Generic;
+using Gaze_Point.GPModel.GPInteraction;
+using System.Windows;
 
 namespace Gaze_Point.Services
 {
@@ -21,14 +23,21 @@ namespace Gaze_Point.Services
         private readonly DispatcherTimer _timer;
         private readonly GPValidationFilter _validationFilter;
         private readonly GPSmoothingFilter _smoothingFilter;
+        private readonly GPTargetProvider _targetProvider;
+        private readonly GPDwellManager _dwellManager;
 
         public event Action<GPData> OnDataReceived;     // Evento che allerta dell'arrivo di un nuovo punto dello sguardo per passare i dati al ViewModel
+        public event Action<FrameworkElement> OnElementFocused;     // Evento che allerta ViewModel quando un elemento è stato fissato con successo
 
         public GPService()
         {
             _client = new GPClient();
             _validationFilter = new GPValidationFilter();
             _smoothingFilter = new GPSmoothingFilter();
+            _targetProvider = new GPTargetProvider();   
+            _dwellManager = new GPDwellManager();
+
+            _dwellManager.OnElementFocused += (element) => OnElementFocused?.Invoke(element);      // Se il dwellManager capisce che un elemento è fissato, avvisa i listeners
 
             // Setup del timer (esegue il Tick sul thread UI per 150 volte al secondo)
             _timer = new DispatcherTimer();
@@ -83,6 +92,18 @@ namespace Gaze_Point.Services
 
                     // Spostiamo il cursore alla posizione indicata
                     SetCursorPos(physX, physY);
+
+                    if (Application.Current.MainWindow != null)
+                    {
+                        // Trasformiamo i dati smoothati in coordinate relative alla finestra
+                        Point windowPoint = GPConverter.ToWindowPoint(smoothData, Application.Current.MainWindow);
+
+                        // Otteniamo dal targetProvider quello che stiamo fissando
+                        FrameworkElement element = _targetProvider.GetElementAtPoint(windowPoint, Application.Current.MainWindow);
+
+                        // Passiamo l'elemento correntemente fissato al dwell Manager
+                        _dwellManager.Update(element);
+                    }
 
                     // Notifica al ViewModel (per evidenziare TextBox ecc.)
                     OnDataReceived?.Invoke(smoothData);

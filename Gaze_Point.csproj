@@ -64,6 +64,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GPConnection\GPClient.cs" />
+    <Compile Include="GPModel\GPInteraction\GPDwellManager.cs" />
+    <Compile Include="GPModel\GPInteraction\GPTargetProvider.cs" />
     <Compile Include="GPModel\GPRecord\GPConverter.cs" />
     <Compile Include="GPModel\GPRecord\GPData.cs" />
     <Compile Include="GPModel\GPRecord\GPParser.cs" />
