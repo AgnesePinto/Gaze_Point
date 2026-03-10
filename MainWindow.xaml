@@ -18,7 +18,7 @@
             <Button Content="AVVIA TRACKING" 
                     Command="{Binding StartCommand}" 
                     x:Name="BtnStart" 
-                    Width="400" Height="100" Margin="20"
+                    Width="400" Height="150" Margin="30"
                     Focusable="False">
                 <Button.Style>
                     <Style TargetType="Button">
@@ -34,16 +34,22 @@
                 </Button.Style>
             </Button>
 
-            <Button x:Name="BtnStop" Content="FERMA TRACKING" Command="{Binding StopCommand}" 
-            Width="400" Height="100" Margin="20"
-            Focusable="False">
+            <Button x:Name="BtnStop" 
+                    Content="FERMA TRACKING" 
+                    Command="{Binding StopCommand}" 
+                    Width="400" Height="150" Margin="30"
+                    Focusable="False">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnStop">
-                                <Setter Property="Background" Value="LimeGreen"/>
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Foreground" Value="LimeGreen"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="BorderBrush" Value="LimeGreen"/>
+                                <Setter Property="BorderThickness" Value="10"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

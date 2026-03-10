@@ -41,13 +41,6 @@ namespace Gaze_Point.GPViewModel
             _gpService = new GPService();           // Istanza del servizio che attiva l'eye tracker
             Status = "Disconnesso";
 
-            // Gestione dell'evento di Focus (scatta dopo il Dwell Time di 500ms)
-            //_gpService.OnElementFocused += (element) =>
-            //{
-            //    _currentGazeElement = element;       // Salviamo l'elemento per l'eventuale pressione di Invio
-            //    FocusedElementName = element?.Name;  // Passiamo il nome alla UI per cambiare colore
-            //};
-
             _gpService.OnElementFocused += (element) =>
             {
                 // Questo comando dice: "Esegui questa azione sul thread della UI"
