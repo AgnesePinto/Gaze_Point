@@ -23,13 +23,19 @@ namespace Gaze_Point.GPModel.GPInteraction
             {
                 // 2. Recuperiamo l'oggetto visivo che è stato colpito
                 DependencyObject visualHit = target.VisualHit;
-
-                // 3. Verifichiamo se questo oggetto è un FrameworkElement (un componente della UI)
-                if (visualHit is FrameworkElement)
+                
+                // 3. Una volta recuperato l'oggetto fissato, cerco come si chiama
+                while (visualHit != null)
                 {
-                    // 4. Se lo è, facciamo il cast esplicito e lo restituiamo
-                    FrameworkElement element = (FrameworkElement)visualHit;
-                    return element;
+                    // 4. Verifichiamo se questo oggetto è un FrameworkElement (un componente della UI)
+                    if (visualHit is FrameworkElement element && !string.IsNullOrEmpty(element.Name))
+                    {
+                        // Se lo è, lo restituiamo
+                        return element;
+                    }
+
+                    // Se non ha nome guardiamo il suo genitore
+                    visualHit = VisualTreeHelper.GetParent(visualHit);
                 }
             }
 

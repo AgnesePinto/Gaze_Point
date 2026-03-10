@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Test Form" Height="600" Width="800">
 
-    <!-- Colleghiamo il tasto INVIO della tastiera al comando nel ViewModel -->
+    <!-- Colleghiamo il tasto INVIO. Nota: usiamo FocusManager per sicurezza -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
     </Window.InputBindings>
@@ -11,49 +11,53 @@
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
-            <!-- SEZIONE DOMANDA INTERATTIVA (Nuova) -->
-            <TextBlock Text="Vuoi procedere con l'operazione?" FontSize="24" Margin="0,0,0,10" HorizontalAlignment="Center"/>
+            <TextBlock Text="Vuoi procedere con l'operazione?" FontSize="28" Margin="0,0,0,10" HorizontalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock Text="{Binding Status}" FontSize="20" Margin="10" HorizontalAlignment="Center" Foreground="Gray"/>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,30">
-                <!-- CheckBox SI -->
-                <CheckBox Content="SI" x:Name="CbSi" FontSize="20" Margin="20" Padding="10,0,10,0">
-                    <CheckBox.Style>
-                        <Style TargetType="CheckBox">
-                            <Style.Triggers>
-                                <!-- Se il nome di questo elemento corrisponde a quello fissato, diventa azzurro -->
-                                <DataTrigger Binding="{Binding FocusedElementName}" Value="CbSi">
-                                    <Setter Property="Background" Value="LightBlue"/>
-                                    <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
-                                    <Setter Property="BorderThickness" Value="3"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </CheckBox.Style>
-                </CheckBox>
+            <!-- BOTTONE AVVIA -->
+            <Button Content="AVVIA TRACKING" 
+                    Command="{Binding StartCommand}" 
+                    x:Name="BtnStart" 
+                    Width="400" Height="100" Margin="20"
+                    Focusable="False">
+                <!-- Focusable=False impedisce al tasto di rubare l'INVIO -->
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <!-- TRUCCO: Usiamo BorderBrush o un Template semplice perché Background spesso fallisce nei Trigger -->
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnStart">
+                                <Setter Property="Background" Value="LightBlue"/>
+                                <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                <Setter Property="BorderThickness" Value="6"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
 
-                <!-- CheckBox NO -->
-                <CheckBox Content="NO" x:Name="CbNo" FontSize="20" Margin="20" Padding="10,0,10,0">
-                    <CheckBox.Style>
-                        <Style TargetType="CheckBox">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding FocusedElementName}" Value="CbNo">
-                                    <Setter Property="Background" Value="LightBlue"/>
-                                    <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
-                                    <Setter Property="BorderThickness" Value="3"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </CheckBox.Style>
-                </CheckBox>
-            </StackPanel>
-
-            <!-- SEZIONE CONTROLLO TRACKING  -->
-            <TextBlock Text="{Binding Status}" FontSize="20" Margin="10" HorizontalAlignment="Center"/>
-            <Button Content="AVVIA TRACKING" Command="{Binding StartCommand}" Width="200" Height="80" Margin="10"/>
-            <Button Content="FERMA TRACKING" Command="{Binding StopCommand}" Width="200" Height="80" Margin="10"/>
+            <!-- BOTTONE FERMA -->
+            <Button Content="FERMA TRACKING" 
+                    Command="{Binding StopCommand}" 
+                    x:Name="BtnStop" 
+                    Width="400" Height="100" Margin="20"
+                    Focusable="False">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Style.Triggers>
+                            <!-- TRIGGER PER IL VERDE -->
+                            <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnStop">
+                                <Setter Property="Background" Value="LimeGreen"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderBrush" Value="DarkGreen"/>
+                                <Setter Property="BorderThickness" Value="6"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
 
         </StackPanel>
     </Grid>
 </Window>
-
-

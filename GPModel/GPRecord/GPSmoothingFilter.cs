@@ -11,15 +11,15 @@ namespace Gaze_Point.GPModel.GPRecord
         // PARAMETRI DI TARATURA DEL FILTRO
 
         // Alfa minimo: stabilità massima quando lo sguardo è fermo (Fissazione)
-        private const double AlphaMin = 0.03;       //0.05;
+        private const double AlphaMin = 0.01;       //0.05;
 
         // Alfa massimo: reattività massima durante gli spostamenti rapidi (Saccade)
-        private const double AlphaMax = 0.4;        //0.5;
+        private const double AlphaMax = 0.3;        //0.5;
 
         // Sensibilità: quanto velocemente il filtro deve "aprirsi" in base alla distanza
         // Un valore più alto rende il cursore più nervoso ma più pronto
         // è il coefficiente angolare della nostra retta, ci dice quanto deve essere rapido lo spostamento tra Alphamax e min
-        private const double Sensitivity = 4.0;          //5.0;
+        private const double Sensitivity = 3.0;          //5.0;
 
         public GPData AdaptiveSmoothing(GPData data)
         {

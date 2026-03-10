@@ -105,7 +105,7 @@ namespace Gaze_Point.Services
                         _dwellManager.Update(element);
                     }
 
-                    // Notifica al ViewModel (per evidenziare TextBox ecc.)
+                    // Notifica al ViewModel
                     OnDataReceived?.Invoke(smoothData);
                 }
             }
