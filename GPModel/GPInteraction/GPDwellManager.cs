@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace Gaze_Point.GPModel.GPInteraction
 {
@@ -10,10 +12,28 @@ namespace Gaze_Point.GPModel.GPInteraction
         private DateTime _focusStartTime;
 
         // Tempo necessario per considerare un elemento "fissato" (es. 300ms)
-        private readonly TimeSpan _dwellTime = TimeSpan.FromMilliseconds(300);
+        private readonly TimeSpan _dwellTime;
 
         // Evento che scatta quando un elemento è stato fissato per il tempo stabilito
         public event Action<FrameworkElement> OnElementFocused;
+
+        public GPDwellManager()
+        {
+            try
+            {
+                var config = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("AppSettings/DataSettings.json")
+                    .Build();
+
+                int ms = int.Parse(config["Interaction:DwellTimeMs"]);
+                _dwellTime = TimeSpan.FromMilliseconds(ms);
+            }
+            catch
+            {
+                _dwellTime = TimeSpan.FromMilliseconds(300);
+            }
+        }
 
         public void Update(FrameworkElement elementUnderGaze)
         {

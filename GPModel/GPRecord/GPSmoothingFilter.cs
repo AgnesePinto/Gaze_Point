@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace Gaze_Point.GPModel.GPRecord
 {
@@ -11,15 +13,37 @@ namespace Gaze_Point.GPModel.GPRecord
         // PARAMETRI DI TARATURA DEL FILTRO
 
         // Alfa minimo: stabilità massima quando lo sguardo è fermo (Fissazione)
-        private const double AlphaMin = 0.01;       //0.05;
+        private readonly double AlphaMin;       
 
         // Alfa massimo: reattività massima durante gli spostamenti rapidi (Saccade)
-        private const double AlphaMax = 0.3;        //0.5;
+        private readonly double AlphaMax;       
 
         // Sensibilità: quanto velocemente il filtro deve "aprirsi" in base alla distanza
         // Un valore più alto rende il cursore più nervoso ma più pronto
         // è il coefficiente angolare della nostra retta, ci dice quanto deve essere rapido lo spostamento tra Alphamax e min
-        private const double Sensitivity = 3.0;          //5.0;
+        private readonly double Sensitivity;
+
+        public GPSmoothingFilter()
+        {
+            try
+            {
+                var config = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("AppSettings/DataSettings.json")
+                    .Build();
+
+                AlphaMin = double.Parse(config["Smoothing:AlphaMin"]);
+                AlphaMax = double.Parse(config["Smoothing:AlphaMax"]);
+                Sensitivity = double.Parse(config["Smoothing:Sensitivity"]);
+            }
+            catch
+            {
+                // Fallback in caso di errore caricamento file
+                AlphaMin = 0.01;
+                AlphaMax = 0.3;
+                Sensitivity = 3.0;
+            }
+        }
 
         public GPData AdaptiveSmoothing(GPData data)
         {

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO; 
+using Microsoft.Extensions.Configuration;
 
 namespace Gaze_Point.GPModel.GPRecord
 {
@@ -13,8 +15,27 @@ namespace Gaze_Point.GPModel.GPRecord
         private double _lastValidY = 0.5;
 
         // Parametri del rettangolo di denoise (range operativo sul display)
-        private const double MinRange = 0.00;
-        private const double MaxRange = 1.00;
+        private readonly double MinRange;
+        private readonly double MaxRange;
+
+        public GPValidationFilter()
+        {
+            try
+            {
+                var config = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("AppSettings/DataSettings.json")
+                    .Build();
+
+                MinRange = double.Parse(config["Validation:MinRange"]);
+                MaxRange = double.Parse(config["Validation:MaxRange"]);
+            }
+            catch
+            {
+                MinRange = 0.00;
+                MaxRange = 1.00;
+            }
+        }
 
         public GPData ValidationFilter (GPData rawData)
         {

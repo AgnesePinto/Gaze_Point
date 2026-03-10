@@ -1,0 +1,17 @@
+{
+  "Validation": {
+    "MinRange": 0.0,
+    "MaxRange": 1.0
+  },
+
+  "Smoothing": {
+    "AlphaMin": 0.01,
+    "AlphaMax": 0.3,
+    "Sensitivity": 3.0
+  },
+
+  "Interaction": {
+    "DwellTimeMs": 300
+  }
+}
+

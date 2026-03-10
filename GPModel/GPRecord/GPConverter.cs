@@ -42,30 +42,6 @@ namespace Gaze_Point.GPModel.GPRecord
             return (physX, physY);
         }
 
-
-        /// <summary>
-        /// Converte le coordinate normalizzate(0-1) del tracker in coordinate 
-        /// logiche(DIP) relative alla finestra WPF passata come parametro.
-        /// </summary>
-
-        //public static Point ToWindowPoint(GPData data, Window window)
-        //{
-        //    double gpX = data.BPOGX;
-        //    double gpY = data.BPOGY;
-
-        //    // 1. CONVERSIONE IN DIP (Rispetto allo Schermo Intero)
-        //    // Moltiplichiamo il dato 0-1 per la larghezza logica (già scalata in base allo zoom) del monitor
-        //    double screenX = gpX * SystemParameters.PrimaryScreenWidth;
-        //    double screenY = gpY * SystemParameters.PrimaryScreenHeight;
-
-        //    // 2. OFFSET FINESTRA (Rispetto alla Finestra)
-        //    // Sottraiamo la posizione della finestra per ottenere lo (0,0) locale
-        //    double windowX = screenX - window.Left;
-        //    double windowY = screenY - window.Top;
-
-        //    return new Point(windowX, windowY);
-        //}
-
         public static Point ToWindowPoint(Point physicalPoint, Window window)
         {
             // Prende il punto fisico dello schermo (pixel reali) 

@@ -128,7 +128,6 @@
     <Compile Include="GPModel\GPService\GPService.cs" />
     <Compile Include="GPViewModel\GPViewModel.cs" />
     <Compile Include="GPViewModel\RelayCommand.cs" />
-    <Compile Include="MainTest\StringReaderTest.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -155,6 +154,7 @@
     <None Include="AppSettings\Connection.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="AppSettings\DataSettings.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

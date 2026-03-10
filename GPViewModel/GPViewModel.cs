@@ -50,8 +50,8 @@ namespace Gaze_Point.GPViewModel
                     FocusedElementName = element?.Name;  // Dice allo XAML di cambiare colore
 
                     // Questo scrive nella finestra "Output" di Visual Studio (utile per te)
-                    System.Diagnostics.Debug.WriteLine($"Sguardo su: {FocusedElementName}");
-                    System.Diagnostics.Debug.WriteLine($"NOME RILEVATO: '{FocusedElementName}'");
+                    ////System.Diagnostics.Debug.WriteLine($"Sguardo su: {FocusedElementName}");
+                    ////System.Diagnostics.Debug.WriteLine($"NOME RILEVATO: '{FocusedElementName}'");
                 });
             };
 
