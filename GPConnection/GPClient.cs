@@ -1,21 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;                  // Convertire il testo da stringhe in byte
-using System.Threading.Tasks;
-using System.Net.Sockets;           // Fornisce le classi per la connessione TCP
+using System.Text;
+using System.Net.Sockets;
+using System.IO;
+using Microsoft.Extensions.Configuration; 
 
 namespace Gaze_Point.Connection
 {
     public class GPClient
     {
-        private const string IpAddres = "127.0.0.1";
-        private const int IpPort = 4242;
+        // Usiamo i nomi corretti dei campi dichiarati sopra
+        private readonly string IpAddres;
+        private readonly int IpPort;
 
-        private TcpClient _client;     // Effettua la chiamata al server GazePoint
-        private NetworkStream _stream;  // Canale di trasmissione dei dati
-        private byte[] _buffer = new byte[4096];     // Buffer di byte per ospitare i dati in arrivo dallo stream
-        private StringBuilder _dataAccumulator = new StringBuilder();   // Accumulatore dinamico: contiene una stringa ASCII grezza che cesce man mano che arrivano i dati.
+        private TcpClient _client;
+        private NetworkStream _stream;
+        private byte[] _buffer = new byte[4096];
+        private StringBuilder _dataAccumulator = new StringBuilder();
+
+        public GPClient()
+        {
+            try
+            {
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("AppSettings/Connection.json", optional: false, reloadOnChange: true)
+                    .Build();
+
+                IpAddres = configuration["IpAddress"] ?? "127.0.0.1";
+                IpPort = int.Parse(configuration["IpPort"] ?? "4242");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Errore nel caricamento della configurazione: " + ex.Message);
+                // Valori di fallback in caso di errore
+                IpAddres = "127.0.0.1";
+                IpPort = 4242;
+            }
+        }
 
 
         // Proprietà per controllo apertura connessione
