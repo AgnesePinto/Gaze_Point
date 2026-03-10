@@ -9,8 +9,8 @@ namespace Gaze_Point.GPModel.GPInteraction
         private FrameworkElement _currentElement;
         private DateTime _focusStartTime;
 
-        // Tempo necessario per considerare un elemento "fissato" (es. 2000ms)
-        private readonly TimeSpan _dwellTime = TimeSpan.FromMilliseconds(2000);
+        // Tempo necessario per considerare un elemento "fissato" (es. 300ms)
+        private readonly TimeSpan _dwellTime = TimeSpan.FromMilliseconds(300);
 
         // Evento che scatta quando un elemento è stato fissato per il tempo stabilito
         public event Action<FrameworkElement> OnElementFocused;

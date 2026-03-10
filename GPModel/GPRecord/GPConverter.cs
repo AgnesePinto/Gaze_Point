@@ -42,28 +42,36 @@ namespace Gaze_Point.GPModel.GPRecord
             return (physX, physY);
         }
 
-        
+
         /// <summary>
         /// Converte le coordinate normalizzate(0-1) del tracker in coordinate 
         /// logiche(DIP) relative alla finestra WPF passata come parametro.
         /// </summary>
-        
-        public static Point ToWindowPoint(GPData data, Window window)
+
+        //public static Point ToWindowPoint(GPData data, Window window)
+        //{
+        //    double gpX = data.BPOGX;
+        //    double gpY = data.BPOGY;
+
+        //    // 1. CONVERSIONE IN DIP (Rispetto allo Schermo Intero)
+        //    // Moltiplichiamo il dato 0-1 per la larghezza logica (già scalata in base allo zoom) del monitor
+        //    double screenX = gpX * SystemParameters.PrimaryScreenWidth;
+        //    double screenY = gpY * SystemParameters.PrimaryScreenHeight;
+
+        //    // 2. OFFSET FINESTRA (Rispetto alla Finestra)
+        //    // Sottraiamo la posizione della finestra per ottenere lo (0,0) locale
+        //    double windowX = screenX - window.Left;
+        //    double windowY = screenY - window.Top;
+
+        //    return new Point(windowX, windowY);
+        //}
+
+        public static Point ToWindowPoint(Point physicalPoint, Window window)
         {
-            double gpX = data.BPOGX;
-            double gpY = data.BPOGY;
-
-            // 1. CONVERSIONE IN DIP (Rispetto allo Schermo Intero)
-            // Moltiplichiamo il dato 0-1 per la larghezza logica (già scalata in base allo zoom) del monitor
-            double screenX = gpX * SystemParameters.PrimaryScreenWidth;
-            double screenY = gpY * SystemParameters.PrimaryScreenHeight;
-
-            // 2. OFFSET FINESTRA (Rispetto alla Finestra)
-            // Sottraiamo la posizione della finestra per ottenere lo (0,0) locale
-            double windowX = screenX - window.Left;
-            double windowY = screenY - window.Top;
-
-            return new Point(windowX, windowY);
+            // Prende il punto fisico dello schermo (pixel reali) 
+            // e lo traduce in un punto logico interno alla finestra.
+            // Gestisce da solo: posizione finestra e zoom di Windows (125%, 150%, ecc.)
+            return window.PointFromScreen(physicalPoint);
         }
     }
 }

@@ -42,10 +42,24 @@ namespace Gaze_Point.GPViewModel
             Status = "Disconnesso";
 
             // Gestione dell'evento di Focus (scatta dopo il Dwell Time di 500ms)
+            //_gpService.OnElementFocused += (element) =>
+            //{
+            //    _currentGazeElement = element;       // Salviamo l'elemento per l'eventuale pressione di Invio
+            //    FocusedElementName = element?.Name;  // Passiamo il nome alla UI per cambiare colore
+            //};
+
             _gpService.OnElementFocused += (element) =>
             {
-                _currentGazeElement = element;       // Salviamo l'elemento per l'eventuale pressione di Invio
-                FocusedElementName = element?.Name;  // Passiamo il nome alla UI per cambiare colore
+                // Questo comando dice: "Esegui questa azione sul thread della UI"
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _currentGazeElement = element;       // Memorizza l'elemento per il tasto Invio
+                    FocusedElementName = element?.Name;  // Dice allo XAML di cambiare colore
+
+                    // Questo scrive nella finestra "Output" di Visual Studio (utile per te)
+                    System.Diagnostics.Debug.WriteLine($"Sguardo su: {FocusedElementName}");
+                    System.Diagnostics.Debug.WriteLine($"NOME RILEVATO: '{FocusedElementName}'");
+                });
             };
 
             // Logica universale per il tasto INVIO

@@ -84,28 +84,28 @@ namespace Gaze_Point.Services
                 // Se il filtro gestisce un dato valido
                 if (validData != null)
                 {
-                    // Applichiamo lo smoothing adattivo
+                    // 1. Applichiamo lo smoothing
                     GPData smoothData = _smoothingFilter.AdaptiveSmoothing(validData);
 
-                    // Conversione in pixel (usiamo i dati smoothati per muovere il mouse)
+                    // 2. Calcoliamo i PIXEL FISICI (quelli dello schermo intero)
                     var (physX, physY) = GPConverter.ToPhysicalScreenPoint(smoothData);
 
-                    // Spostiamo il cursore alla posizione indicata
+                    // 3. Muoviamo il cursore reale di Windows
                     SetCursorPos(physX, physY);
 
-                    if (Application.Current.MainWindow != null)
+                    // 4. Interazione con la finestra
+                    if (Application.Current.MainWindow is Window window)
                     {
-                        // Trasformiamo i dati smoothati in coordinate relative alla finestra
-                        Point windowPoint = GPConverter.ToWindowPoint(smoothData, Application.Current.MainWindow);
+                        // Creiamo il punto FISICO dove si trova il mouse
+                        Point mousePoint = new Point(physX, physY);
 
-                        // Otteniamo dal targetProvider quello che stiamo fissando
-                        FrameworkElement element = _targetProvider.GetElementAtPoint(windowPoint, Application.Current.MainWindow);
+                        // Lo convertiamo in punto LOGICO per WPF
+                        Point windowPoint = GPConverter.ToWindowPoint(mousePoint, window);
 
-                        // Passiamo l'elemento correntemente fissato al dwell Manager
+                        // Eseguiamo l'Hit-Test su quel punto preciso
+                        FrameworkElement element = _targetProvider.GetElementAtPoint(windowPoint, window);
                         _dwellManager.Update(element);
                     }
-
-                    // Notifica al ViewModel
                     OnDataReceived?.Invoke(smoothData);
                 }
             }

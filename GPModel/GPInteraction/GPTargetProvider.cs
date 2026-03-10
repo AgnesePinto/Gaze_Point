@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Gaze_Point.GPModel.GPInteraction
 {
@@ -22,20 +23,20 @@ namespace Gaze_Point.GPModel.GPInteraction
             if (target != null)
             {
                 // 2. Recuperiamo l'oggetto visivo che è stato colpito
-                DependencyObject visualHit = target.VisualHit;
+                DependencyObject obj = target.VisualHit;
                 
                 // 3. Una volta recuperato l'oggetto fissato, cerco come si chiama
-                while (visualHit != null)
+                while (obj != null)
                 {
                     // 4. Verifichiamo se questo oggetto è un FrameworkElement (un componente della UI)
-                    if (visualHit is FrameworkElement element && !string.IsNullOrEmpty(element.Name))
+                    if (obj is Button btn && !string.IsNullOrEmpty(btn.Name))
                     {
                         // Se lo è, lo restituiamo
-                        return element;
+                        return btn;
                     }
 
                     // Se non ha nome guardiamo il suo genitore
-                    visualHit = VisualTreeHelper.GetParent(visualHit);
+                    obj = VisualTreeHelper.GetParent(obj);
                 }
             }
 

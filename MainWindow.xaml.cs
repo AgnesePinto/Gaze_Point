@@ -27,7 +27,7 @@ namespace Gaze_Point
         {
             InitializeComponent();
 
-            this.DataContext = new Gaze_Point.GPViewModel.MainViewModel();
+            this.DataContext = new MainViewModel();
 
         }
     }
