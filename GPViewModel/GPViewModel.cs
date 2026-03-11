@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls; // Necessario per gestire CheckBox e TextBox nel comando
 using Gaze_Point.GPModel.GPCursor;
 
+
 namespace Gaze_Point.GPViewModel
 {
     // Collega i pulsanti della finestra alle azioni del codice
@@ -80,7 +81,20 @@ namespace Gaze_Point.GPViewModel
             // Colleghiamo i comandi ai pulsanti
             StartCommand = new RelayCommand(_ => {
                 _gpService.Start();
-                Status = "Tracking Attivo";
+                var formWindow = new FormWindow();
+
+                // 3. Crea il nuovo ViewModel passandogli il servizio ATTIVO
+                var formViewModel = new FormViewModel(_gpService);
+
+                // 4. Collega il ViewModel alla finestra e mostrala
+                formWindow.DataContext = formViewModel;
+                formWindow.Show();
+
+                // 5. Chiude la finestra corrente (opzionale, puoi anche usare .Hide())
+                Application.Current.MainWindow.Close();
+
+                // Aggiorna il riferimento della MainWindow globale per l'Hit-Testing
+                Application.Current.MainWindow = formWindow;
             });
 
             StopCommand = new RelayCommand(_ => {

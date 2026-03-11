@@ -22,25 +22,25 @@ namespace Gaze_Point.GPModel.GPInteraction
             // 1. Verifichiamo prima di tutto se il test ha colpito effettivamente qualcosa
             if (target != null)
             {
-                // 2. Recuperiamo l'oggetto visivo che è stato colpito
                 DependencyObject obj = target.VisualHit;
-                
-                // 3. Una volta recuperato l'oggetto fissato, cerco come si chiama
+
                 while (obj != null)
                 {
-                    // 4. Verifichiamo se questo oggetto è un FrameworkElement (un componente della UI)
-                    if (obj is Button btn && !string.IsNullOrEmpty(btn.Name))
+                    // CERCHIAMO SIA BOTTONI CHE TEXTBOX
+                    // Se l'oggetto è un FrameworkElement e ha un nome, lo consideriamo un bersaglio
+                    if (obj is FrameworkElement fe && !string.IsNullOrEmpty(fe.Name))
                     {
-                        // Se lo è, lo restituiamo
-                        return btn;
+                        // Filtriamo solo i tipi che ci interessano: Button e TextBox
+                        if (fe is Button || fe is TextBox)
+                        {
+                            return fe;
+                        }
                     }
 
-                    // Se non ha nome guardiamo il suo genitore
+                    // Risaliamo verso il genitore se non abbiamo trovato nulla
                     obj = VisualTreeHelper.GetParent(obj);
                 }
             }
-
-            // Se non abbiamo colpito nulla o non è un elemento UI, ritorniamo null
             return null;
         }
     }

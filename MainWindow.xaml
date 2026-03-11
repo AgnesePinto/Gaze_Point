@@ -15,7 +15,7 @@
             <TextBlock Text="{Binding Status}" FontSize="20" Margin="10" HorizontalAlignment="Center" Foreground="Gray"/>
 
             <!-- BOTTONE AVVIA -->
-            <Button Content="AVVIA TRACKING" 
+            <Button Content="AVVIA FORM" 
                     Command="{Binding StartCommand}" 
                     x:Name="BtnStart" 
                     Width="400" Height="150" Margin="30"
@@ -58,7 +58,7 @@
         </StackPanel>
 
         <Canvas IsHitTestVisible="False">
-            <Ellipse Width="30" Height="30" 
+            <Ellipse Width="20" Height="20" 
          Fill="#4CFF0000" 
          Stroke="Red" 
          StrokeThickness="2">

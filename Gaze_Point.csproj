@@ -109,6 +109,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="FormWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -116,6 +120,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FormWindow.xaml.cs">
+      <DependentUpon>FormWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GPConnection\GPClient.cs" />
     <Compile Include="GPModel\GPCursor\GPCursor.cs" />
@@ -127,6 +134,7 @@
     <Compile Include="GPModel\GPRecord\GPSmoothingFilter.cs" />
     <Compile Include="GPModel\GPRecord\GPValidationFilter.cs" />
     <Compile Include="GPModel\GPService\GPService.cs" />
+    <Compile Include="GPViewModel\FormViewModel.cs" />
     <Compile Include="GPViewModel\GPViewModel.cs" />
     <Compile Include="GPViewModel\RelayCommand.cs" />
     <Compile Include="MainWindow.xaml.cs">
