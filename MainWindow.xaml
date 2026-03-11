@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Test Form" Height="600" Width="800">
 
-    <!-- Colleghiamo il tasto INVIO. Nota: usiamo FocusManager per sicurezza -->
+    <!-- Colleghiamo il tasto INVIO  -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
     </Window.InputBindings>
