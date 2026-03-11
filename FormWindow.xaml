@@ -6,6 +6,12 @@
         xmlns:local="clr-namespace:Gaze_Point"
         mc:Ignorable="d"
         Title="FormWindow" Height="600" Width="800">
+
+    <!-- Colleghiamo il tasto INVIO  -->
+    <Window.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
+    </Window.InputBindings>
+    
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
