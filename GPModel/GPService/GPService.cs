@@ -21,6 +21,7 @@ namespace Gaze_Point.Services
         private readonly GPTargetProvider _targetProvider;
         private readonly GPDwellManager _dwellManager;
         public GPCursor GazeCursor { get; } = new GPCursor();
+        public bool IsCursorVisible { get; }
 
         public event Action<GPData> OnDataReceived;     // Evento che allerta dell'arrivo di un nuovo punto dello sguardo per passare i dati al ViewModel
         public event Action<FrameworkElement> OnElementFocused;     // Evento che allerta ViewModel quando un elemento è stato fissato con successo
@@ -32,6 +33,12 @@ namespace Gaze_Point.Services
             _smoothingFilter = new GPSmoothingFilter();
             _targetProvider = new GPTargetProvider();   
             _dwellManager = new GPDwellManager();
+
+#if DEBUG
+            IsCursorVisible = true;  // In Debug il cursore è visibile
+#else
+                IsCursorVisible = false; // In Release il cursore è nascosto
+#endif
 
             _dwellManager.OnElementFocused += (element) => OnElementFocused?.Invoke(element);      // Se il dwellManager capisce che un elemento è fissato, avvisa i listeners
 

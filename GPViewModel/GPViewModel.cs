@@ -15,6 +15,7 @@ namespace Gaze_Point.GPViewModel
         private string _status;
 
         public GPCursor MyGazeCursor => _gpService.GazeCursor;
+        public bool IsCursorVisible => _gpService.IsCursorVisible;
 
         private FrameworkElement _currentGazeElement; // Memorizza l'oggetto fisico sotto lo sguardo
         private string _focusedElementName;           // Memorizza il nome dell'oggetto per lo XAML
