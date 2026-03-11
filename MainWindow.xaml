@@ -56,5 +56,23 @@
                 </Button.Style>
             </Button>
         </StackPanel>
+
+        <Canvas IsHitTestVisible="False">
+            <Ellipse Width="30" Height="30" 
+             Fill="#4CFF0000" 
+             Stroke="Red" 
+             StrokeThickness="2">
+                <Ellipse.RenderTransform>
+                    <TranslateTransform X="{Binding MyGazeCursor.X}" 
+                                Y="{Binding MyGazeCursor.Y}" />
+                </Ellipse.RenderTransform>
+
+                <!-- sposto il cerchio di metà della sua dimensione 
+             per centrarlo sul punto esatto dello sguardo -->
+                <Ellipse.Margin>
+                    <Thickness Left="-15" Top="-15" Right="0" Bottom="0"/>
+                </Ellipse.Margin>
+            </Ellipse>
+        </Canvas>
     </Grid>
 </Window>

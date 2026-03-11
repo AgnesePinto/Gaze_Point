@@ -4,6 +4,7 @@ using Gaze_Point.Services;
 using Gaze_Point.GPModel.GPRecord;
 using System.Windows;
 using System.Windows.Controls; // Necessario per gestire CheckBox e TextBox nel comando
+using Gaze_Point.GPModel.GPCursor;
 
 namespace Gaze_Point.GPViewModel
 {
@@ -12,6 +13,8 @@ namespace Gaze_Point.GPViewModel
     {
         private readonly GPService _gpService;
         private string _status;
+
+        public GPCursor MyGazeCursor => _gpService.GazeCursor;
 
         private FrameworkElement _currentGazeElement; // Memorizza l'oggetto fisico sotto lo sguardo
         private string _focusedElementName;           // Memorizza il nome dell'oggetto per lo XAML

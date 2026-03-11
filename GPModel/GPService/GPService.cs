@@ -6,18 +6,13 @@ using Gaze_Point.GPModel.GPRecord;
 using System.Collections.Generic;
 using Gaze_Point.GPModel.GPInteraction;
 using System.Windows;
+using Gaze_Point.GPModel.GPCursor;
+using System.Windows.Input;
 
 namespace Gaze_Point.Services
 {
     public class GPService
     {
-        // API per spostare il cursore
-        [DllImport("user32.dll")]
-        private static extern bool SetCursorPos(int x, int y);
-
-        // API per mostrare o nascondere il cursore fisico
-        [DllImport("user32.dll")]
-        private static extern int ShowCursor(bool bShow);
 
         private readonly GPClient _client;
         private readonly DispatcherTimer _timer;
@@ -25,6 +20,7 @@ namespace Gaze_Point.Services
         private readonly GPSmoothingFilter _smoothingFilter;
         private readonly GPTargetProvider _targetProvider;
         private readonly GPDwellManager _dwellManager;
+        public GPCursor GazeCursor { get; } = new GPCursor();
 
         public event Action<GPData> OnDataReceived;     // Evento che allerta dell'arrivo di un nuovo punto dello sguardo per passare i dati al ViewModel
         public event Action<FrameworkElement> OnElementFocused;     // Evento che allerta ViewModel quando un elemento è stato fissato con successo
@@ -51,14 +47,7 @@ namespace Gaze_Point.Services
 
             if (_client.IsConnected)
             {
-                // --- GESTIONE VISIBILITÀ CURSORE ---
-#if DEBUG
-                // Imposto il cursore come visibile in fase di debug
-                ShowCursor(true);
-#else
-                // Imposto il cursore come invisibile in fase di Release
-                ShowCursor(false);
-#endif
+
                 // Comandi Gazepoint per attivare l'invio dei dati POG
                 _client.SendCommand("<SET ID=\"ENABLE_SEND_POG_BEST\" STATE=\"1\" />");
                 _client.SendCommand("<SET ID=\"ENABLE_SEND_DATA\" STATE=\"1\" />");
@@ -84,29 +73,24 @@ namespace Gaze_Point.Services
                 // Se il filtro gestisce un dato valido
                 if (validData != null)
                 {
-                    // 1. Applichiamo lo smoothing
                     GPData smoothData = _smoothingFilter.AdaptiveSmoothing(validData);
 
-                    // 2. Calcoliamo i PIXEL FISICI (quelli dello schermo intero)
+                    // 1. Coordinate Fisiche (per Windows/Hit-Test)
                     var (physX, physY) = GPConverter.ToPhysicalScreenPoint(smoothData);
 
-                    // 3. Muoviamo il cursore reale di Windows
-                    SetCursorPos(physX, physY);
+                    // 2. Coordinate Logiche (per la UI/GazeCursor) usando la nuova funzione
+                    var (logX, logY) = GPConverter.ToLogicalScreenPoint(smoothData);
 
-                    // 4. Interazione con la finestra
+                    // Aggiorniamo l'oggetto GazeCursor
+                    GazeCursor.X = logX;
+                    GazeCursor.Y = logY;
+
+                    // 3. Logica di Hit-Testing (usa physX/physY)
                     if (Application.Current.MainWindow is Window window)
                     {
-                        // Creiamo il punto FISICO dove si trova il mouse
-                        Point mousePoint = new Point(physX, physY);
-
-                        // Lo convertiamo in punto LOGICO per WPF
-                        Point windowPoint = GPConverter.ToWindowPoint(mousePoint, window);
-
-                        // Eseguiamo l'Hit-Test su quel punto preciso
-                        FrameworkElement element = _targetProvider.GetElementAtPoint(windowPoint, window);
-                        _dwellManager.Update(element);
+                        Point windowPoint = GPConverter.ToWindowPoint(new Point(physX, physY), window);
+                        _dwellManager.Update(_targetProvider.GetElementAtPoint(windowPoint, window));
                     }
-                    OnDataReceived?.Invoke(smoothData);
                 }
             }
         }
@@ -117,8 +101,6 @@ namespace Gaze_Point.Services
             {
                 _timer.Stop();
 
-                // Quando fermiamo il servizio, restituiamo sempre il cursore all'utente
-                ShowCursor(true);
             }
 
             _client.Disconnect();

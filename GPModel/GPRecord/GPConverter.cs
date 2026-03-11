@@ -49,6 +49,16 @@ namespace Gaze_Point.GPModel.GPRecord
             // Gestisce da solo: posizione finestra e zoom di Windows (125%, 150%, ecc.)
             return window.PointFromScreen(physicalPoint);
         }
+
+        public static (double X, double Y) ToLogicalScreenPoint(GPData data)
+        {
+            // Calcolo: Dato normalizzato (0-1) * Larghezza Schermo Logica
+            // SystemParameters.PrimaryScreenWidth restituisce già il valore "pulito" dallo zoom DPI
+            double logX = data.BPOGX * SystemParameters.PrimaryScreenWidth;
+            double logY = data.BPOGY * SystemParameters.PrimaryScreenHeight;
+
+            return (logX, logY);
+        }
     }
 }
 
