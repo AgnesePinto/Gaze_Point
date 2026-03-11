@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="FormWindow" Height="600" Width="800">
 
-    <!-- Colleghiamo il tasto INVIO  -->
+    <!-- Collego il tasto INVIO  -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
     </Window.InputBindings>
@@ -45,7 +45,7 @@
 
             <!-- COGNOME -->
             <TextBlock Text="Cognome" FontSize="10" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
-            <TextBox x:Name="TxtCognome" Width="200" Height="100" FontSize="16" Margin="0,0,0,20"
+            <TextBox x:Name="TxtCognome" Width="100" Height="20" FontSize="16" Margin="0,0,0,20"
                      HorizontalAlignment="Left" VerticalContentAlignment="Center"
                      Text="{Binding Cognome, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.Style>
