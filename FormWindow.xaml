@@ -13,6 +13,30 @@
     </Window.InputBindings>
 
     <Grid>
+        <!-- Tasto Exit in alto a destra -->
+        <Button x:Name="BtnExit" 
+        Content="X" 
+        VerticalAlignment="Top" 
+        HorizontalAlignment="Right" 
+        Width="40" Height="40" 
+        Margin="10"
+        FontWeight="Bold"
+        Command="{Binding StopCommand}"
+        Focusable="False">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="Tomato"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnExit">
+                            <Setter Property="Background" Value="Red"/>
+                            <Setter Property="BorderBrush" Value="Yellow"/>
+                            <Setter Property="BorderThickness" Value="3"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
             <TextBlock Text="MODULO REGISTRAZIONE" 

@@ -71,10 +71,10 @@ namespace Gaze_Point.GPViewModel
                         // Eseguiamo il comando del bottone 
                         b.Command?.Execute(b.CommandParameter);
                     }
-                    else if (_currentGazeElement is CheckBox cb)
-                    {
-                        cb.IsChecked = !cb.IsChecked;
-                    }
+                    //else if (_currentGazeElement is CheckBox cb)
+                    //{
+                    //    cb.IsChecked = !cb.IsChecked;
+                    //}
                 }
             });
 
@@ -97,10 +97,15 @@ namespace Gaze_Point.GPViewModel
                 Application.Current.MainWindow = formWindow;
             });
 
+            //StopCommand = new RelayCommand(_ => {
+            //    _gpService.Stop();
+            //    Status = "Tracking Fermato";
+            //    FocusedElementName = null; // Reset dell'evidenziazione allo stop
+            //});
+
             StopCommand = new RelayCommand(_ => {
                 _gpService.Stop();
-                Status = "Tracking Fermato";
-                FocusedElementName = null; // Reset dell'evidenziazione allo stop
+                Application.Current.Shutdown();
             });
 
             // Se vuoi mostrare le coordinate in tempo reale nella UI:

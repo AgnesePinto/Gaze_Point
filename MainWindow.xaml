@@ -3,15 +3,39 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Test Form" Height="600" Width="800">
 
-    <!-- Collego il tasto INVIO  -->
+    <!-- TASTO INVIO  -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
     </Window.InputBindings>
 
     <Grid>
+        <!-- TASTO EXIT -->
+        <Button x:Name="BtnExit" 
+        Content="X" 
+        VerticalAlignment="Top" 
+        HorizontalAlignment="Right" 
+        Width="40" Height="40" 
+        Margin="10"
+        FontWeight="Bold"
+        Command="{Binding StopCommand}"
+        Focusable="False">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="Tomato"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnExit">
+                            <Setter Property="Background" Value="Red"/>
+                            <Setter Property="BorderBrush" Value="Yellow"/>
+                            <Setter Property="BorderThickness" Value="3"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
-            <TextBlock Text="Vuoi procedere con l'operazione?" FontSize="28" Margin="0,0,0,10" HorizontalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock Text="Premi il pulsante per avviare il form" FontSize="28" Margin="0,0,0,10" HorizontalAlignment="Center" FontWeight="Bold"/>
             <TextBlock Text="{Binding Status}" FontSize="20" Margin="10" HorizontalAlignment="Center" Foreground="Gray"/>
 
             <!-- BOTTONE AVVIA -->
@@ -34,27 +58,7 @@
                 </Button.Style>
             </Button>
 
-            <Button x:Name="BtnStop" 
-                    Content="FERMA TRACKING" 
-                    Command="{Binding StopCommand}" 
-                    Width="400" Height="150" Margin="30"
-                    Focusable="False">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Foreground" Value="Black"/>
-                        <Setter Property="BorderBrush" Value="Transparent"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnStop">
-                                <Setter Property="Foreground" Value="LimeGreen"/>
-                                <Setter Property="FontWeight" Value="Bold"/>
-                                <Setter Property="BorderBrush" Value="LimeGreen"/>
-                                <Setter Property="BorderThickness" Value="10"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+            
         </StackPanel>
 
         <Canvas IsHitTestVisible="False">

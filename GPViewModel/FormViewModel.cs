@@ -24,6 +24,7 @@ namespace Gaze_Point.GPViewModel
         // Proprietà per i dati (Nome e Cognome)
         public string Nome { get; set; }
         public string Cognome { get; set; }
+        public ICommand StopCommand { get; }
 
         // 2. Comando per gestire la pressione del tasto INVIO
         public ICommand PressEnterCommand { get; }
@@ -42,16 +43,23 @@ namespace Gaze_Point.GPViewModel
                 });
             };
 
-            // 3. Logica del tasto INVIO
+            StopCommand = new RelayCommand(_ => {
+                _gpService.Stop();
+                Application.Current.Shutdown();
+            });
+
             PressEnterCommand = new RelayCommand(_ =>
             {
                 if (_currentGazeElement != null)
                 {
-                    // Se l'elemento che sto guardando è una TextBox
-                    if (_currentGazeElement is TextBox tb)
+                    if (_currentGazeElement is Button b)
                     {
-                        tb.Focus(); // Attiva il cursore per scrivere
-                        tb.CaretIndex = tb.Text.Length; // Metti il cursore alla fine del testo
+                        b.Command?.Execute(b.CommandParameter);
+                    }
+                    else if (_currentGazeElement is TextBox tb)
+                    {
+                        tb.Focus();
+                        tb.CaretIndex = tb.Text.Length;
                     }
                     else if (_currentGazeElement is RadioButton rb)
                     {
@@ -59,7 +67,7 @@ namespace Gaze_Point.GPViewModel
                     }
                     else if (_currentGazeElement is CheckBox cb)
                     {
-                        cb.IsChecked = true;
+                        cb.IsChecked = !cb.IsChecked;
                     }
                 }
             });
