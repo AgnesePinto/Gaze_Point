@@ -53,6 +53,14 @@ namespace Gaze_Point.GPViewModel
                         tb.Focus(); // Attiva il cursore per scrivere
                         tb.CaretIndex = tb.Text.Length; // Metti il cursore alla fine del testo
                     }
+                    else if (_currentGazeElement is RadioButton rb)
+                    {
+                        rb.IsChecked = true;
+                    }
+                    else if (_currentGazeElement is CheckBox cb)
+                    {
+                        cb.IsChecked = true;
+                    }
                 }
             });
         }

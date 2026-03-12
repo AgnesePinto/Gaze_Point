@@ -121,7 +121,7 @@ namespace Gaze_Point.GPModel.GPInteraction
                 if (child is FrameworkElement fe && !string.IsNullOrEmpty(fe.Name))
                 {
                     // Filtriamo solo ciò che ci interessa cliccare/scrivere
-                    if (fe is Button || fe is TextBox || fe is CheckBox)
+                    if (fe is Button || fe is TextBox || fe is CheckBox || fe is RadioButton)
                         list.Add(fe);
                 }
                 FindInteractiveElements(child, list); // Ricorsione

@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gaze_Point"
         mc:Ignorable="d"
-        Title="FormWindow" Height="600" Width="800">
+        Title="FormWindow" Height="650" Width="800">
 
-    <!-- Collego il tasto INVIO  -->
+    <!-- Collego il tasto INVIO -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
     </Window.InputBindings>
-    
+
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
@@ -22,8 +22,8 @@
                    HorizontalAlignment="Center" />
 
             <!-- NOME -->
-            <TextBlock Text="Nome" FontSize="10" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
-            <TextBox x:Name="TxtNome" Width="100" Height="20" FontSize="16" Margin="0,0,0,20"
+            <TextBlock Text="Nome" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
+            <TextBox x:Name="TxtNome" Width="250" Height="40" FontSize="16" Margin="0,0,0,15"
                      HorizontalAlignment="Left" VerticalContentAlignment="Center"
                      Text="{Binding Nome, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.Style>
@@ -44,8 +44,8 @@
             </TextBox>
 
             <!-- COGNOME -->
-            <TextBlock Text="Cognome" FontSize="10" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
-            <TextBox x:Name="TxtCognome" Width="100" Height="20" FontSize="16" Margin="0,0,0,20"
+            <TextBlock Text="Cognome" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
+            <TextBox x:Name="TxtCognome" Width="250" Height="40" FontSize="16" Margin="0,0,0,20"
                      HorizontalAlignment="Left" VerticalContentAlignment="Center"
                      Text="{Binding Cognome, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.Style>
@@ -53,7 +53,6 @@
                         <Setter Property="BorderThickness" Value="1"/>
                         <Setter Property="BorderBrush" Value="Gray"/>
                         <Style.Triggers>
-                            
                             <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtCognome">
                                 <Setter Property="BorderThickness" Value="4"/>
                                 <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
@@ -66,9 +65,110 @@
                 </TextBox.Style>
             </TextBox>
 
+            <!-- PANEL PROFESSIONE -->
+            <TextBlock Text="Professione" FontSize="15" Foreground="DimGray" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <CheckBox x:Name="ChkLavoratore" Content="Lavoratore" FontSize="15" Margin="0,0,15,0">
+                    <CheckBox.Style>
+                        <Style TargetType="CheckBox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkLavoratore">
+                                    <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                    <Setter Property="BorderThickness" Value="3"/>
+                                    <Setter Property="Background" Value="AliceBlue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </CheckBox.Style>
+                </CheckBox>
+
+                <CheckBox x:Name="ChkStudente" Content="Studente" FontSize="15" Margin="0,0,15,0">
+                    <CheckBox.Style>
+                        <Style TargetType="CheckBox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkStudente">
+                                    <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                    <Setter Property="BorderThickness" Value="3"/>
+                                    <Setter Property="Background" Value="AliceBlue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </CheckBox.Style>
+                </CheckBox>
+
+                <CheckBox x:Name="ChkEntrambi" Content="Entrambi" FontSize="15">
+                    <CheckBox.Style>
+                        <Style TargetType="CheckBox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkEntrambi">
+                                    <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                    <Setter Property="BorderThickness" Value="3"/>
+                                    <Setter Property="Background" Value="AliceBlue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </CheckBox.Style>
+                </CheckBox>
+            </StackPanel>
+
+            <!-- PANEL TRASPORTO -->
+            <TextBlock Text="Come vieni in università:" FontSize="10" Foreground="DimGray" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <RadioButton x:Name="RbPiedi" Content="A piedi" FontSize="15" Margin="0,0,15,0" GroupName="Trasporto">
+                    <RadioButton.Style>
+                        <Style TargetType="RadioButton">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FocusedElementName}" Value="RbPiedi">
+                                    <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RadioButton.Style>
+                </RadioButton>
+
+                <RadioButton x:Name="RbBici" Content="Bicicletta" FontSize="15" Margin="0,0,15,0" GroupName="Trasporto">
+                    <RadioButton.Style>
+                        <Style TargetType="RadioButton">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FocusedElementName}" Value="RbBici">
+                                    <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RadioButton.Style>
+                </RadioButton>
+
+                <RadioButton x:Name="RbMezzi" Content="Mezzi Pubblici" FontSize="15" Margin="0,0,15,0" GroupName="Trasporto">
+                    <RadioButton.Style>
+                        <Style TargetType="RadioButton">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FocusedElementName}" Value="RbMezzi">
+                                    <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RadioButton.Style>
+                </RadioButton>
+
+                <RadioButton x:Name="RbAuto" Content="Automobile" FontSize="15" GroupName="Trasporto">
+                    <RadioButton.Style>
+                        <Style TargetType="RadioButton">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FocusedElementName}" Value="RbAuto">
+                                    <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RadioButton.Style>
+                </RadioButton>
+            </StackPanel>
         </StackPanel>
 
-        <!-- Canvas del cursore (Invariato) -->
+        <!-- GAZE CURSOR -->
         <Canvas IsHitTestVisible="False">
             <Ellipse Width="20" Height="20" Fill="#4CFF0000" Stroke="Red" StrokeThickness="2" IsHitTestVisible="False">
                 <Ellipse.RenderTransform>
@@ -81,3 +181,5 @@
         </Canvas>
     </Grid>
 </Window>
+
+    

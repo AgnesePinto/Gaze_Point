@@ -7,11 +7,11 @@
   "Smoothing": {
     "AlphaMin": 0.01,
     "AlphaMax": 0.3,
-    "Sensitivity": 3.0
+    "Sensitivity": 1.0
   },
 
   "Interaction": {
-    "DwellTimeMs": 50,
+    "DwellTimeMs": 30,
     "TolerancePixels": 50.0
   }
 }
