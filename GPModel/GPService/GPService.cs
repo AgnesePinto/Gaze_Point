@@ -34,6 +34,7 @@ namespace Gaze_Point.Services
             _smoothingFilter = new GPSmoothingFilter();
             _targetProvider = new GPTargetProvider();   
             _dwellManager = new GPDwellManager();
+            _saccadeDetector = new GPSaccadeDetector();
 
 #if DEBUG
             IsCursorVisible = true;  // In Debug il cursore è visibile
@@ -118,30 +119,25 @@ namespace Gaze_Point.Services
         //            GazeCursor.X = logX;
         //            GazeCursor.Y = logY;
 
-        //            // 2. Controllo spostamento improvviso
+        //            // 1. Controllo se c'è uno spostamento rapido (Saccade)
         //            bool isSaccade = _saccadeDetector.IsSignificantSaccade(rawData);
 
-        //            // 2. Hit-Testing "Magnetico" usando coordinate Fisiche -> Finestra
         //            if (Application.Current.MainWindow is Window window)
         //            {
         //                var (physX, physY) = GPConverter.ToPhysicalScreenPoint(smoothData);
         //                Point windowPoint = GPConverter.ToWindowPoint(new Point(physX, physY), window);
 
-        //                // Se c'è una saccade, forziamo il reset del DwellManager 
-        //                // prima di calcolare il nuovo target.
         //                if (isSaccade)
         //                {
-        //                    // Passando null resettiamo il timer interno del DwellManager 
-        //                    // perché l'utente ha "staccato" lo sguardo dal vecchio obiettivo
+        //                    // Se l'occhio salta, resettiamo il tempo di fissazione
         //                    _dwellManager.Update(null);
         //                }
-
-
-        //                // Chiediamo al provider chi è il più vicino
-        //                FrameworkElement target = _targetProvider.GetElementAtPoint(windowPoint, window);
-
-        //                // Passiamo il risultato al manager del tempo
-        //                _dwellManager.Update(target);
+        //                else
+        //                {
+        //                    // Solo se lo sguardo è "calmo" cerchiamo l'elemento UI
+        //                    FrameworkElement target = _targetProvider.GetElementAtPoint(windowPoint, window);
+        //                    _dwellManager.Update(target);
+        //                }
         //            }
         //        }
         //    }
