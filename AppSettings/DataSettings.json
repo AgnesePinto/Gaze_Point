@@ -12,7 +12,9 @@
 
   "Interaction": {
     "DwellTimeMs": 30,
-    "TolerancePixels": 50.0
+    "TolerancePixels": 50.0,
+    "SaccadeThresholdMin": 70.0,
+    "SaccadeThresholdMax": 200.0
   }
 }
 

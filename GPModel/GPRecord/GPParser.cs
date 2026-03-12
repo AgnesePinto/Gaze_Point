@@ -27,7 +27,7 @@ namespace Gaze_Point.GPModel.GPRecord
             data.BPOGV = (int)GetAttributeValue(xml, "BPOGV");
             data.TIME = GetAttributeValue(xml, "TIME");
 
-            // Saccadi (opzionali nel flusso dati)
+            // Saccadi
             data.SACCADE_MAG = GetAttributeValue(xml, "SACCADE_MAG");
             data.SACCADE_DIR = GetAttributeValue(xml, "SACCADE_DIR");
 

@@ -131,6 +131,7 @@
     <Compile Include="GPModel\GPRecord\GPConverter.cs" />
     <Compile Include="GPModel\GPRecord\GPData.cs" />
     <Compile Include="GPModel\GPRecord\GPParser.cs" />
+    <Compile Include="GPModel\GPRecord\GPSaccadeDetector.cs" />
     <Compile Include="GPModel\GPRecord\GPSmoothingFilter.cs" />
     <Compile Include="GPModel\GPRecord\GPValidationFilter.cs" />
     <Compile Include="GPModel\GPService\GPService.cs" />
