@@ -10,7 +10,7 @@ namespace Gaze_Point.Connection
     public class GPClient
     {
         // Usiamo i nomi corretti dei campi dichiarati sopra
-        private readonly string IpAddres;
+        private readonly string IpAddress;
         private readonly int IpPort;
 
         private TcpClient _client;
@@ -27,14 +27,14 @@ namespace Gaze_Point.Connection
                     .AddJsonFile("AppSettings/Connection.json", optional: false, reloadOnChange: true)
                     .Build();
 
-                IpAddres = configuration["IpAddress"] ?? "127.0.0.1";
+                IpAddress = configuration["IpAddress"] ?? "127.0.0.1";
                 IpPort = int.Parse(configuration["IpPort"] ?? "4242");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Errore nel caricamento della configurazione: " + ex.Message);
                 // Valori di fallback in caso di errore
-                IpAddres = "127.0.0.1";
+                IpAddress = "127.0.0.1";
                 IpPort = 4242;
             }
         }
@@ -61,7 +61,7 @@ namespace Gaze_Point.Connection
             {
                 if (!IsConnected)            // Se non siamo già collegati
                 {
-                    _client = new TcpClient(IpAddres, IpPort);          // Iniziaizza il clien e tenta di collegarsi a quell'ip e a quella porta
+                    _client = new TcpClient(IpAddress, IpPort);          // Iniziaizza il clien e tenta di collegarsi a quell'ip e a quella porta
                     _stream = _client.GetStream();                      // recupera lo stream appena creato
 
                     Console.WriteLine("Connessione stabilita con successo!");
