@@ -11,7 +11,8 @@
   },
 
   "Interaction": {
-    "DwellTimeMs": 300
+    "DwellTimeMs": 300,
+    "TolerancePixels": 50.0
   }
 }
 

@@ -64,39 +64,73 @@ namespace Gaze_Point.Services
         }
 
         // Esegue questa operazione ogni volta che il timer esegue un tick (impostato a 150Hz nel nostro caso)
+        //private void OnTick(object sender, EventArgs e)
+        //{
+        //    // 1. Recupera i dati grezzi XML dal buffer del client
+        //    List<string> packets = _client.ReadData();
+
+        //    foreach (string packet in packets)
+        //    {
+        //        // 2. Trasforma l'XML in un oggetto GPData (Grezzo)
+        //        GPData rawData = GPParser.Parse(packet);
+
+        //        // 3. Pulizia del dato dal rumore (blinks e bordi display)
+        //        GPData validData = _validationFilter.ValidationFilter(rawData);
+
+        //        // Se il filtro gestisce un dato valido
+        //        if (validData != null)
+        //        {
+        //            GPData smoothData = _smoothingFilter.AdaptiveSmoothing(validData);
+
+        //            // 1. Coordinate Fisiche (per Windows/Hit-test targetProvider)
+        //            var (physX, physY) = GPConverter.ToPhysicalScreenPoint(smoothData);
+
+        //            // 2. Coordinate Logiche (per la UI/GazeCursor)
+        //            var (logX, logY) = GPConverter.ToLogicalScreenPoint(smoothData);
+
+        //            // Aggiorniamo l'oggetto GazeCursor
+        //            GazeCursor.X = logX;
+        //            GazeCursor.Y = logY;
+
+        //            // 3. Logica di Hit-Testing (usa physX/physY)
+        //            if (Application.Current.MainWindow is Window window)
+        //            {
+        //                Point windowPoint = GPConverter.ToWindowPoint(new Point(physX, physY), window);
+        //                _dwellManager.Update(_targetProvider.GetElementAtPoint(windowPoint, window));
+        //            }
+        //        }
+        //    }
+        //}
+
         private void OnTick(object sender, EventArgs e)
         {
-            // 1. Recupera i dati grezzi XML dal buffer del client
             List<string> packets = _client.ReadData();
 
             foreach (string packet in packets)
             {
-                // 2. Trasforma l'XML in un oggetto GPData (Grezzo)
                 GPData rawData = GPParser.Parse(packet);
-
-                // 3. Pulizia del dato dal rumore (blinks e bordi display)
                 GPData validData = _validationFilter.ValidationFilter(rawData);
 
-                // Se il filtro gestisce un dato valido
                 if (validData != null)
                 {
                     GPData smoothData = _smoothingFilter.AdaptiveSmoothing(validData);
 
-                    // 1. Coordinate Fisiche (per Windows/Hit-Test)
-                    var (physX, physY) = GPConverter.ToPhysicalScreenPoint(smoothData);
-
-                    // 2. Coordinate Logiche (per la UI/GazeCursor) usando la nuova funzione
+                    // 1. Coordinate Logiche per gaze cursor
                     var (logX, logY) = GPConverter.ToLogicalScreenPoint(smoothData);
-
-                    // Aggiorniamo l'oggetto GazeCursor
                     GazeCursor.X = logX;
                     GazeCursor.Y = logY;
 
-                    // 3. Logica di Hit-Testing (usa physX/physY)
+                    // 2. Hit-Testing "Magnetico" usando coordinate Fisiche -> Finestra
                     if (Application.Current.MainWindow is Window window)
                     {
+                        var (physX, physY) = GPConverter.ToPhysicalScreenPoint(smoothData);
                         Point windowPoint = GPConverter.ToWindowPoint(new Point(physX, physY), window);
-                        _dwellManager.Update(_targetProvider.GetElementAtPoint(windowPoint, window));
+
+                        // Chiediamo al provider chi è il più vicino
+                        FrameworkElement target = _targetProvider.GetElementAtPoint(windowPoint, window);
+
+                        // Passiamo il risultato al manager del tempo
+                        _dwellManager.Update(target);
                     }
                 }
             }

@@ -9,6 +9,8 @@ namespace Gaze_Point.GPModel.GPRecord
         /// Converte le coordinate normalizzate (0-1) in Pixel Fisici (interi).
         /// Necessario per le API di sistema come SetCursorPos.
         /// </summary>
+
+        // Coordinate traduzione coordinate normalizzate in coordinate in pixel
         public static (int X, int Y) ToPhysicalScreenPoint(GPData data)
         {
             double gpX = data.BPOGX;  
@@ -42,6 +44,8 @@ namespace Gaze_Point.GPModel.GPRecord
             return (physX, physY);
         }
 
+        // Conversione coordinate da pixel a coordinate relative alla finestra attiva 
+        // Viene utilizzato dal target provider
         public static Point ToWindowPoint(Point physicalPoint, Window window)
         {
             // Prende il punto fisico dello schermo (pixel reali) 
@@ -50,6 +54,8 @@ namespace Gaze_Point.GPModel.GPRecord
             return window.PointFromScreen(physicalPoint);
         }
 
+        // Conversione coordinate da pixel a coordinate DPI
+        // Viene utilizzata dal gaze cursor
         public static (double X, double Y) ToLogicalScreenPoint(GPData data)
         {
             // Calcolo: Dato normalizzato (0-1) * Larghezza Schermo Logica
