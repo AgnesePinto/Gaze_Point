@@ -23,7 +23,7 @@
 
             <!-- NOME -->
             <TextBlock Text="Nome" FontSize="10" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
-            <TextBox x:Name="TxtNome" Width="200" Height="100" FontSize="16" Margin="0,0,0,20"
+            <TextBox x:Name="TxtNome" Width="100" Height="20" FontSize="16" Margin="0,0,0,20"
                      HorizontalAlignment="Left" VerticalContentAlignment="Center"
                      Text="{Binding Nome, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.Style>
