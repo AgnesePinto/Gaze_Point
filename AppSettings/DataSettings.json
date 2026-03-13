@@ -5,14 +5,15 @@
   },
 
   "Smoothing": {
-    "AlphaMin": 0.01,
-    "AlphaMax": 0.3,
-    "Sensitivity": 1.0
+    "AlphaMin": 0.009,
+    "AlphaMax": 0.09,
+    "Sensitivity": 0.6,
+    "DistanceThreshold" :  0.02
   },
 
   "Interaction": {
     "DwellTimeMs": 30,
-    "TolerancePixels": 50.0,
+    "TolerancePixels": 40.0,
     "SaccadeThresholdMin": 30.0,
     "SaccadeThresholdMax": 100.0
   }

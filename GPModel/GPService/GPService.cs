@@ -67,40 +67,6 @@ namespace Gaze_Point.Services
         }
 
         // Esegue questa operazione ogni volta che il timer esegue un tick (impostato a 150Hz nel nostro caso)
-        //private void OnTick(object sender, EventArgs e)
-        //{
-        //    List<string> packets = _client.ReadData();
-
-        //    foreach (string packet in packets)
-        //    {
-        //        GPData rawData = GPParser.Parse(packet);
-        //        GPData validData = _validationFilter.ValidationFilter(rawData);
-
-        //        if (validData != null)
-        //        {
-        //            GPData smoothData = _smoothingFilter.AdaptiveSmoothing(validData);
-
-        //            // 1. Coordinate Logiche per gaze cursor
-        //            var (logX, logY) = GPConverter.ToLogicalScreenPoint(smoothData);
-        //            GazeCursor.X = logX;
-        //            GazeCursor.Y = logY;
-
-        //            // 2. Hit-Testing "Magnetico" usando coordinate Fisiche -> Finestra
-        //            if (Application.Current.MainWindow is Window window)
-        //            {
-        //                var (physX, physY) = GPConverter.ToPhysicalScreenPoint(smoothData);
-        //                Point windowPoint = GPConverter.ToWindowPoint(new Point(physX, physY), window);
-
-        //                // Chiediamo al provider chi è il più vicino
-        //                FrameworkElement target = _targetProvider.GetElementAtPoint(windowPoint, window);
-
-        //                // Passiamo il risultato al manager del tempo
-        //                _dwellManager.Update(target);
-        //            }
-        //        }
-        //    }
-        //}
-
         private void OnTick(object sender, EventArgs e)
         {
             List<string> packets = _client.ReadData();

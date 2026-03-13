@@ -112,7 +112,7 @@
             </StackPanel>
 
             <!-- PANEL TRASPORTO -->
-            <TextBlock Text="Come vieni in università:" FontSize="10" Foreground="DimGray" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+            <TextBlock Text="Come vieni in università:" FontSize="15" Foreground="DimGray" Margin="0,0,0,5" HorizontalAlignment="Left"/>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                 <RadioButton x:Name="RbPiedi" Content="A piedi" FontSize="15" Margin="0,0,15,0" GroupName="Trasporto">
                     <RadioButton.Style>
