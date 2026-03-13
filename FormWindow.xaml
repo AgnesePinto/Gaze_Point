@@ -72,6 +72,30 @@
                 </TextBox.Style>
             </TextBox>
 
+            <!-- FACOLTÀ -->
+            <TextBlock Text="Facoltà" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
+            <ComboBox x:Name="CmbFacolta" 
+                      Width="250" Height="40" FontSize="16" Margin="0,0,0,20"
+                      HorizontalAlignment="Left" VerticalContentAlignment="Center">
+                <ComboBoxItem Content="Ingegneria"/>
+                <ComboBoxItem Content="Matematica"/>
+                <ComboBoxItem Content="Fisica"/>
+                <ComboBoxItem Content="Informatica"/>
+                <ComboBoxItem Content="Chimica"/>
+
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox">
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="BorderBrush" Value="Gray"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="Background" Value="LightYellow"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+            </ComboBox>
+
             <!-- PANEL PROFESSIONE -->
             <TextBlock Text="Professione" FontSize="15" Foreground="DimGray" Margin="0,0,0,5" HorizontalAlignment="Left"/>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
@@ -173,6 +197,30 @@
                     </RadioButton.Style>
                 </RadioButton>
             </StackPanel>
+
+            <!-- EMAIL -->
+            <TextBlock Text="Email" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
+            <TextBox x:Name="TxtEmail" 
+          Width="250" Height="40" FontSize="16" Margin="0,0,0,20"
+          HorizontalAlignment="Left" VerticalContentAlignment="Center"
+          Text="{Binding Cognome, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="BorderBrush" Value="Gray"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtCognome">
+                                <Setter Property="BorderThickness" Value="4"/>
+                                <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                            </DataTrigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="Background" Value="LightYellow"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+
         </StackPanel>
 
         <!-- GAZE CURSOR -->
@@ -180,10 +228,8 @@
             <Ellipse Width="20" Height="20" Fill="#4CFF0000" Stroke="Red" StrokeThickness="2">
                 <Ellipse.Style>
                     <Style TargetType="Ellipse">
-                        <!-- Di base lo teniamo nascosto -->
                         <Setter Property="Visibility" Value="Collapsed"/>
                         <Style.Triggers>
-                            <!-- Lo mostriamo solo se IsCursorVisible è True -->
                             <DataTrigger Binding="{Binding IsCursorVisible}" Value="True">
                                 <Setter Property="Visibility" Value="Visible"/>
                             </DataTrigger>
