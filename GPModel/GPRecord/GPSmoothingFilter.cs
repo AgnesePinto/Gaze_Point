@@ -23,7 +23,7 @@ namespace Gaze_Point.GPModel.GPRecord
         // è il coefficiente angolare della nostra retta, ci dice quanto deve essere rapido lo spostamento tra Alphamax e min
         private readonly double Sensitivity;
 
-        // Distanza accettabile per eliminare il tremolio
+        // Distanza accettabile per eliminare il tremolio espressa come distanza normalizzata
         private readonly double distanceThreshold;
 
         public GPSmoothingFilter()
