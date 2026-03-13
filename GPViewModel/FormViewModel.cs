@@ -24,8 +24,9 @@ namespace Gaze_Point.GPViewModel
         }
 
         // Proprietà per i dati (Nome e Cognome)
-        public string Nome { get; set; }
-        public string Cognome { get; set; }
+        //public string Nome { get; set; }
+        //public string Cognome { get; set; }
+        //public string Email { get; set; }
         public ICommand StopCommand { get; }
 
         // 2. Comando per gestire la pressione del tasto INVIO

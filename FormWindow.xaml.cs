@@ -12,7 +12,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Gaze_Point.GPViewModel;
 
 namespace Gaze_Point
 {

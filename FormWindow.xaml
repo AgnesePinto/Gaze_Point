@@ -201,15 +201,15 @@
             <!-- EMAIL -->
             <TextBlock Text="Email" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
             <TextBox x:Name="TxtEmail" 
-          Width="250" Height="40" FontSize="16" Margin="0,0,0,20"
-          HorizontalAlignment="Left" VerticalContentAlignment="Center"
-          Text="{Binding Cognome, UpdateSourceTrigger=PropertyChanged}">
+         Width="250" Height="40" FontSize="16" Margin="0,0,0,20"
+         HorizontalAlignment="Left" VerticalContentAlignment="Center"
+         Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.Style>
                     <Style TargetType="TextBox">
                         <Setter Property="BorderThickness" Value="1"/>
                         <Setter Property="BorderBrush" Value="Gray"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtCognome">
+                            <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtEmail">
                                 <Setter Property="BorderThickness" Value="4"/>
                                 <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
                             </DataTrigger>
