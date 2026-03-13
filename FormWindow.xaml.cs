@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gaze_Point.GPViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Gaze_Point.GPViewModel;
 
 namespace Gaze_Point
 {
@@ -22,6 +24,19 @@ namespace Gaze_Point
         public FormWindow()
         {
             InitializeComponent();
+
+            EventManager.RegisterClassHandler(typeof(FrameworkElement),
+            FrameworkElement.GotFocusEvent, new RoutedEventHandler(OnElementFocusedByKeyboard));
+        }
+
+        // 2. IL METODO "PONTE" (fuori dal costruttore)
+        private void OnElementFocusedByKeyboard(object sender, RoutedEventArgs e)
+        {
+            // Il Code-behind passa l'informazione al ViewModel
+            if (DataContext is FormViewModel vm && e.OriginalSource is FrameworkElement fe)
+            {
+                vm.SetFocusedElement(fe.Name);
+            }
         }
     }
 }

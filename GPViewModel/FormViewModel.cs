@@ -50,30 +50,6 @@ namespace Gaze_Point.GPViewModel
                 Application.Current.Shutdown();
             });
 
-            //PressEnterCommand = new RelayCommand(_ =>
-            //{
-            //    if (_currentGazeElement != null)
-            //    {
-            //        if (_currentGazeElement is Button b)
-            //        {
-            //            b.Command?.Execute(b.CommandParameter);
-            //        }
-            //        else if (_currentGazeElement is TextBox tb)
-            //        {
-            //            tb.Focus();
-            //            tb.CaretIndex = tb.Text.Length;
-            //        }
-            //        else if (_currentGazeElement is RadioButton rb)
-            //        {
-            //            rb.IsChecked = true;
-            //        }
-            //        else if (_currentGazeElement is CheckBox cb)
-            //        {
-            //            cb.IsChecked = !cb.IsChecked;
-            //        }
-            //    }
-            //});
-
             PressEnterCommand = new RelayCommand(_ =>
             {
                 if (_currentGazeElement != null)
@@ -106,9 +82,18 @@ namespace Gaze_Point.GPViewModel
                     }
                 }
             });
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        public void SetFocusedElement(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                FocusedElementName = name;
+            }
+        }
     }
 }

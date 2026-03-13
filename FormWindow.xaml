@@ -18,7 +18,9 @@
     </Window.InputBindings>
 
     <Grid>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel VerticalAlignment="Center" 
+                    HorizontalAlignment="Center"
+                    KeyboardNavigation.DirectionalNavigation="Cycle">
 
             <TextBlock Text="MODULO REGISTRAZIONE" 
                    FontSize="18" 
