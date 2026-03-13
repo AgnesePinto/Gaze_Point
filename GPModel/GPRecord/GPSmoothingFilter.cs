@@ -45,6 +45,37 @@ namespace Gaze_Point.GPModel.GPRecord
             }
         }
 
+        //public GPData AdaptiveSmoothing(GPData data)
+        //{
+        //    if (data == null) return null;
+
+        //    // 1. CALCOLO DELLA DISTANZA (Euclidea) tra il nuovo dato e l'ultima posizione filtrata
+        //    double dx = data.BPOGX - _lastX;
+        //    double dy = data.BPOGY - _lastY;
+        //    double distance = Math.Sqrt(dx * dx + dy * dy);
+
+        //    // 2. CALCOLO DINAMICO DI ALFA
+        //    // Più distanza c'è, più alfa aumenta (entro i limiti stabiliti)
+        //    double dynamicAlpha = AlphaMin + (distance * Sensitivity);
+
+        //    // Controllo di Alfa: deve stare nel range [AlphaMin, AlphaMax]
+        //    double alpha = Math.Max(AlphaMin, Math.Min(AlphaMax, dynamicAlpha));
+
+        //    // 3. FILTRO BUTTERWORTH DEL PRIMO ORDINE
+        //    // NuovaPos = (Alfa * NuovoDato) + ((1 - Alfa) * VecchiaPos)
+        //    double smoothX = (alpha * data.BPOGX) + ((1 - alpha) * _lastX);
+        //    double smoothY = (alpha * data.BPOGY) + ((1 - alpha) * _lastY);
+
+        //    // 4. AGGIORNAMENTO MEMORIA E DATI
+        //    _lastX = smoothX;
+        //    _lastY = smoothY;
+
+        //    data.BPOGX = smoothX;
+        //    data.BPOGY = smoothY;
+
+        //    return data;
+        //}
+
         public GPData AdaptiveSmoothing(GPData data)
         {
             if (data == null) return null;
@@ -59,12 +90,19 @@ namespace Gaze_Point.GPModel.GPRecord
             double dynamicAlpha = AlphaMin + (distance * Sensitivity);
 
             // Controllo di Alfa: deve stare nel range [AlphaMin, AlphaMax]
-            double alpha = Math.Max(AlphaMin, Math.Min(AlphaMax, dynamicAlpha));
+            if (dynamicAlpha < AlphaMin)
+            {
+                dynamicAlpha = AlphaMin; // Se è troppo piccolo, alzalo al minimo
+            }
+            else if (dynamicAlpha > AlphaMax)
+            {
+                dynamicAlpha = AlphaMax; // Se è troppo grande, abbassalo al massimo
+            }
 
             // 3. FILTRO BUTTERWORTH DEL PRIMO ORDINE
             // NuovaPos = (Alfa * NuovoDato) + ((1 - Alfa) * VecchiaPos)
-            double smoothX = (alpha * data.BPOGX) + ((1 - alpha) * _lastX);
-            double smoothY = (alpha * data.BPOGY) + ((1 - alpha) * _lastY);
+            double smoothX = (dynamicAlpha * data.BPOGX) + ((1 - dynamicAlpha) * _lastX);
+            double smoothY = (dynamicAlpha * data.BPOGY) + ((1 - dynamicAlpha) * _lastY);
 
             // 4. AGGIORNAMENTO MEMORIA E DATI
             _lastX = smoothX;
