@@ -170,10 +170,24 @@
 
         <!-- GAZE CURSOR -->
         <Canvas IsHitTestVisible="False">
-            <Ellipse Width="20" Height="20" Fill="#4CFF0000" Stroke="Red" StrokeThickness="2" IsHitTestVisible="False">
+            <Ellipse Width="20" Height="20" Fill="#4CFF0000" Stroke="Red" StrokeThickness="2">
+                <Ellipse.Style>
+                    <Style TargetType="Ellipse">
+                        <!-- Di base lo teniamo nascosto -->
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <!-- Lo mostriamo solo se IsCursorVisible è True -->
+                            <DataTrigger Binding="{Binding IsCursorVisible}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Ellipse.Style>
+
                 <Ellipse.RenderTransform>
                     <TranslateTransform X="{Binding MyGazeCursor.X}" Y="{Binding MyGazeCursor.Y}" />
                 </Ellipse.RenderTransform>
+
                 <Ellipse.Margin>
                     <Thickness Left="-10" Top="-10" Right="0" Bottom="0"/>
                 </Ellipse.Margin>
