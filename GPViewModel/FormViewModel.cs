@@ -50,26 +50,59 @@ namespace Gaze_Point.GPViewModel
                 Application.Current.Shutdown();
             });
 
+            //PressEnterCommand = new RelayCommand(_ =>
+            //{
+            //    if (_currentGazeElement != null)
+            //    {
+            //        if (_currentGazeElement is Button b)
+            //        {
+            //            b.Command?.Execute(b.CommandParameter);
+            //        }
+            //        else if (_currentGazeElement is TextBox tb)
+            //        {
+            //            tb.Focus();
+            //            tb.CaretIndex = tb.Text.Length;
+            //        }
+            //        else if (_currentGazeElement is RadioButton rb)
+            //        {
+            //            rb.IsChecked = true;
+            //        }
+            //        else if (_currentGazeElement is CheckBox cb)
+            //        {
+            //            cb.IsChecked = !cb.IsChecked;
+            //        }
+            //    }
+            //});
+
             PressEnterCommand = new RelayCommand(_ =>
             {
                 if (_currentGazeElement != null)
                 {
-                    if (_currentGazeElement is Button b)
-                    {
-                        b.Command?.Execute(b.CommandParameter);
-                    }
-                    else if (_currentGazeElement is TextBox tb)
+                    // 1. Gestione specifica per TextBox
+                    if (_currentGazeElement is TextBox tb)
                     {
                         tb.Focus();
                         tb.CaretIndex = tb.Text.Length;
                     }
-                    else if (_currentGazeElement is RadioButton rb)
+                    else
                     {
-                        rb.IsChecked = true;
-                    }
-                    else if (_currentGazeElement is CheckBox cb)
-                    {
-                        cb.IsChecked = !cb.IsChecked;
+                        // 2. Se premo Invio su QUALSIASI ALTRO elemento (Button, CheckBox, ecc.)
+                        // Spostiamo il focus all'elemento corrente per "staccarlo" dalla vecchia TextBox
+                        _currentGazeElement.Focus();
+
+                        // 3. Eseguiamo la logica specifica dell'elemento
+                        if (_currentGazeElement is Button b)
+                        {
+                            b.Command?.Execute(b.CommandParameter);
+                        }
+                        else if (_currentGazeElement is RadioButton rb)
+                        {
+                            rb.IsChecked = true;
+                        }
+                        else if (_currentGazeElement is CheckBox cb)
+                        {
+                            cb.IsChecked = !cb.IsChecked;
+                        }
                     }
                 }
             });

@@ -73,7 +73,7 @@
             <!-- PANEL PROFESSIONE -->
             <TextBlock Text="Professione" FontSize="15" Foreground="DimGray" Margin="0,0,0,5" HorizontalAlignment="Left"/>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                <CheckBox x:Name="ChkLavoratore" Content="Lavoratore" FontSize="15" Margin="0,0,15,0">
+                <CheckBox x:Name="ChkLavoratore" Content="Lavoratore" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,0,15,0">
                     <CheckBox.Style>
                         <Style TargetType="CheckBox">
                             <Style.Triggers>
@@ -87,7 +87,7 @@
                     </CheckBox.Style>
                 </CheckBox>
 
-                <CheckBox x:Name="ChkStudente" Content="Studente" FontSize="15" Margin="0,0,15,0">
+                <CheckBox x:Name="ChkStudente" Content="Studente" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,0,15,0">
                     <CheckBox.Style>
                         <Style TargetType="CheckBox">
                             <Style.Triggers>
@@ -101,7 +101,7 @@
                     </CheckBox.Style>
                 </CheckBox>
 
-                <CheckBox x:Name="ChkEntrambi" Content="Entrambi" FontSize="15">
+                <CheckBox x:Name="ChkEntrambi" Content="Entrambi" FocusVisualStyle="{x:Null}" FontSize="15">
                     <CheckBox.Style>
                         <Style TargetType="CheckBox">
                             <Style.Triggers>
@@ -119,7 +119,7 @@
             <!-- PANEL TRASPORTO -->
             <TextBlock Text="Come vieni in università:" FontSize="15" Foreground="DimGray" Margin="0,0,0,5" HorizontalAlignment="Left"/>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                <RadioButton x:Name="RbPiedi" Content="A piedi" FontSize="15" Margin="0,0,15,0" GroupName="Trasporto">
+                <RadioButton x:Name="RbPiedi" Content="A piedi" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,0,15,0" GroupName="Trasporto">
                     <RadioButton.Style>
                         <Style TargetType="RadioButton">
                             <Style.Triggers>
@@ -132,7 +132,7 @@
                     </RadioButton.Style>
                 </RadioButton>
 
-                <RadioButton x:Name="RbBici" Content="Bicicletta" FontSize="15" Margin="0,0,15,0" GroupName="Trasporto">
+                <RadioButton x:Name="RbBici" Content="Bicicletta" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,0,15,0" GroupName="Trasporto">
                     <RadioButton.Style>
                         <Style TargetType="RadioButton">
                             <Style.Triggers>
@@ -145,7 +145,7 @@
                     </RadioButton.Style>
                 </RadioButton>
 
-                <RadioButton x:Name="RbMezzi" Content="Mezzi Pubblici" FontSize="15" Margin="0,0,15,0" GroupName="Trasporto">
+                <RadioButton x:Name="RbMezzi" Content="Mezzi Pubblici" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,0,15,0" GroupName="Trasporto">
                     <RadioButton.Style>
                         <Style TargetType="RadioButton">
                             <Style.Triggers>
@@ -158,7 +158,7 @@
                     </RadioButton.Style>
                 </RadioButton>
 
-                <RadioButton x:Name="RbAuto" Content="Automobile" FontSize="15" GroupName="Trasporto">
+                <RadioButton x:Name="RbAuto" Content="Automobile" FocusVisualStyle="{x:Null}" FontSize="15" GroupName="Trasporto">
                     <RadioButton.Style>
                         <Style TargetType="RadioButton">
                             <Style.Triggers>

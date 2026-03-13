@@ -100,11 +100,6 @@ namespace Gaze_Point.GPViewModel
                 Application.Current.Shutdown();
             });
 
-            // Se vuoi mostrare le coordinate in tempo reale nella UI:
-            _gpService.OnDataReceived += (data) => {
-                // Esempio: aggiorna una label con le coordinate
-                // Status = $"X: {data.BPOGX:F2} Y: {data.BPOGY:F2}";
-            };
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -24,7 +24,6 @@ namespace Gaze_Point.Services
         public GPCursor GazeCursor { get; } = new GPCursor();
         public bool IsCursorVisible { get; }
 
-        public event Action<GPData> OnDataReceived;     // Evento che allerta dell'arrivo di un nuovo punto dello sguardo per passare i dati al ViewModel
         public event Action<FrameworkElement> OnElementFocused;     // Evento che allerta ViewModel quando un elemento è stato fissato con successo
 
         public GPService()
