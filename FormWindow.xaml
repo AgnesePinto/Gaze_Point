@@ -5,11 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gaze_Point"
         mc:Ignorable="d"
-        Title="FormWindow" Height="650" Width="800">
+        Title="FormWindow" 
+        Height="650" Width="800"
+        WindowStyle="SingleBorderWindow" 
+        WindowState="Maximized" 
+        ResizeMode="CanMinimize">
 
-    <!-- Collego il tasto INVIO -->
+    <!-- Comandi associati ai tasti: INVIO, ESC -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
+        <KeyBinding Key="Esc" Command="{Binding StopCommand}"/>
     </Window.InputBindings>
 
     <Grid>

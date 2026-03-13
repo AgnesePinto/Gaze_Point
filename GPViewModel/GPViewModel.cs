@@ -13,19 +13,12 @@ namespace Gaze_Point.GPViewModel
     public class MainViewModel : INotifyPropertyChanged         // Implementa l'interfaccia Notify per comunicare le modifiche alla view
     {
         private readonly GPService _gpService;
-        private string _status;
 
         public GPCursor MyGazeCursor => _gpService.GazeCursor;
         public bool IsCursorVisible => _gpService.IsCursorVisible;
 
         private FrameworkElement _currentGazeElement; // Memorizza l'oggetto fisico sotto lo sguardo
         private string _focusedElementName;           // Memorizza il nome dell'oggetto per lo XAML
-
-        public string Status
-        {
-            get => _status;
-            set { _status = value; OnPropertyChanged(nameof(Status)); }         // OnPropertyChanged lancia l'allarme ogni volta che una proprietà cambia
-        }
 
         // Proprietà che comunica allo XAML quale elemento deve diventare azzurro
         public string FocusedElementName
@@ -44,7 +37,6 @@ namespace Gaze_Point.GPViewModel
         public MainViewModel()
         {
             _gpService = new GPService();           // Istanza del servizio che attiva l'eye tracker
-            Status = "Disconnesso";
 
             _gpService.OnElementFocused += (element) =>
             {
