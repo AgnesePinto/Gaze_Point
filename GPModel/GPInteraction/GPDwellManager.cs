@@ -63,6 +63,18 @@ namespace Gaze_Point.GPModel.GPInteraction
                 _focusStartTime = DateTime.MaxValue;
             }
         }
+
+        public void ResetDwellTimer()
+        {
+            // Resettiamo il tempo di inizio fissazione. 
+            _focusStartTime = DateTime.Now;
+        }
+
+        public void Clear()
+        {
+            _currentElement = null;
+            _focusStartTime = DateTime.MinValue;
+        }
     }
 }
 

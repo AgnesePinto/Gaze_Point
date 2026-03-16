@@ -15,7 +15,8 @@
     "DwellTimeMs": 30,
     "TolerancePixels": 40.0,
     "SaccadeThresholdMin": 30.0,
-    "SaccadeThresholdMax": 100.0
+    "SaccadeThresholdMax": 100.0,
+    "LockTime": 3000.0
   }
 }
 
