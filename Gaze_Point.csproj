@@ -127,6 +127,7 @@
     <Compile Include="GPConnection\GPClient.cs" />
     <Compile Include="GPModel\GPCursor\GPCursor.cs" />
     <Compile Include="GPModel\GPInteraction\GPDwellManager.cs" />
+    <Compile Include="GPModel\GPInteraction\GPMovementDetector.cs" />
     <Compile Include="GPModel\GPInteraction\GPTargetLocker.cs" />
     <Compile Include="GPModel\GPInteraction\GPTargetProvider.cs" />
     <Compile Include="GPModel\GPRecord\GPConverter.cs" />

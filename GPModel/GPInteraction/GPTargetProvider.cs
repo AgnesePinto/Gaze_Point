@@ -29,40 +29,6 @@ namespace Gaze_Point.GPModel.GPInteraction
             }
         }
 
-        //public FrameworkElement GetElementAtPoint(Point windowPoint, Window window)
-        //{
-        //    FrameworkElement bestTarget = null;
-        //    double minDistance = double.MaxValue;
-
-        //    // 1. Cerchiamo tutti i potenziali bersagli nella finestra
-        //    var interactiveElements = new List<FrameworkElement>();
-        //    FindInteractiveElements(window, interactiveElements);
-
-        //    foreach (var element in interactiveElements)
-        //    {
-        //        if (!element.IsVisible) continue;
-
-        //        // 2. Troviamo il centro dell'elemento rispetto alla finestra
-        //        // Trasformiamo il punto centrale (ActualWidth/2) in coordinate Window
-        //        // Trasforma la posizione locale dell'elemento grafico in una posizione relativa alla finestra
-        //        Point elementCenter = element.TransformToAncestor(window)
-        //                                     .Transform(new Point(element.ActualWidth / 2, element.ActualHeight / 2));
-
-        //        // 3. Calcolo distanza Euclidea
-        //        double dx = windowPoint.X - elementCenter.X;
-        //        double dy = windowPoint.Y - elementCenter.Y;
-        //        double distance = Math.Sqrt(dx * dx + dy * dy);
-
-        //        // 4. Selezione del "vincitore" entro la soglia (Magnetismo)
-        //        if (distance < _tolerance && distance < minDistance)
-        //        {
-        //            minDistance = distance;
-        //            bestTarget = element;
-        //        }
-        //    }
-        //    return bestTarget;
-        //}
-
         public FrameworkElement GetElementAtPoint(Point windowPoint, Window window)
         {
             FrameworkElement bestTarget = null;
@@ -130,6 +96,54 @@ namespace Gaze_Point.GPModel.GPInteraction
                 FindInteractiveElements(child, list); // Ricorsione
             }
         }
+
+        public FrameworkElement GetNextElementInDirection(FrameworkElement currentFE, double angle, Window window)
+        {
+            if (currentFE == null) return null;
+
+            // Centro dell'elemento attuale
+            Point currentCenter = currentFE.TransformToAncestor(window)
+                                         .Transform(new Point(currentFE.ActualWidth / 2, currentFE.ActualHeight / 2));
+
+            FrameworkElement bestNextFE = null;
+            double minDistance = double.MaxValue;
+
+            var candidates = new List<FrameworkElement>();
+            FindInteractiveElements(window, candidates);
+
+            foreach (var target in candidates)
+            {
+                if (target == currentFE || !target.IsVisible) continue;
+
+                // Centro del nuovo target
+                Point targetCenter = target.TransformToAncestor(window)
+                                           .Transform(new Point(target.ActualWidth / 2, target.ActualHeight / 2));
+
+                // Calcolo vettore verso il candidato
+                double dx = targetCenter.X - currentCenter.X;
+                double dy = targetCenter.Y - currentCenter.Y;
+                double dist = Math.Sqrt(dx * dx + dy * dy);
+
+                // Calcolo angolo verso il candidato
+                double targetAngle = Math.Atan2(dy, dx) * (180 / Math.PI);
+                if (targetAngle < 0) targetAngle += 360;
+
+                // Verifichiamo se il candidato è nella direzione desiderata (con un cono di tolleranza di 45 gradi)
+                double diff = Math.Abs(targetAngle - angle);
+                if (diff > 180) diff = 360 - diff;
+
+                if (diff < 45) // L'elemento è nel "cono" visivo della direzione indicata
+                {
+                    if (dist < minDistance)
+                    {
+                        minDistance = dist;
+                        bestNextFE = target;
+                    }
+                }
+            }
+            return bestNextFE;
+        }
+
     }
 }
 
