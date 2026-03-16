@@ -13,10 +13,13 @@
 
   "Interaction": {
     "DwellTimeMs": 30,
-    "TolerancePixels": 40.0,
+    "DistanceTolerance": 35.0,                      
+    "AngleTolerance": 45,
     "SaccadeThresholdMin": 30.0,
     "SaccadeThresholdMax": 100.0,
-    "LockTime": 1500.0
+    "LockTime": 1500.0,
+    "LargeMovementThreshold": 0.20,
+    "SmallMovementThreshold": 0.03
   }
 }
 

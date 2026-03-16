@@ -10,7 +10,7 @@ namespace Gaze_Point.GPModel.GPInteraction
     {
         private readonly DispatcherTimer _timer;
         private bool _isLocked;
-        double lockTime;
+        private readonly double lockTime;
 
         // Proprietà per sapere se il puntamento oculare è sospeso
         public bool IsLocked => _isLocked;

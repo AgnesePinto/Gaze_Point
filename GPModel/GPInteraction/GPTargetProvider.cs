@@ -10,7 +10,8 @@ namespace Gaze_Point.GPModel.GPInteraction
 {
     public class GPTargetProvider
     {
-        private readonly double _tolerance;
+        private readonly double _distanceTolerance;
+        private readonly int _angleTolerance;
 
         public GPTargetProvider()
         {
@@ -21,11 +22,14 @@ namespace Gaze_Point.GPModel.GPInteraction
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                _tolerance = double.Parse(config["Interaction:TolerancePixels"] ?? "50.0");
+                _distanceTolerance = double.Parse(config["Interaction:DistanceTolerance"]);
+                _angleTolerance = int.Parse(config["Interaction:AngleTolerance"]);
             }
             catch
             {
-                _tolerance = 50.0; // Fallback
+                // Fallback
+                _distanceTolerance = 50.0; 
+                _angleTolerance = 45;   
             }
         }
 
@@ -52,7 +56,7 @@ namespace Gaze_Point.GPModel.GPInteraction
                     double distance = ComputeDistanceToRect(windowPoint, bounds);
 
                     // 3. Se lo sguardo è sopra l'oggetto (distanza 0) o entro la tolleranza dal bordo
-                    if (distance < _tolerance && distance < minDistance)
+                    if (distance < _distanceTolerance && distance < minDistance)
                     {
                         minDistance = distance;
                         bestTarget = element;
@@ -67,18 +71,76 @@ namespace Gaze_Point.GPModel.GPInteraction
             return bestTarget;
         }
 
-        /// <summary>
-        /// Calcola la distanza minima tra un punto e i bordi di un rettangolo.
-        /// Restituisce 0 se il punto è all'interno del rettangolo.
-        /// </summary>
+        public FrameworkElement GetNextElementInDirection(FrameworkElement currentFE, double angle, Window window)
+        {
+            if (currentFE == null) return null;
+
+            // Centro dell'elemento attuale 
+            Point currentCenter = currentFE.TransformToAncestor(window).Transform(FindCenterPoint(currentFE));
+
+            FrameworkElement bestNextFE = null;
+            double minDistance = double.MaxValue;
+
+            var candidates = new List<FrameworkElement>();
+            FindInteractiveElements(window, candidates);
+
+            foreach (var target in candidates)
+            {
+                if (target == currentFE || !target.IsVisible) continue;
+
+                // Centro del nuovo target
+                Point targetCenter = currentFE.TransformToAncestor(window).Transform(FindCenterPoint(currentFE));
+
+                // Calcolo vettore verso il candidato
+                double dx = targetCenter.X - currentCenter.X;
+                double dy = targetCenter.Y - currentCenter.Y;
+                double dist = ComputeDistanceToPoint(currentCenter, targetCenter);
+
+                // Calcolo angolo verso il candidato
+                double targetAngle = Math.Atan2(dy, dx) * (180 / Math.PI);
+
+                if (targetAngle < 0) targetAngle += 360;
+
+                // Verifichiamo se il candidato è nel cono di tolleranza
+                double diff = Math.Abs(targetAngle - angle);
+                if (diff > 180) diff = 360 - diff;
+
+                // L'elemento è nel "cono" visivo della direzione indicata
+                if (diff < _angleTolerance) 
+                {
+                    if (dist < minDistance)
+                    {
+                        minDistance = dist;
+                        bestNextFE = target;
+                    }
+                }
+            }
+            return bestNextFE;
+        }
+
+        private double ComputeDistanceToPoint (Point pStart, Point pEnd)
+        {
+            double dx = pEnd.X - pStart.X;
+            double dy = pEnd.Y - pStart.Y;
+            double dist = Math.Sqrt(dx * dx + dy * dy);
+            return dist;
+        }
+
+        private Point FindCenterPoint (FrameworkElement fe)
+        {
+            double cx = fe.ActualWidth / 2;
+            double cy = fe.ActualHeight / 2;
+            Point pCenter = new Point(cx, cy);
+            return pCenter;
+        }
+
         private double ComputeDistanceToRect(Point p, Rect r)
         {
             // Calcolo distanza sui due assi: se il punto è "dentro" l'asse, il valore è 0
             double dx = Math.Max(0, Math.Max(r.Left - p.X, p.X - r.Right));
             double dy = Math.Max(0, Math.Max(r.Top - p.Y, p.Y - r.Bottom));
-
-            // Pitagora per la distanza euclidea dai bordi
-            return Math.Sqrt(dx * dx + dy * dy);
+            double dist = Math.Sqrt(dx * dx + dy * dy);
+            return dist;
         }
 
         private void FindInteractiveElements(DependencyObject parent, List<FrameworkElement> list)
@@ -95,53 +157,6 @@ namespace Gaze_Point.GPModel.GPInteraction
                 }
                 FindInteractiveElements(child, list); // Ricorsione
             }
-        }
-
-        public FrameworkElement GetNextElementInDirection(FrameworkElement currentFE, double angle, Window window)
-        {
-            if (currentFE == null) return null;
-
-            // Centro dell'elemento attuale
-            Point currentCenter = currentFE.TransformToAncestor(window)
-                                         .Transform(new Point(currentFE.ActualWidth / 2, currentFE.ActualHeight / 2));
-
-            FrameworkElement bestNextFE = null;
-            double minDistance = double.MaxValue;
-
-            var candidates = new List<FrameworkElement>();
-            FindInteractiveElements(window, candidates);
-
-            foreach (var target in candidates)
-            {
-                if (target == currentFE || !target.IsVisible) continue;
-
-                // Centro del nuovo target
-                Point targetCenter = target.TransformToAncestor(window)
-                                           .Transform(new Point(target.ActualWidth / 2, target.ActualHeight / 2));
-
-                // Calcolo vettore verso il candidato
-                double dx = targetCenter.X - currentCenter.X;
-                double dy = targetCenter.Y - currentCenter.Y;
-                double dist = Math.Sqrt(dx * dx + dy * dy);
-
-                // Calcolo angolo verso il candidato
-                double targetAngle = Math.Atan2(dy, dx) * (180 / Math.PI);
-                if (targetAngle < 0) targetAngle += 360;
-
-                // Verifichiamo se il candidato è nella direzione desiderata (con un cono di tolleranza di 45 gradi)
-                double diff = Math.Abs(targetAngle - angle);
-                if (diff > 180) diff = 360 - diff;
-
-                if (diff < 45) // L'elemento è nel "cono" visivo della direzione indicata
-                {
-                    if (dist < minDistance)
-                    {
-                        minDistance = dist;
-                        bestNextFE = target;
-                    }
-                }
-            }
-            return bestNextFE;
         }
 
     }

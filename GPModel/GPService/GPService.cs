@@ -24,7 +24,7 @@ namespace Gaze_Point.Services
         private readonly GPTargetLocker _targetLocker;
         private FrameworkElement _lastSelectedElement;
         private readonly GPMovementDetector _movementDetector;
-        private readonly List<Point> _lockCyclePoints = new List<Point>();
+        private readonly List<Point> _lockPoints = new List<Point>();
 
         public GPCursor GazeCursor { get; } = new GPCursor();
         public bool IsCursorVisible { get; }
@@ -43,24 +43,24 @@ namespace Gaze_Point.Services
             _movementDetector = new GPMovementDetector();
 
 #if DEBUG
-            IsCursorVisible = true;  // In Debug il cursore è visibile
+            IsCursorVisible = true; 
 #else
-                IsCursorVisible = false; // In Release il cursore è nascosto
+                IsCursorVisible = false; 
 #endif
 
             // Se il dwellManager capisce che un elemento è fissato, avvisa i listeners
             _dwellManager.OnElementFocused += (element) => {
                 _lastSelectedElement = element;     // Memorizziamo l'ultimo successo
-                _lockCyclePoints.Clear(); // Iniziamo a registrare da zero
+                _lockPoints.Clear(); // Iniziamo a registrare da zero
                 _targetLocker.Activate();       // Facciamo scattare i 3 secondi di blocco
                 OnElementFocused?.Invoke(element);
             };
 
-            // Quando il blocco scade, puliamo il dwell per evitare selezioni a raffica
+            // Quando il blocco scade
             _targetLocker.OnLockExpired += () => {
 
                 // 1. Analizziamo i punti raccolti durante il blocco
-                var result = _movementDetector.Analyze(_lockCyclePoints);
+                var result = _movementDetector.Analyze(_lockPoints);
 
                 bool foundNext = false;
 
@@ -76,8 +76,8 @@ namespace Gaze_Point.Services
                             _lastSelectedElement = nextElement;
                             OnElementFocused?.Invoke(nextElement); // Notifichiamo la UI
 
-                            // 3. RICORSIONE: Facciamo ripartire il blocco immediatamente
-                            _lockCyclePoints.Clear();
+                            // 3. Facciamo ripartire il blocco immediatamente
+                            _lockPoints.Clear();
                             _targetLocker.Activate();
                             foundNext = true;
                         }
@@ -87,7 +87,7 @@ namespace Gaze_Point.Services
                 // 4. Se non abbiamo trovato un "prossimo" o il salto era ampio, resettiamo tutto
                 if (!foundNext)
                 {
-                    _lockCyclePoints.Clear();
+                    _lockPoints.Clear();
                     _dwellManager.Clear();
                     // Il lock si è già disattivato da solo nel ReleaseLock() di GPInteractionLock
                 }
@@ -115,54 +115,6 @@ namespace Gaze_Point.Services
             }
         }
 
-        // Esegue questa operazione ogni volta che il timer esegue un tick (impostato a 150Hz nel nostro caso)
-        //private void OnTick(object sender, EventArgs e)
-        //{
-        //    List<string> packets = _client.ReadData();
-
-        //    foreach (string packet in packets)
-        //    {
-        //        GPData rawData = GPParser.Parse(packet);
-        //        GPData validData = _validationFilter.ValidationFilter(rawData);
-
-        //        if (validData != null)
-        //        {
-        //            GPData smoothData = _smoothingFilter.AdaptiveSmoothing(validData);
-
-        //            // AGGIORNAMENTO DATI: Sempre attivo (Binario A)
-        //            var (logX, logY) = GPConverter.ToLogicalScreenPoint(smoothData);
-        //            GazeCursor.X = logX;
-        //            GazeCursor.Y = logY;
-
-        //            // LOGICA DECISIONALE: Condizionata (Binario B)
-        //            if (!_targetLocker.IsLocked)
-        //            {
-        //                bool isSaccade = _saccadeDetector.IsSignificantSaccade(rawData);
-
-        //                if (Application.Current.MainWindow is Window window)
-        //                {
-        //                    var (physX, physY) = GPConverter.ToPhysicalScreenPoint(smoothData);
-        //                    Point windowPoint = GPConverter.ToWindowPoint(new Point(physX, physY), window);
-
-        //                    if (isSaccade)
-        //                    {
-        //                        _dwellManager.Update(null);
-        //                    }
-        //                    else
-        //                    {
-        //                        FrameworkElement target = _targetProvider.GetElementAtPoint(windowPoint, window);
-        //                        _dwellManager.Update(target);
-        //                    }
-        //                }
-        //            }
-        //            // Se IsLocked è true, non entriamo nell'IF: 
-        //            // - Non cerchiamo nuovi target
-        //            // - Non aggiorniamo il DwellManager
-        //            // - Ma i dati GazeCursor sono già stati aggiornati sopra!
-        //        }
-        //    }
-        //}
-
         private void OnTick(object sender, EventArgs e)
         {
             List<string> packets = _client.ReadData();
@@ -176,7 +128,7 @@ namespace Gaze_Point.Services
                 {
                     GPData smoothData = _smoothingFilter.AdaptiveSmoothing(validData);
 
-                    // AGGIORNAMENTO DATI: Sempre attivo (Binario A)
+                    // AGGIORNAMENTO DATI: Sempre attivo 
                     var (logX, logY) = GPConverter.ToLogicalScreenPoint(smoothData);
                     GazeCursor.X = logX;
                     GazeCursor.Y = logY;
@@ -185,10 +137,10 @@ namespace Gaze_Point.Services
                     if (_targetLocker.IsLocked)
                     {
                         // Usiamo le coordinate normalizzate (0-1) di smoothData per l'analisi
-                        _lockCyclePoints.Add(new Point(smoothData.BPOGX, smoothData.BPOGY));
+                        _lockPoints.Add(new Point(smoothData.BPOGX, smoothData.BPOGY));
                     }
 
-                    // LOGICA DECISIONALE: Condizionata (Binario B)
+                    // LOGICA DECISIONALE: Condizionata 
                     if (!_targetLocker.IsLocked)
                     {
                         bool isSaccade = _saccadeDetector.IsSignificantSaccade(rawData);

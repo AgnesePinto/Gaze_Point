@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 
@@ -7,43 +9,77 @@ namespace Gaze_Point.GPModel.GPInteraction
 {
     public class GPMovementDetector
     {
-        // Soglie da mettere poi nel JSON (0.1 = 10% dello schermo)
-        private const double LargeMovementThreshold = 0.20;
-        private const double SmallMovementThreshold = 0.03;
+        // Soglie normalizzate
+        public readonly double _largeMovementThreshold;
+        public readonly double _smallMovementThreshold;
 
         public enum MovementType { Stay, SmallStep, LargeJump }
 
-        public struct AnalysisResult
+        public struct MovementAnalysis
         {
             public MovementType Type;
-            public double Angle; // In gradi (0-360)
+            public double Angle;
             public double Distance;
         }
 
-        public AnalysisResult Analyze(List<Point> points)
+        public GPMovementDetector() 
         {
-            if (points == null || points.Count < 2)
-                return new AnalysisResult { Type = MovementType.Stay };
+            try
+            {
+                var config = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("AppSettings/DataSettings.json")
+                    .Build();
+
+                _largeMovementThreshold = double.Parse(config["Interaction:LargeMovementThreshold"]);
+                _smallMovementThreshold = double.Parse(config["Interaction:SmallMovementThreshold"]);
+            }
+            catch
+            {
+                _largeMovementThreshold = 0.20;
+                _smallMovementThreshold = 0.03;
+    }
+        }
+
+        public MovementAnalysis Analyze(List<Point> points)
+        {
+            if (points == null || points.Count < 10) // Serve un minimo di campioni
+                return new MovementAnalysis { Type = MovementType.Stay };
 
             Point start = points.First();
-            Point end = points.Last(); // O la media degli ultimi 10 punti per stabilità
 
-            double dx = end.X - start.X;
-            double dy = end.Y - start.Y;
+            // 1. PUNTO MEDIO (Baricentro) di tutti i punti successivi
+            double sumX = 0;
+            double sumY = 0;
+            for (int i = 1; i < points.Count; i++)
+            {
+                sumX += points[i].X;
+                sumY += points[i].Y;
+            }
+
+            Point averagePoint = new Point(sumX / (points.Count - 1), sumY / (points.Count - 1));
+
+            // 2. Vettore tra START e il PUNTO MEDIO
+            double dx = averagePoint.X - start.X;
+            double dy = averagePoint.Y - start.Y;
+
             double distance = Math.Sqrt(dx * dx + dy * dy);
 
-            // Calcolo angolo in gradi (0 è destra, 90 è giù, 180 sinistra, 270 su)
+            // 3. Calcolo angolo 
             double angle = Math.Atan2(dy, dx) * (180 / Math.PI);
             if (angle < 0) angle += 360;
 
-            if (distance > LargeMovementThreshold)
-                return new AnalysisResult { Type = MovementType.LargeJump, Distance = distance };
+            if (angle < 0) angle += 360;
 
-            if (distance >= SmallMovementThreshold && distance <= LargeMovementThreshold)
-                return new AnalysisResult { Type = MovementType.SmallStep, Angle = angle, Distance = distance };
+            if (distance > _largeMovementThreshold)
+                return new MovementAnalysis { Type = MovementType.LargeJump, Distance = distance };
 
-            return new AnalysisResult { Type = MovementType.Stay, Distance = distance };
+            if (distance >= _smallMovementThreshold && distance <= _largeMovementThreshold)
+                return new MovementAnalysis { Type = MovementType.SmallStep, Angle = angle, Distance = distance };
+
+            return new MovementAnalysis { Type = MovementType.Stay, Distance = distance };
         }
+
     }
 }
 

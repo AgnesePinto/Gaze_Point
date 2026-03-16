@@ -27,8 +27,8 @@ namespace Gaze_Point.GPModel.GPRecord
             }
             catch
             {
-                _saccadeThresholdMin = 70.0; // Fallback
-                _saccadeThresholdMax = 200.0; // Fallback
+                _saccadeThresholdMin = 30.0; // Fallback
+                _saccadeThresholdMax = 100.0; // Fallback
             }
         }
 
