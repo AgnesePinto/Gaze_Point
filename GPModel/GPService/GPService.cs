@@ -138,6 +138,17 @@ namespace Gaze_Point.Services
             }
         }
 
+        public void ClearFocusedElementSubscriptions()
+        {
+            // Rimuove tutti i delegati (ViewModel) attaccati a questo evento
+            OnElementFocused = null;
+
+            // Opzionale: Resettiamo anche lo stato interno per la nuova finestra
+            _dwellManager.Clear();
+            _lastSelectedElement = null;
+        }
+
+
         public void Stop()
         {
             if (_timer.IsEnabled)
