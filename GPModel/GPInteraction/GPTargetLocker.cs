@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using System.Net;
 
 namespace Gaze_Point.GPModel.GPInteraction
 {
@@ -10,13 +11,13 @@ namespace Gaze_Point.GPModel.GPInteraction
     {
         private readonly DispatcherTimer _timer;
         private bool _isLocked;
-        private readonly double lockTime;
+        private readonly double _lockTime;
+        private readonly List<Point> _collectedPoints = new List<Point>();
 
-        // Proprietà per sapere se il puntamento oculare è sospeso
         public bool IsLocked => _isLocked;
 
-        // Evento che avvisa il GPService quando il tempo è scaduto
-        public event Action OnLockExpired;
+        // L'evento restituisce la lista di punti accumulati al termine del blocco
+        public event Action<List<Point>> OnLockExpired;
 
         public GPTargetLocker()
         {
@@ -27,31 +28,50 @@ namespace Gaze_Point.GPModel.GPInteraction
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                lockTime = double.Parse(config["Interaction:LockTime"]);
+                _lockTime = double.Parse(config["Interaction:LockTime"]);
             }
             catch
             {
-                // Fallback in caso di errore caricamento file
-                lockTime = 3000.0;
+                _lockTime = 1500.0;
             }
 
             _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromMilliseconds(lockTime);
+            _timer.Interval = TimeSpan.FromMilliseconds(_lockTime);
             _timer.Tick += (s, e) => ReleaseLock();
         }
 
         public void Activate()
         {
+            _collectedPoints.Clear(); // Reset automatico dei punti ad ogni nuova attivazione
             _isLocked = true;
-            _timer.Stop(); // Reset se era già attivo
+            _timer.Stop();
             _timer.Start();
+        }
+
+        /// <summary>
+        /// Metodo chiamato da GPService per passare i dati durante il blocco.
+        /// Gestisce internamente il filtro di validità (BPOGV == 1).
+        /// </summary>
+        public void ProcessPoint(double x, double y, int bpogv)
+        {
+            if (!_isLocked) return;
+
+            // Filtro: scartiamo i dati di "riparazione" o invalidi (es. blink)
+            if (bpogv == 1)
+            {
+                _collectedPoints.Add(new Point(x, y));
+            }
         }
 
         private void ReleaseLock()
         {
             _timer.Stop();
             _isLocked = false;
-            OnLockExpired?.Invoke(); // Avvisa il Service che può tornare a "decidere"
+
+            // Inviamo una copia della lista corretta aggiornata per evitare problemi di riferimento
+            OnLockExpired?.Invoke(new List<Point>(_collectedPoints));
+
+            _collectedPoints.Clear();
         }
     }
 }

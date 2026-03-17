@@ -36,7 +36,7 @@ namespace Gaze_Point.GPModel.GPInteraction
             }
             catch
             {
-                _largeMovementThreshold = 0.20;
+                _largeMovementThreshold = 0.15;
                 _smallMovementThreshold = 0.03;
     }
         }
