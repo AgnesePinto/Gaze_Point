@@ -44,13 +44,15 @@ namespace Gaze_Point.Services
             IsCursorVisible = false; 
 #endif
 
-            _dwellManager.OnElementFocused += (element) => {
+            _dwellManager.OnElementFocused += (element) =>
+            {
                 _lastSelectedElement = element;
                 _targetLocker.Activate();
                 OnElementFocused?.Invoke(element);
             };
 
-            _targetLocker.OnLockExpired += (points) => {
+            _targetLocker.OnLockExpired += (points) =>
+            {
                 var result = _movementDetector.Analyze(points);
                 bool foundNext = false;
 
@@ -90,6 +92,15 @@ namespace Gaze_Point.Services
                 _client.SendCommand("<SET ID=\"ENABLE_SEND_DATA\" STATE=\"1\" />");
                 _timer.Start();
             }
+        }
+
+        public void UpdateWindowContext(Window newWindow)
+        {
+            // Forza il TargetProvider a rifare l'inventario degli elementi immediatamente
+            _targetProvider.ForceRefreshCache(newWindow);
+
+            // Pulisce le vecchie sottoscrizioni e i timer di focus
+            ClearFocusedElementSubscriptions();
         }
 
         private void OnTick(object sender, EventArgs e)
@@ -148,7 +159,6 @@ namespace Gaze_Point.Services
             _lastSelectedElement = null;
         }
 
-
         public void Stop()
         {
             if (_timer.IsEnabled)
@@ -160,6 +170,11 @@ namespace Gaze_Point.Services
         }
     }
 }
+
+
+
+
+
 
 
 

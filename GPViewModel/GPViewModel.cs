@@ -32,8 +32,6 @@ namespace Gaze_Point.GPViewModel
         public MainViewModel()
         {
             _gpService = new GPService();
-
-            // Sottoscrizione locale per l'evidenziazione nella MainWindow
             _gpService.OnElementFocused += OnGazeFocusUpdate;
 
             PressEnterCommand = new RelayCommand(_ =>
@@ -47,27 +45,25 @@ namespace Gaze_Point.GPViewModel
                 }
             });
 
-            StartCommand = new RelayCommand(_ => {
+            StartCommand = new RelayCommand(_ =>
+            {
                 _gpService.Start();
-
-                // 1. PULIZIA TOTALE DEI VECCHI LISTENERS
-                // Questo rimuove il metodo OnGazeFocusUpdate e qualsiasi altra sottoscrizione pendente
-                _gpService.ClearFocusedElementSubscriptions();
 
                 var formWindow = new FormWindow();
 
-                // 2. Crea il nuovo ViewModel come unica sottoscrizione nel sevice
-                var formViewModel = new FormViewModel(_gpService);
+                // LOGICA IBRIDA: Reset immediato e scansione della nuova finestra
+                _gpService.UpdateWindowContext(formWindow);
 
+                var formViewModel = new FormViewModel(_gpService);
                 formWindow.DataContext = formViewModel;
                 formWindow.Show();
 
-                // 3. Chiude la finestra corrente e aggiorna il riferimento globale
                 Application.Current.MainWindow.Close();
                 Application.Current.MainWindow = formWindow;
             });
 
-            StopCommand = new RelayCommand(_ => {
+            StopCommand = new RelayCommand(_ =>
+            {
                 _gpService.Stop();
                 Application.Current.Shutdown();
             });
@@ -87,5 +83,8 @@ namespace Gaze_Point.GPViewModel
         protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
+
+
+
 
 
