@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO; 
+using System.IO;
 using Microsoft.Extensions.Configuration;
 
 namespace Gaze_Point.GPModel.GPRecord
 {
     internal class GPValidationFilter
     {
-        // Ultima coordinata valida per gestire i blink
         private double _lastValidX = 0.5;
         private double _lastValidY = 0.5;
 
-        // Parametri del rettangolo di denoise (range operativo sul display)
+        // Variabili per il Blanking Period
+        private bool _wasValid = true;
+        private int _recoverySamples = 0;
+
         private readonly double MinRange;
         private readonly double MaxRange;
 
@@ -32,49 +30,55 @@ namespace Gaze_Point.GPModel.GPRecord
             }
             catch
             {
-                MinRange = 0.00;
-                MaxRange = 1.00;
+                MinRange = 0.01;
+                MaxRange = 0.99;
             }
         }
 
-        public GPData ValidationFilter (GPData rawData)
+        public GPData ValidationFilter(GPData rawData)
         {
             if (rawData == null) return null;
 
-            // 1. GESTIONE BLINK (Validazione)
-            if (!IsValid(rawData))
+            bool currentValid = IsValid(rawData);
+
+            // RILEVAZIONE RIAPERTURA OCCHI (Transizione da Invalido a Valido)
+            if (currentValid && !_wasValid)
             {
-                // Se l'occhio è perso (blink), sovrascriviamo con l'ultima posizione buona
-                // In questo modo il cursore resta "congelato" e non schizza a (0,0)
+                _recoverySamples = 3; // Imposta il Blanking Period (circa 20ms a 150Hz)
+            }
+            _wasValid = currentValid;
+
+            // LOGICA DI FILTRAGGIO E BLANKING
+            if (!currentValid || _recoverySamples > 0)
+            {
+                // Se l'occhio è chiuso OPPURE siamo nel periodo di stabilizzazione post-blink:
+                // Sovrascriviamo con l'ultima posizione stabile
                 rawData.BPOGX = _lastValidX;
                 rawData.BPOGY = _lastValidY;
 
-                // Forzo BPOGV ad 1 così il resto del programma pensa che sia una dato utilizzabile
+                // Forziamo BPOGV a 1 solo internamente per non interrompere il flusso dei filtri successivi
                 rawData.BPOGV = 1;
+
+                // Scalo il contatore per i cicli successivi
+                if (_recoverySamples > 0) _recoverySamples--;
             }
             else
             {
-                // Se il dato è valido, aggiorniamo l'ultima posizione nota
+                // Se il dato è reale e stabilizzato, aggiorniamo la memoria
                 _lastValidX = rawData.BPOGX;
                 _lastValidY = rawData.BPOGY;
             }
 
-            // 2. RETTAGOLO DI DENOISE (Clamping Operativo)
-            // Applichiamo la teoria: restringiamo il campo per eliminare distorsioni ai bordi
+            // 2. RETTANGOLO DI DENOISE (Clamping)
             rawData.BPOGX = Math.Max(MinRange, Math.Min(MaxRange, rawData.BPOGX));
             rawData.BPOGY = Math.Max(MinRange, Math.Min(MaxRange, rawData.BPOGY));
 
             return rawData;
         }
 
-        // Controllo per dato affidabile
-        public bool IsValid (GPData rawData)
+        public bool IsValid(GPData rawData)
         {
-                if (rawData.BPOGV == 1)
-                {
-                    return true;
-                }
-                return false;
+            return rawData.BPOGV == 1;
         }
     }
 }

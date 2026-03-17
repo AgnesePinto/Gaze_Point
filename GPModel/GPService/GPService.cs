@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Threading;
 using Gaze_Point.Connection;
 using Gaze_Point.GPModel.GPRecord;
-using System.Collections.Generic;
 using Gaze_Point.GPModel.GPInteraction;
-using System.Windows;
 using Gaze_Point.GPModel.GPCursor;
 
 namespace Gaze_Point.Services
@@ -44,16 +44,13 @@ namespace Gaze_Point.Services
             IsCursorVisible = false; 
 #endif
 
-            // Quando il DwellManager rileva un fissaggio, attiva il Locker
             _dwellManager.OnElementFocused += (element) => {
                 _lastSelectedElement = element;
-                _targetLocker.Activate(); // Il locker si resetta internamente
+                _targetLocker.Activate();
                 OnElementFocused?.Invoke(element);
             };
 
-            // Quando il blocco scade, riceve i punti già filtrati dal Locker
             _targetLocker.OnLockExpired += (points) => {
-
                 var result = _movementDetector.Analyze(points);
                 bool foundNext = false;
 
@@ -66,8 +63,6 @@ namespace Gaze_Point.Services
                         {
                             _lastSelectedElement = nextElement;
                             OnElementFocused?.Invoke(nextElement);
-
-                            // Riattiva il blocco per il nuovo elemento
                             _targetLocker.Activate();
                             foundNext = true;
                         }
@@ -104,23 +99,24 @@ namespace Gaze_Point.Services
             foreach (string packet in packets)
             {
                 GPData rawData = GPParser.Parse(packet);
+                // Il ValidationFilter ora gestisce internamente il Blanking Period
                 GPData validData = _validationFilter.ValidationFilter(rawData);
 
                 if (validData != null)
                 {
                     GPData smoothData = _smoothingFilter.AdaptiveSmoothing(validData);
 
-                    // 1. Aggiornamento cursore visivo
                     var (logX, logY) = GPConverter.ToLogicalScreenPoint(smoothData);
                     GazeCursor.X = logX;
                     GazeCursor.Y = logY;
 
-                    // 2. Se bloccato, deleghiamo la raccolta punti al Locker
                     if (_targetLocker.IsLocked)
                     {
+                        // Passiamo rawData.BPOGV per assicurarci che il Locker 
+                        // scarti i punti congelati durante il blink/blanking
                         _targetLocker.ProcessPoint(smoothData.BPOGX, smoothData.BPOGY, rawData.BPOGV);
                     }
-                    else // 3. Se NON bloccato, procediamo con la logica di puntamento standard
+                    else
                     {
                         bool isSaccade = _saccadeDetector.IsSignificantSaccade(rawData);
 
@@ -153,6 +149,7 @@ namespace Gaze_Point.Services
         }
     }
 }
+
 
 
 

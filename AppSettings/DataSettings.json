@@ -1,7 +1,7 @@
 {
   "Validation": {
-    "MinRange": 0.0,
-    "MaxRange": 1.0
+    "MinRange": 0.01,
+    "MaxRange": 0.99
   },
 
   "Smoothing": {
@@ -18,7 +18,7 @@
     "SaccadeThresholdMin": 30.0,
     "SaccadeThresholdMax": 100.0,
     "LockTime": 1500.0,
-    "LargeMovementThreshold": 0.15,
+    "LargeMovementThreshold": 0.10,
     "SmallMovementThreshold": 0.03
   }
 }
