@@ -50,14 +50,13 @@ namespace Gaze_Point.GPViewModel
             StartCommand = new RelayCommand(_ => {
                 _gpService.Start();
 
-                // 1. PULIZIA TOTALE DEI VECCHI ASCOLTATORI (Fondamentale per le performance)
+                // 1. PULIZIA TOTALE DEI VECCHI LISTENERS
                 // Questo rimuove il metodo OnGazeFocusUpdate e qualsiasi altra sottoscrizione pendente
                 _gpService.ClearFocusedElementSubscriptions();
 
                 var formWindow = new FormWindow();
 
-                // 2. Crea il nuovo ViewModel: la sua sottoscrizione nel costruttore 
-                // sarà ora l'unica presente nel Service.
+                // 2. Crea il nuovo ViewModel come unica sottoscrizione nel sevice
                 var formViewModel = new FormViewModel(_gpService);
 
                 formWindow.DataContext = formViewModel;
@@ -74,7 +73,7 @@ namespace Gaze_Point.GPViewModel
             });
         }
 
-        // Metodo estratto per gestire l'aggiornamento del focus
+        // Metodo per gestire l'aggiornamento del focus
         private void OnGazeFocusUpdate(FrameworkElement element)
         {
             Application.Current.Dispatcher.Invoke(() =>
