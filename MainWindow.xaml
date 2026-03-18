@@ -19,7 +19,7 @@
             <TextBlock Text="Premi il pulsante per avviare il form" FontSize="28" Margin="0,0,0,10" HorizontalAlignment="Center" FontWeight="Bold"/>
             <TextBlock Text="{Binding Status}" FontSize="20" Margin="10" HorizontalAlignment="Center" Foreground="Gray"/>
 
-            <!-- BOTTONE AVVIA -->
+            <!-- BOTTONE AVVIA FORM -->
             <Button Content="AVVIA FORM" 
                     Command="{Binding StartCommand}" 
                     x:Name="BtnStart" 
@@ -38,37 +38,7 @@
                     </Style>
                 </Button.Style>
             </Button>
-
-            
         </StackPanel>
-
-        <Canvas IsHitTestVisible="False">
-            <Ellipse Width="20" Height="20" 
-         Fill="#4CFF0000" 
-         Stroke="Red" 
-         StrokeThickness="2">
-
-                <!-- GESTIONE VISIBILITÀ DEBUG/RELEASE -->
-                <Ellipse.Style>
-                    <Style TargetType="Ellipse">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsCursorVisible}" Value="True">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Ellipse.Style>
-
-                <Ellipse.RenderTransform>
-                    <TranslateTransform X="{Binding MyGazeCursor.X}" 
-                            Y="{Binding MyGazeCursor.Y}" />
-                </Ellipse.RenderTransform>
-
-                <Ellipse.Margin>
-                    <Thickness Left="-15" Top="-15" Right="0" Bottom="0"/>
-                </Ellipse.Margin>
-            </Ellipse>
-        </Canvas>
     </Grid>
 </Window>
+

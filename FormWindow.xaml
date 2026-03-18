@@ -11,6 +11,23 @@
         WindowState="Maximized" 
         ResizeMode="CanMinimize">
 
+    <Window.Resources>
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Style.Triggers>
+                <!-- Trigger attivo quando ViewModel chiama item.Focus() -->
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Background" Value="DeepSkyBlue"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="BorderBrush" Value="Navy"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <!-- Comandi associati ai tasti: INVIO, ESC -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
@@ -158,28 +175,38 @@
                 <!-- FACOLTÀ -->
                 <StackPanel Orientation="Vertical" Margin="0,0,20,0">
                     <TextBlock Text="Facoltà" FontSize="15" Margin="20,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
-                <ComboBox x:Name="CmbFacolta" 
-                          Width="250" Height="40" 
-                          FontSize="16" Margin="20,0,0,5" 
-                          HorizontalAlignment="Left" VerticalContentAlignment="Center">
-                    <ComboBoxItem Content="Ingegneria"/>
-                    <ComboBoxItem Content="Matematica"/>
-                    <ComboBoxItem Content="Fisica"/>
-                    <ComboBoxItem Content="Informatica"/>
-                    <ComboBoxItem Content="Chimica"/>
+                    <ComboBox x:Name="CmbFacolta" 
+                              Width="250" Height="40" 
+                              FontSize="16" Margin="20,0,0,5" 
+                              HorizontalAlignment="Left" VerticalContentAlignment="Center">
 
-                    <ComboBox.Style>
-                        <Style TargetType="ComboBox">
-                            <Setter Property="BorderThickness" Value="1"/>
-                            <Setter Property="BorderBrush" Value="Gray"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsFocused" Value="True">
-                                    <Setter Property="Background" Value="LightYellow"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.Style>
-                </ComboBox>
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox">
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="BorderBrush" Value="Gray"/>
+                                <Style.Triggers>
+
+                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="CmbFacolta">
+                                        <Setter Property="BorderThickness" Value="4"/>
+                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="Background" Value="AliceBlue"/>
+                                    </DataTrigger>
+
+
+                                    <Trigger Property="IsFocused" Value="True">
+                                        <Setter Property="Background" Value="LightYellow"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+
+                        <!-- ELEMENTI DELLA TENDINA -->
+                        <ComboBoxItem Content="Ingegneria"/>
+                        <ComboBoxItem Content="Matematica"/>
+                        <ComboBoxItem Content="Fisica"/>
+                        <ComboBoxItem Content="Informatica"/>
+                        <ComboBoxItem Content="Chimica"/>
+                    </ComboBox>
                 </StackPanel>
 
             </StackPanel>
@@ -232,7 +259,7 @@
 
             <!-- PANEL TRASPORTO -->
             <TextBlock Text="Come vieni in università:" FontSize="15" Foreground="DimGray" Margin="0,0,0,5" HorizontalAlignment="Left"/>
-            <StackPanel Orientation="Horizontal" Margin="0,0,90,20">
+            <StackPanel Orientation="Horizontal" Margin="0,0,400,20">
                 <RadioButton x:Name="RbPiedi" Content="A piedi" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,0,15,0" GroupName="Trasporto">
                     <RadioButton.Style>
                         <Style TargetType="RadioButton">
@@ -286,30 +313,6 @@
                 </RadioButton>
             </StackPanel>
         </StackPanel>
-
-        <!-- GAZE CURSOR -->
-        <Canvas IsHitTestVisible="False">
-            <Ellipse Width="20" Height="20" Fill="#4CFF0000" Stroke="Red" StrokeThickness="2">
-                <Ellipse.Style>
-                    <Style TargetType="Ellipse">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsCursorVisible}" Value="True">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Ellipse.Style>
-
-                <Ellipse.RenderTransform>
-                    <TranslateTransform X="{Binding MyGazeCursor.X}" Y="{Binding MyGazeCursor.Y}" />
-                </Ellipse.RenderTransform>
-
-                <Ellipse.Margin>
-                    <Thickness Left="-10" Top="-10" Right="0" Bottom="0"/>
-                </Ellipse.Margin>
-            </Ellipse>
-        </Canvas>
     </Grid>
 </Window>
 

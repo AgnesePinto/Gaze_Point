@@ -113,6 +113,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GazeCursorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -124,8 +128,12 @@
     <Compile Include="FormWindow.xaml.cs">
       <DependentUpon>FormWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GazeCursorWindow.xaml.cs">
+      <DependentUpon>GazeCursorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GPConnection\GPClient.cs" />
     <Compile Include="GPModel\GPCursor\GPCursor.cs" />
+    <Compile Include="GPModel\GPCursor\GPCursorController.cs" />
     <Compile Include="GPModel\GPInteraction\GPDwellManager.cs" />
     <Compile Include="GPModel\GPInteraction\GPMovementDetector.cs" />
     <Compile Include="GPModel\GPInteraction\GPTargetLocker.cs" />

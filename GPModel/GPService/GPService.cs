@@ -7,6 +7,7 @@ using Gaze_Point.GPModel.GPRecord;
 using Gaze_Point.GPModel.GPInteraction;
 using Gaze_Point.GPModel.GPCursor;
 
+
 namespace Gaze_Point.Services
 {
     public class GPService
@@ -20,6 +21,7 @@ namespace Gaze_Point.Services
         private readonly GPSaccadeDetector _saccadeDetector;
         private readonly GPTargetLocker _targetLocker;
         private readonly GPMovementDetector _movementDetector;
+        private readonly GPCursorController _cursorController;
         private FrameworkElement _lastSelectedElement;
 
         public GPCursor GazeCursor { get; } = new GPCursor();
@@ -37,9 +39,11 @@ namespace Gaze_Point.Services
             _saccadeDetector = new GPSaccadeDetector();
             _targetLocker = new GPTargetLocker();
             _movementDetector = new GPMovementDetector();
+            _cursorController = new GPCursorController();
 
 #if DEBUG
             IsCursorVisible = true;
+            _cursorController.Show();	// Mostriamo la finestra esterna
 #else
             IsCursorVisible = false; 
 #endif
@@ -106,48 +110,59 @@ namespace Gaze_Point.Services
         private void OnTick(object sender, EventArgs e)
         {
             List<string> packets = _client.ReadData();
+            if (packets.Count == 0) return;
+
+            GPData lastValidData = null;
+            GPData lastRawData = null;
 
             foreach (string packet in packets)
             {
                 GPData rawData = GPParser.Parse(packet);
-                // Il ValidationFilter ora gestisce internamente il Blanking Period
                 GPData validData = _validationFilter.ValidationFilter(rawData);
 
                 if (validData != null)
                 {
-                    GPData smoothData = _smoothingFilter.AdaptiveSmoothing(validData);
+                    lastValidData = _smoothingFilter.AdaptiveSmoothing(validData);
+                    lastRawData = rawData;
 
-                    var (logX, logY) = GPConverter.ToLogicalScreenPoint(smoothData);
-                    GazeCursor.X = logX;
-                    GazeCursor.Y = logY;
-
-                    if (_targetLocker.IsLocked)
+                    // 1. MOVIMENTO CURSORE (Per ogni pacchetto)
+                    var (logX, logY) = GPConverter.ToLogicalScreenPoint(lastValidData);
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        // Passiamo rawData.BPOGV per assicurarci che il Locker 
-                        // scarti i punti congelati durante il blink/blanking
-                        _targetLocker.ProcessPoint(smoothData.BPOGX, smoothData.BPOGY, rawData.BPOGV);
-                    }
-                    else
-                    {
-                        bool isSaccade = _saccadeDetector.IsSignificantSaccade(rawData);
-
-                        if (Application.Current.MainWindow is Window window)
-                        {
-                            var (physX, physY) = GPConverter.ToPhysicalScreenPoint(smoothData);
-                            Point windowPoint = GPConverter.ToWindowPoint(new Point(physX, physY), window);
-
-                            if (isSaccade)
-                                _dwellManager.Update(null);
-                            else
-                            {
-                                FrameworkElement target = _targetProvider.GetElementAtPoint(windowPoint, window);
-                                _dwellManager.Update(target);
-                            }
-                        }
-                    }
+                        _cursorController.UpdatePosition(logX, logY);
+                    }), DispatcherPriority.Render);
                 }
             }
+
+            // 2. LOGICA DI INTERAZIONE (Solo sull'ultimo pacchetto)
+            if (lastValidData != null && lastRawData != null)
+            {
+                // Calcoliamo la saccade QUI, prima di passarla al Dispatcher
+                bool isSaccade = _saccadeDetector.IsSignificantSaccade(lastRawData);
+
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (Application.Current.MainWindow is Window window)
+                    {
+                        var (physX, physY) = GPConverter.ToPhysicalScreenPoint(lastValidData);
+                        Point windowPoint = GPConverter.ToWindowPoint(new Point(physX, physY), window);
+
+                        if (isSaccade)
+                        {
+                            _dwellManager.Update(null);
+                        }
+                        else
+                        {
+                            // Chiamata sicura al thread UI per trovare l'elemento (incluse le popup)
+                            FrameworkElement target = _targetProvider.GetElementAtPoint(windowPoint, window);
+                            _dwellManager.Update(target);
+                        }
+                    }
+                }), DispatcherPriority.Input);
+            }
         }
+
+
 
         public void ClearFocusedElementSubscriptions()
         {
@@ -159,14 +174,23 @@ namespace Gaze_Point.Services
             _lastSelectedElement = null;
         }
 
+        public void RefreshInteractionTargets()
+        {
+            if (Application.Current.MainWindow is Window window)
+            {
+                // Forziamo il provider a ricalcolare tutto (inclusi i nuovi popup)
+                _targetProvider.ForceRefreshCache(window);
+            }
+        }
+
         public void Stop()
         {
-            if (_timer.IsEnabled)
-            {
-                _timer.Stop();
-                _client.SendCommand("<SET ID=\"ENABLE_SEND_DATA\" STATE=\"0\" />");
-            }
+            _timer.Stop();
+            _client.SendCommand("<SET ID=\"ENABLE_SEND_DATA\" STATE=\"0\" />");
             _client.Disconnect();
+
+            // Nascondi il cursore alla chiusura
+            Application.Current.Dispatcher.Invoke(() => _cursorController.Hide());
         }
     }
 }
