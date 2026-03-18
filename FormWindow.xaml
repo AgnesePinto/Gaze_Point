@@ -155,32 +155,34 @@
                     </TextBox>
                 </StackPanel>
 
+                <!-- FACOLTÀ -->
+                <StackPanel Orientation="Vertical" Margin="0,0,20,0">
+                    <TextBlock Text="Facoltà" FontSize="15" Margin="20,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
+                <ComboBox x:Name="CmbFacolta" 
+                          Width="250" Height="40" 
+                          FontSize="16" Margin="20,0,0,5" 
+                          HorizontalAlignment="Left" VerticalContentAlignment="Center">
+                    <ComboBoxItem Content="Ingegneria"/>
+                    <ComboBoxItem Content="Matematica"/>
+                    <ComboBoxItem Content="Fisica"/>
+                    <ComboBoxItem Content="Informatica"/>
+                    <ComboBoxItem Content="Chimica"/>
+
+                    <ComboBox.Style>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="Gray"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsFocused" Value="True">
+                                    <Setter Property="Background" Value="LightYellow"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.Style>
+                </ComboBox>
+                </StackPanel>
+
             </StackPanel>
-
-
-            <!-- FACOLTÀ -->
-            <TextBlock Text="Facoltà" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
-            <ComboBox x:Name="CmbFacolta" 
-                      Width="250" Height="40" FontSize="16" Margin="0,0,0,20"
-                      HorizontalAlignment="Left" VerticalContentAlignment="Center">
-                <ComboBoxItem Content="Ingegneria"/>
-                <ComboBoxItem Content="Matematica"/>
-                <ComboBoxItem Content="Fisica"/>
-                <ComboBoxItem Content="Informatica"/>
-                <ComboBoxItem Content="Chimica"/>
-
-                <ComboBox.Style>
-                    <Style TargetType="ComboBox">
-                        <Setter Property="BorderThickness" Value="1"/>
-                        <Setter Property="BorderBrush" Value="Gray"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter Property="Background" Value="LightYellow"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ComboBox.Style>
-            </ComboBox>
 
             <!-- PANEL PROFESSIONE -->
             <TextBlock Text="Professione" FontSize="15" Foreground="DimGray" Margin="0,0,0,5" HorizontalAlignment="Left"/>
