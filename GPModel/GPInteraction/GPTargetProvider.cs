@@ -18,7 +18,7 @@ namespace Gaze_Point.GPModel.GPInteraction
 
         private List<FrameworkElement> _interactiveElementsCache = new List<FrameworkElement>();
         private DateTime _lastCacheUpdate = DateTime.MinValue;
-        private readonly TimeSpan _cacheDuration = TimeSpan.FromMilliseconds(500); // Ridotto per essere più reattivi alle popup
+        private readonly TimeSpan _cacheDuration = TimeSpan.FromMilliseconds(300); // Più veloce per interazioni UI
 
         public GPTargetProvider()
         {
@@ -26,11 +26,11 @@ namespace Gaze_Point.GPModel.GPInteraction
             {
                 var config = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("AppSettings/DataSettings.json")
+                    .AddJsonFile("AppSettings/DataSettings.json", true)
                     .Build();
 
-                _distanceTolerance = double.Parse(config["Interaction:DistanceTolerance"]);
-                _angleTolerance = int.Parse(config["Interaction:AngleTolerance"]);
+                _distanceTolerance = double.TryParse(config["Interaction:DistanceTolerance"], out var dt) ? dt : 50.0;
+                _angleTolerance = int.TryParse(config["Interaction:AngleTolerance"], out var at) ? at : 45;
             }
             catch
             {
@@ -43,8 +43,8 @@ namespace Gaze_Point.GPModel.GPInteraction
         {
             _interactiveElementsCache.Clear();
 
-            // 1. SCANSIONE PRIORITARIA: Cerca prima nelle Popup (tendine aperte)
-            // Usiamo una logica più robusta per estrarre i figli dalle popup aperte
+            // 1. SCANSIONE POPUP (Tendine aperte, ContextMenu, ecc.)
+            // PresentationSource.CurrentSources permette di trovare le finestre "nascoste" dei popup
             var popupRoots = PresentationSource.CurrentSources.OfType<HwndSource>()
                 .Select(h => h.RootVisual)
                 .OfType<FrameworkElement>()
@@ -55,32 +55,61 @@ namespace Gaze_Point.GPModel.GPInteraction
                 FindInteractiveElements(root, _interactiveElementsCache);
             }
 
-            // 2. SCANSIONE SECONDARIA: Cerca nella finestra principale
+            // 2. SCANSIONE FINESTRA PRINCIPALE
             FindInteractiveElements(window, _interactiveElementsCache);
 
             _lastCacheUpdate = DateTime.Now;
+        }
+
+        private void FindInteractiveElements(DependencyObject parent, List<FrameworkElement> list)
+        {
+            if (parent == null) return;
+
+            // Logica speciale per l'oggetto Popup (ponte tra Visual Trees diversi)
+            if (parent is Popup popup && popup.IsOpen && popup.Child != null)
+            {
+                FindInteractiveElements(popup.Child, list);
+            }
+
+            // Scansione figli tramite VisualTreeHelper
+            int count = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                if (child is FrameworkElement fe)
+                {
+                    // Definiamo cosa è "interattivo"
+                    bool isTargetType = fe is Button || fe is TextBox || fe is CheckBox ||
+                                       fe is RadioButton || fe is ComboBox || fe is ComboBoxItem ||
+                                       fe is MenuItem;
+
+                    if (isTargetType && fe.IsVisible && fe.ActualWidth > 0)
+                    {
+                        // Aggiungiamo se ha un nome o se è un elemento di una lista (che spesso non ha nome)
+                        if (!string.IsNullOrEmpty(fe.Name) || fe is ComboBoxItem || fe is MenuItem)
+                        {
+                            if (!list.Contains(fe)) list.Add(fe);
+                        }
+                    }
+                }
+                // Ricorsione
+                FindInteractiveElements(child, list);
+            }
         }
 
         private Rect GetElementBounds(FrameworkElement fe, Window window)
         {
             try
             {
-                // Verifichiamo se l'elemento è connesso visivamente
-                if (PresentationSource.FromVisual(fe) == null) return Rect.Empty;
+                if (!fe.IsLoaded || !fe.IsVisible) return Rect.Empty;
 
-                // Se l'elemento è nella stessa finestra, usiamo la trasformazione standard (veloce)
-                if (Window.GetWindow(fe) == window)
-                {
-                    Point topLeft = fe.TransformToAncestor(window).Transform(new Point(0, 0));
-                    return new Rect(topLeft.X, topLeft.Y, fe.ActualWidth, fe.ActualHeight);
-                }
-                else
-                {
-                    // Se l'elemento è in una Popup, usiamo il "ponte" dello schermo
-                    Point screenPoint = fe.PointToScreen(new Point(0, 0));
-                    Point windowPoint = window.PointFromScreen(screenPoint);
-                    return new Rect(windowPoint.X, windowPoint.Y, fe.ActualWidth, fe.ActualHeight);
-                }
+                // Calcolo coordinate assolute rispetto allo schermo
+                Point screenPoint = fe.PointToScreen(new Point(0, 0));
+
+                // Conversione coordinate schermo -> coordinate relative della finestra principale
+                Point windowPoint = window.PointFromScreen(screenPoint);
+
+                return new Rect(windowPoint.X, windowPoint.Y, fe.ActualWidth, fe.ActualHeight);
             }
             catch { return Rect.Empty; }
         }
@@ -90,54 +119,72 @@ namespace Gaze_Point.GPModel.GPInteraction
             if (DateTime.Now - _lastCacheUpdate > _cacheDuration) ForceRefreshCache(window);
 
             FrameworkElement bestTarget = null;
-            double minScore = double.MaxValue;
-            bool isInsideAnyElement = false;
+            double minDistance = double.MaxValue;
+            bool foundInside = false;
 
             foreach (var element in _interactiveElementsCache)
             {
-                if (!element.IsVisible || element.ActualWidth == 0) continue;
-
                 Rect bounds = GetElementBounds(element, window);
                 if (bounds.IsEmpty) continue;
 
-                double distanceToEdge = ComputeDistanceToRect(windowPoint, bounds);
-                bool isInside = (distanceToEdge == 0);
+                bool isInside = bounds.Contains(windowPoint);
 
-                if (isInsideAnyElement && !isInside) continue;
+                // Se siamo già "dentro" un elemento, ignoriamo quelli "fuori"
+                if (foundInside && !isInside) continue;
 
-                double currentScore;
+                double distance;
                 if (isInside)
                 {
+                    // Se siamo dentro, la distanza è dal centro (per precisione gaze)
                     Point center = new Point(bounds.Left + bounds.Width / 2, bounds.Top + bounds.Height / 2);
-                    currentScore = ComputeDistanceToPoint(windowPoint, center);
+                    distance = ComputeDistanceToPoint(windowPoint, center);
 
-                    if (!isInsideAnyElement)
+                    // Priorità assoluta ai ComboBoxItem se siamo dentro (stanno sopra tutto)
+                    if (element is ComboBoxItem) distance -= 1000;
+
+                    if (!foundInside)
                     {
-                        isInsideAnyElement = true;
-                        minScore = currentScore;
+                        foundInside = true;
+                        minDistance = distance;
                         bestTarget = element;
                     }
                 }
                 else
                 {
-                    currentScore = distanceToEdge;
+                    distance = ComputeDistanceToRect(windowPoint, bounds);
                 }
 
-                if (currentScore < minScore && (isInside || currentScore < _distanceTolerance))
+                if (distance < minDistance && (isInside || distance < _distanceTolerance))
                 {
-                    minScore = currentScore;
+                    minDistance = distance;
                     bestTarget = element;
                 }
             }
             return bestTarget;
         }
 
+        // Metodi di utilità geometrica
+        private double ComputeDistanceToPoint(Point p1, Point p2)
+            => Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
+
+        private double ComputeDistanceToRect(Point p, Rect r)
+        {
+            double dx = Math.Max(0, Math.Max(r.Left - p.X, p.X - r.Right));
+            double dy = Math.Max(0, Math.Max(r.Top - p.Y, p.Y - r.Bottom));
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
         public FrameworkElement GetNextElementInDirection(FrameworkElement currentFE, double angle, Window window)
         {
             if (currentFE == null) return null;
+
+            // Aggiorna la cache se necessario
             if (DateTime.Now - _lastCacheUpdate > _cacheDuration) ForceRefreshCache(window);
 
+            // Ottieni i confini dell'elemento corrente (gestisce correttamente se è in un popup)
             Rect currentBounds = GetElementBounds(currentFE, window);
+            if (currentBounds.IsEmpty) return null;
+
             Point currentCenter = new Point(currentBounds.Left + currentBounds.Width / 2, currentBounds.Top + currentBounds.Height / 2);
 
             FrameworkElement bestNextFE = null;
@@ -145,24 +192,34 @@ namespace Gaze_Point.GPModel.GPInteraction
 
             foreach (var target in _interactiveElementsCache)
             {
-                if (target == currentFE || !target.IsVisible) continue;
+                // Salta l'elemento corrente e quelli non visibili
+                if (target == currentFE || !target.IsVisible || target.ActualWidth == 0) continue;
 
                 Rect targetBounds = GetElementBounds(target, window);
                 if (targetBounds.IsEmpty) continue;
 
                 Point targetCenter = new Point(targetBounds.Left + targetBounds.Width / 2, targetBounds.Top + targetBounds.Height / 2);
 
+                // Calcolo dell'angolo tra il centro attuale e il target
                 double dx = targetCenter.X - currentCenter.X;
                 double dy = targetCenter.Y - currentCenter.Y;
                 double targetAngle = Math.Atan2(dy, dx) * (180 / Math.PI);
+
+                // Normalizza l'angolo in [0, 360]
                 if (targetAngle < 0) targetAngle += 360;
 
+                // Calcolo differenza angolare minima
                 double diff = Math.Abs(targetAngle - angle);
                 if (diff > 180) diff = 360 - diff;
 
+                // Se l'elemento è nella direzione desiderata (entro la tolleranza)
                 if (diff < _angleTolerance)
                 {
-                    double dist = ComputeDistanceToRect(currentCenter, targetBounds);
+                    double dist = ComputeDistanceToPoint(currentCenter, targetCenter);
+
+                    // Priorità agli elementi nel popup se stiamo navigando
+                    if (target is ComboBoxItem) dist -= 500;
+
                     if (dist < minDistance)
                     {
                         minDistance = dist;
@@ -172,56 +229,6 @@ namespace Gaze_Point.GPModel.GPInteraction
             }
             return bestNextFE;
         }
-
-        private double ComputeDistanceToPoint(Point pStart, Point pEnd) => Math.Sqrt(Math.Pow(pEnd.X - pStart.X, 2) + Math.Pow(pEnd.Y - pStart.Y, 2));
-
-        private double ComputeDistanceToRect(Point p, Rect r)
-        {
-            double dx = Math.Max(0, Math.Max(r.Left - p.X, p.X - r.Right));
-            double dy = Math.Max(0, Math.Max(r.Top - p.Y, p.Y - r.Bottom));
-            return Math.Sqrt(dx * dx + dy * dy);
-        }
-
-        private void FindInteractiveElements(DependencyObject parent, List<FrameworkElement> list)
-        {
-            // --- GESTIONE POPUP ---
-            // Le Popup non hanno figli visivi diretti nel VisualTreeHelper, 
-            // scansiono esplicitamente la loro proprietà .Child
-            if (parent is Popup popup)
-            {
-                if (popup.Child != null)
-                    FindInteractiveElements(popup.Child, list);
-                return;
-            }
-
-            // --- SCANSIONE STANDARD DEL VISUAL TREE ---
-            int count = VisualTreeHelper.GetChildrenCount(parent);
-            for (int i = 0; i < count; i++)
-            {
-                var child = VisualTreeHelper.GetChild(parent, i);
-                if (child is FrameworkElement fe)
-                {
-                    // 1. Controlliamo se è un tipo di controllo interattivo che ci interessa
-                    bool isTargetType = fe is Button || fe is TextBox || fe is CheckBox ||
-                                       fe is RadioButton || fe is ComboBox || fe is ComboBoxItem;
-
-                    // 2. LOGICA DI FILTRAGGIO:
-                    // - Se l'elemento ha un Nome (x:Name), lo aggiungiamo (es. bottoni del form).
-                    // - Se è un ComboBoxItem lo aggiungiamo SEMPRE (perché nelle popup spesso non hanno nome).
-                    if (isTargetType)
-                    {
-                        if (!string.IsNullOrEmpty(fe.Name) || fe is ComboBoxItem)
-                        {
-                            list.Add(fe);
-                        }
-                    }
-                }
-
-                // Chiamata ricorsiva per cercare nei figli di questo elemento
-                FindInteractiveElements(child, list);
-            }
-        }
-
     }
-
 }
+
