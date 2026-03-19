@@ -94,15 +94,24 @@ namespace Gaze_Point.GPViewModel
                     // 3. NOVITÀ: Gestione ComboBoxItem (Selezione elemento nella tendina)
                     else if (_currentGazeElement is ComboBoxItem item)
                     {
-                        item.IsSelected = true;
-                        // Cerchiamo la ComboBox "padre" per chiudere la tendina dopo la selezione
+                        // 1. Troviamo la ComboBox madre
                         var parentCombo = ItemsControl.ItemsControlFromItemContainer(item) as ComboBox;
+
                         if (parentCombo != null)
                         {
+                            // 2. FORZIAMO la selezione tramite la ComboBox, non solo tramite l'Item
+                            parentCombo.SelectedItem = item;
+                            item.IsSelected = true;
+
+                            // 3. Chiudiamo la tendina
                             parentCombo.IsDropDownOpen = false;
                             parentCombo.Focus();
-                            // Puliamo la cache dagli elementi della tendina ormai chiusa
-                            _gpService.RefreshInteractionTargets();
+
+                            // 4. RESET IMMEDIATO: Chiediamo al servizio di pulire TUTTO 
+                            // affinché lo sguardo non resti "appeso" a un elemento rimosso
+                            _gpService.ClearFocusedElementSubscriptions(); // Pulisce il focus attuale
+                            _gpService.RefreshInteractionTargets();      // Forza la scansione del form "pulito"
+
                         }
                     }
                     else
