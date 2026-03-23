@@ -20,16 +20,12 @@ namespace Gaze_Point.GPModel.GPRecord
             GPData data = new GPData();
 
             // Estrazione attributi principali
-            data.FPOGX = GetAttributeValue(xml, "FPOGX");
-            data.FPOGY = GetAttributeValue(xml, "FPOGY");
             data.BPOGX = GetAttributeValue(xml, "BPOGX");
             data.BPOGY = GetAttributeValue(xml, "BPOGY");
             data.BPOGV = (int)GetAttributeValue(xml, "BPOGV");
-            data.TIME = GetAttributeValue(xml, "TIME");
 
             // Saccadi
             data.SACCADE_MAG = GetAttributeValue(xml, "SACCADE_MAG");
-            data.SACCADE_DIR = GetAttributeValue(xml, "SACCADE_DIR");
 
             return data;
         }

@@ -6,28 +6,36 @@ using System.Threading.Tasks;
 
 namespace Gaze_Point.GPModel.GPRecord
 {
+
+    /// <summary>
+    /// Represents a single data record from the Gazepoint eye-tracker.
+    /// Contains normalized gaze coordinates, data validity and saccade metrics.
+    /// </summary>
+    /// <remarks>
+    /// Coordinates are normalized (0.0 to 1.0), while saccade magnitude is measured in pixels.
+    /// </remarks>
+    /// <author>Agnese Pinto</author>
     public class GPData
     {
-        // Coordinate dello sguardo (da 0.0 a 1.0)
+
+        /// <summary>
+        /// Best Point of Gaze X-coordinate (normalized 0.0 to 1.0).
+        /// </summary>
         public double BPOGX { get; set; }
+
+        /// <summary>
+        /// Best Point of Gaze Y-coordinate (normalized 0.0 to 1.0).
+        /// </summary>
         public double BPOGY { get; set; }
 
-        // Validità del dato (1 = ok, 0 = perso)
+        /// <summary>
+        /// Gaze data validity flag (1 = Valid, 0 = Invalid/Lost).
+        /// </summary>
         public int BPOGV { get; set; }
 
-        // Tempo di sistema del record
-        public double TIME { get; set; }
-
-        // Coordinate del mouse reale 
-        public double CX { get; set; }
-        public double CY { get; set; }
-
-        // Coordinate dei punti di fissazione
-        public double FPOGX { get; set; }
-        public double FPOGY { get; set; }
-
-        // Saccadi
+        /// <summary>
+        /// Saccade magnitude, representing the displacement in pixels between successive fixation points.
+        /// </summary>
         public double SACCADE_MAG { get; set; }
-        public double SACCADE_DIR { get; set; }
     }
 }
