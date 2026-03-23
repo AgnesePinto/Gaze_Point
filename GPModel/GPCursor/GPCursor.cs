@@ -2,6 +2,11 @@
 
 namespace Gaze_Point.GPModel.GPCursor
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <author>Agnese Pinto</author>
     public class GPCursor : INotifyPropertyChanged
     {
         private double _x;

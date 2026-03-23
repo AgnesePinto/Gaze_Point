@@ -48,7 +48,8 @@ namespace Gaze_Point.GPModel.GPInteraction
             var popupRoots = PresentationSource.CurrentSources.OfType<HwndSource>()
                 .Select(h => h.RootVisual)
                 .OfType<FrameworkElement>()
-                .Where(f => f.GetType().Name.Contains("PopupRoot"));
+                .Where(f => f.IsLoaded && f.IsVisible && f.GetType().Name.Contains("PopupRoot"));
+             
 
             foreach (var root in popupRoots)
             {

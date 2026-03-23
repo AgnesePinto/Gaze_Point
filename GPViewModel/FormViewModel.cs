@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Windows.Threading;
+using System;
 
 namespace Gaze_Point.GPViewModel
 {
@@ -94,24 +96,21 @@ namespace Gaze_Point.GPViewModel
                     // 3. NOVITÀ: Gestione ComboBoxItem (Selezione elemento nella tendina)
                     else if (_currentGazeElement is ComboBoxItem item)
                     {
-                        // 1. Troviamo la ComboBox madre
                         var parentCombo = ItemsControl.ItemsControlFromItemContainer(item) as ComboBox;
-
                         if (parentCombo != null)
                         {
-                            // 2. FORZIAMO la selezione tramite la ComboBox, non solo tramite l'Item
                             parentCombo.SelectedItem = item;
-                            item.IsSelected = true;
-
-                            // 3. Chiudiamo la tendina
                             parentCombo.IsDropDownOpen = false;
+
+                            // 1. Forza il focus fisico sulla combo
                             parentCombo.Focus();
 
-                            // 4. RESET IMMEDIATO: Chiediamo al servizio di pulire TUTTO 
-                            // affinché lo sguardo non resti "appeso" a un elemento rimosso
-                            _gpService.ClearFocusedElementSubscriptions(); // Pulisce il focus attuale
-                            _gpService.RefreshInteractionTargets();      // Forza la scansione del form "pulito"
+                            // 2. Resetta lo stato del servizio SENZA cancellare l'evento
+                            _gpService.ResetInteractionState();
 
+                            // 3. Importante: pulisci il riferimento locale nel VM
+                            _currentGazeElement = parentCombo;
+                            FocusedElementName = parentCombo.Name;
                         }
                     }
                     else

@@ -7,7 +7,6 @@ using Gaze_Point.GPModel.GPRecord;
 using Gaze_Point.GPModel.GPInteraction;
 using Gaze_Point.GPModel.GPCursor;
 
-
 namespace Gaze_Point.Services
 {
     public class GPService
@@ -27,6 +26,7 @@ namespace Gaze_Point.Services
         public GPCursor GazeCursor { get; } = new GPCursor();
         public bool IsCursorVisible { get; }
 
+        // Questo evento deve rimanere VIVO per tutta la durata dell'app
         public event Action<FrameworkElement> OnElementFocused;
 
         public GPService()
@@ -43,7 +43,7 @@ namespace Gaze_Point.Services
 
 #if DEBUG
             IsCursorVisible = true;
-            _cursorController.Show();	// Mostriamo la finestra esterna
+            _cursorController.Show();
 #else
             IsCursorVisible = false; 
 #endif
@@ -52,6 +52,7 @@ namespace Gaze_Point.Services
             {
                 _lastSelectedElement = element;
                 _targetLocker.Activate();
+                // Notifichiamo il ViewModel (che rimarrà sempre in ascolto)
                 OnElementFocused?.Invoke(element);
             };
 
@@ -98,13 +99,37 @@ namespace Gaze_Point.Services
             }
         }
 
+        // --- METODO CORRETTO PER IL RESET (NON CANCELLA GLI EVENTI) ---
+        public void ResetInteractionState()
+        {
+            // Svuotiamo solo lo stato interno dei filtri e del tempo di fissazione
+            _dwellManager.Clear();
+            _lastSelectedElement = null;
+
+            // Chiediamo al provider di dimenticare i vecchi elementi (es. i popup chiusi)
+            if (Application.Current.MainWindow is Window window)
+            {
+                _targetProvider.ForceRefreshCache(window);
+            }
+        }
+
         public void UpdateWindowContext(Window newWindow)
         {
-            // Forza il TargetProvider a rifare l'inventario degli elementi immediatamente
+            // Forza il TargetProvider a rifare l'inventario degli elementi sulla nuova finestra
             _targetProvider.ForceRefreshCache(newWindow);
 
-            // Pulisce le vecchie sottoscrizioni e i timer di focus
-            ClearFocusedElementSubscriptions();
+            // Resetta lo stato interno (fissazioni, elementi precedenti) 
+            // SENZA cancellare l'evento OnElementFocused
+            ResetInteractionState();
+        }
+
+
+        public void RefreshInteractionTargets()
+        {
+            if (Application.Current.MainWindow is Window window)
+            {
+                _targetProvider.ForceRefreshCache(window);
+            }
         }
 
         private void OnTick(object sender, EventArgs e)
@@ -125,7 +150,6 @@ namespace Gaze_Point.Services
                     lastValidData = _smoothingFilter.AdaptiveSmoothing(validData);
                     lastRawData = rawData;
 
-                    // 1. MOVIMENTO CURSORE (Per ogni pacchetto)
                     var (logX, logY) = GPConverter.ToLogicalScreenPoint(lastValidData);
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
@@ -134,18 +158,16 @@ namespace Gaze_Point.Services
                 }
             }
 
-            // 2. LOGICA DI INTERAZIONE (Solo sull'ultimo pacchetto)
             if (lastValidData != null && lastRawData != null)
             {
-                // Calcoliamo la saccade QUI, prima di passarla al Dispatcher
                 bool isSaccade = _saccadeDetector.IsSignificantSaccade(lastRawData);
 
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     if (Application.Current.MainWindow is Window window)
                     {
-                        var (physX, physY) = GPConverter.ToPhysicalScreenPoint(lastValidData);
-                        Point windowPoint = GPConverter.ToWindowPoint(new Point(physX, physY), window);
+                        var (physX, py) = GPConverter.ToPhysicalScreenPoint(lastValidData);
+                        Point winPt = GPConverter.ToWindowPoint(new Point(physX, py), window);
 
                         if (isSaccade)
                         {
@@ -153,33 +175,11 @@ namespace Gaze_Point.Services
                         }
                         else
                         {
-                            // Chiamata sicura al thread UI per trovare l'elemento (incluse le popup)
-                            FrameworkElement target = _targetProvider.GetElementAtPoint(windowPoint, window);
+                            FrameworkElement target = _targetProvider.GetElementAtPoint(winPt, window);
                             _dwellManager.Update(target);
                         }
                     }
                 }), DispatcherPriority.Input);
-            }
-        }
-
-
-
-        public void ClearFocusedElementSubscriptions()
-        {
-            // Rimuove tutti i delegati (ViewModel) attaccati a questo evento
-            OnElementFocused = null;
-
-            // Opzionale: Resettiamo anche lo stato interno per la nuova finestra
-            _dwellManager.Clear();
-            _lastSelectedElement = null;
-        }
-
-        public void RefreshInteractionTargets()
-        {
-            if (Application.Current.MainWindow is Window window)
-            {
-                // Forziamo il provider a ricalcolare tutto (inclusi i nuovi popup)
-                _targetProvider.ForceRefreshCache(window);
             }
         }
 
@@ -188,8 +188,6 @@ namespace Gaze_Point.Services
             _timer.Stop();
             _client.SendCommand("<SET ID=\"ENABLE_SEND_DATA\" STATE=\"0\" />");
             _client.Disconnect();
-
-            // Nascondi il cursore alla chiusura
             Application.Current.Dispatcher.Invoke(() => _cursorController.Hide());
         }
     }
