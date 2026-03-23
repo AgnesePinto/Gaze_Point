@@ -4,27 +4,24 @@ using Microsoft.Extensions.Configuration;
 
 namespace Gaze_Point.GPModel.GPRecord
 {
-    internal class GPSmoothingFilter
+
+    /// <summary>
+    /// Applies an adaptive firs-order low-pass filter to gaze data to reduce jitter.
+    /// Dinamically adjusts smoothing (Alpha) based on the distance between successive points to balance stability and responsivness.
+    /// </summary>
+    /// <author>Agnese Pinto</author>
+     
+
+    public class GPSmoothingFilter
     {
-        // Memoria dell'ultima posizione filtrata
+        private readonly double _alphaMin;
+        private readonly double _alphaMax;
+        private readonly double _sensitivity;
+        private readonly double _distanceThreshold;
+
         private double _lastX = 0.5;
         private double _lastY = 0.5;
 
-        // PARAMETRI DI TARATURA DEL FILTRO
-
-        // Alfa minimo: stabilità massima quando lo sguardo è fermo (Fissazione)
-        private readonly double AlphaMin;       
-
-        // Alfa massimo: reattività massima durante gli spostamenti rapidi (Saccade)
-        private readonly double AlphaMax;       
-
-        // Sensibilità: quanto velocemente il filtro deve "aprirsi" in base alla distanza
-        // Un valore più alto rende il cursore più nervoso ma più pronto
-        // è il coefficiente angolare della nostra retta, ci dice quanto deve essere rapido lo spostamento tra Alphamax e min
-        private readonly double Sensitivity;
-
-        // Distanza accettabile per eliminare il tremolio espressa come distanza normalizzata
-        private readonly double distanceThreshold;
 
         public GPSmoothingFilter()
         {
@@ -35,64 +32,83 @@ namespace Gaze_Point.GPModel.GPRecord
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                AlphaMin = double.Parse(config["Smoothing:AlphaMin"]);
-                AlphaMax = double.Parse(config["Smoothing:AlphaMax"]);
-                Sensitivity = double.Parse(config["Smoothing:Sensitivity"]);
-                distanceThreshold = double.Parse(config["Smoothing:DistanceThreshold"]);
+                _alphaMin = double.Parse(config["Smoothing:AlphaMin"]);
+                _alphaMax = double.Parse(config["Smoothing:AlphaMax"]);
+                _sensitivity = double.Parse(config["Smoothing:Sensitivity"]);
+                _distanceThreshold = double.Parse(config["Smoothing:DistanceThreshold"]);
             }
             catch
             {
-                // Fallback in caso di errore caricamento file
-                AlphaMin = 0.01;
-                AlphaMax = 0.3;
-                Sensitivity = 3.0;
+                // Fallback
+                _alphaMin = 0.009;
+                _alphaMax = 0.09;
+                _sensitivity = 0.6;
+                _distanceThreshold = 0.02;
             }
         }
 
+
+        /// <summary>
+        /// Orchestrates the adaptive smoothing process on the provided gaze data.
+        /// </summary>
+        /// <param name="data">The gaze data record to be smoothed.</param>
+        /// <returns>The processed GPData with filtered coordinates.</returns>
         public GPData AdaptiveSmoothing(GPData data)
         {
             if (data == null) return null;
 
-            // 1. CALCOLO DELLA DISTANZA (Euclidea) tra il nuovo dato e l'ultima posizione filtrata
-            double dx = data.BPOGX - _lastX;
-            double dy = data.BPOGY - _lastY;
-            double distance = Math.Sqrt(dx * dx + dy * dy);
+            double distance = ComputeDistance(data.BPOGX, data.BPOGY);
 
-            if(distance > distanceThreshold)
+            if(distance > _distanceThreshold)
             {
-                // 2. CALCOLO DINAMICO DI ALFA
-                // Più distanza c'è, più alfa aumenta (entro i limiti stabiliti)
-                double dynamicAlpha = AlphaMin + (distance * Sensitivity);
-
-                // Controllo di Alfa: deve stare nel range [AlphaMin, AlphaMax]
-                if (dynamicAlpha < AlphaMin)
-                {
-                    dynamicAlpha = AlphaMin; // Se è troppo piccolo, alzalo al minimo
-                }
-                else if (dynamicAlpha > AlphaMax)
-                {
-                    dynamicAlpha = AlphaMax; // Se è troppo grande, abbassalo al massimo
-                }
-
-                // 3. FILTRO BUTTERWORTH DEL PRIMO ORDINE
-                // NuovaPos = (Alfa * NuovoDato) + ((1 - Alfa) * VecchiaPos)
-                double smoothX = (dynamicAlpha * data.BPOGX) + ((1 - dynamicAlpha) * _lastX);
-                double smoothY = (dynamicAlpha * data.BPOGY) + ((1 - dynamicAlpha) * _lastY);
-
-                // 4. AGGIORNAMENTO MEMORIA E DATI
-                _lastX = smoothX;
-                _lastY = smoothY;
-
-                data.BPOGX = smoothX;
-                data.BPOGY = smoothY;
-
-                return data;
-            } else
+                double alpha = CalculateDynamicAlpha(distance);
+                ApplyFilter(data, alpha);
+            }
+            else
             {
                 data.BPOGX = _lastX;
-                data.BPOGY = _lastY; 
-                return data;
+                data.BPOGY = _lastY;
             }
+            return data;
         }
+
+
+        /// <summary>
+        /// Determines the filter coefficient (Alpha) based on movement magnitude, clamped between configured minimum and maximum limits. 
+        /// </summary>
+        private double CalculateDynamicAlpha(double distance)
+        {
+            double alpha = _alphaMin + (distance * _sensitivity);
+            
+            return Math.Max(_alphaMin, Math.Min(_alphaMax, alpha));
+        }
+
+
+        /// <summary>
+        /// Calculates the weighted avarage between the current gaze point and the previous position to reduce sudden jumps in the signal.
+        /// </summary>
+        /// <param name="data">The gaze data object to be modified with smoothed coordinates.</param>
+        /// <param name="alpha">The dynamic weighting factor (0.0 to 1.0) defining filter strenght.</param>
+        private void ApplyFilter(GPData data, double alpha)
+        {
+            double smoothX = (alpha * data.BPOGX) + ((1 - alpha) * _lastX);
+            double smoothY = (alpha * data.BPOGY) + ((1 - alpha) * _lastY);
+
+            _lastX = smoothX;
+            _lastY = smoothY;
+
+            data.BPOGX = smoothX;
+            data.BPOGY = smoothY;
+        }
+
+
+        private double ComputeDistance(double newX, double newY)
+        {
+            double dx = newX - _lastX;
+            double dy = newY - _lastY;
+
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
     }
 }

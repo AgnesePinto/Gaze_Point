@@ -6,10 +6,10 @@
   },
 
   "Smoothing": {
-    "AlphaMin": 0.009,
     "AlphaMax": 0.09,
+    "AlphaMin": 0.009,
     "Sensitivity": 0.6,
-    "DistanceThreshold" :  0.02
+    "DistanceThreshold": 0.02
   },
 
   "Interaction": {
