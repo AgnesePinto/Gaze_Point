@@ -1,7 +1,8 @@
 {
   "Validation": {
+    "MaxRange": 0.99,
     "MinRange": 0.01,
-    "MaxRange": 0.99
+    "SamplesBlankingPeriod": 3
   },
 
   "Smoothing": {

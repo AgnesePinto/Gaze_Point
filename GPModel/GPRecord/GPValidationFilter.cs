@@ -4,17 +4,28 @@ using Microsoft.Extensions.Configuration;
 
 namespace Gaze_Point.GPModel.GPRecord
 {
-    internal class GPValidationFilter
+
+    /// <summary>
+    /// Handles gaze data validation, blink recovery management and spatial constraints.
+    /// Ensures signal continuity by masking loss of tracking periods and clamping coordinates within a safe visual range.
+    /// </summary>
+    /// <remarks>
+    /// This filter implements a "Blanking Period" to ignore unstable samples immediatly after the eyes re-open.
+    /// </remarks>
+    /// <author>Agnese Pinto</author>
+     
+
+    public class GPValidationFilter
     {
+        private readonly int _recoverySamples;
+        private readonly double _minRange;
+        private readonly double _maxRange;
+
         private double _lastValidX = 0.5;
         private double _lastValidY = 0.5;
-
-        // Variabili per il Blanking Period
+        private int _recoveryCounter = 0;
         private bool _wasValid = true;
-        private int _recoverySamples = 0;
 
-        private readonly double MinRange;
-        private readonly double MaxRange;
 
         public GPValidationFilter()
         {
@@ -25,13 +36,16 @@ namespace Gaze_Point.GPModel.GPRecord
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                MinRange = double.Parse(config["Validation:MinRange"]);
-                MaxRange = double.Parse(config["Validation:MaxRange"]);
+                _minRange = double.Parse(config["Validation:MinRange"]);
+                _maxRange = double.Parse(config["Validation:MaxRange"]);
+                _recoverySamples = int.Parse(config["Validation:SamplesBlankingPeriod"]);
             }
             catch
             {
-                MinRange = 0.01;
-                MaxRange = 0.99;
+                // Fallback
+                _minRange = 0.01;
+                _maxRange = 0.99;
+                _recoverySamples = 3;
             }
         }
 
@@ -39,44 +53,75 @@ namespace Gaze_Point.GPModel.GPRecord
         {
             if (rawData == null) return null;
 
-            bool currentValid = IsValid(rawData);
+            BlinkRecovery(rawData);
 
-            // RILEVAZIONE RIAPERTURA OCCHI (Transizione da Invalido a Valido)
-            if (currentValid && !_wasValid)
+            if(!IsValid(rawData) || _recoveryCounter > 0)
             {
-                _recoverySamples = 3; // Imposta il Blanking Period (circa 20ms a 150Hz)
-            }
-            _wasValid = currentValid;
-
-            // LOGICA DI FILTRAGGIO E BLANKING
-            if (!currentValid || _recoverySamples > 0)
-            {
-                // Se l'occhio è chiuso OPPURE siamo nel periodo di stabilizzazione post-blink:
-                // Sovrascriviamo con l'ultima posizione stabile
-                rawData.BPOGX = _lastValidX;
-                rawData.BPOGY = _lastValidY;
-
-                // Forziamo BPOGV a 1 solo internamente per non interrompere il flusso dei filtri successivi
-                rawData.BPOGV = 1;
-
-                // Scalo il contatore per i cicli successivi
-                if (_recoverySamples > 0) _recoverySamples--;
+                FreezeToLastValid(rawData);
             }
             else
             {
-                // Se il dato è reale e stabilizzato, aggiorniamo la memoria
-                _lastValidX = rawData.BPOGX;
-                _lastValidY = rawData.BPOGY;
+                UpdateData(rawData);
             }
 
-            // 2. RETTANGOLO DI DENOISE (Clamping)
-            rawData.BPOGX = Math.Max(MinRange, Math.Min(MaxRange, rawData.BPOGX));
-            rawData.BPOGY = Math.Max(MinRange, Math.Min(MaxRange, rawData.BPOGY));
+            Clamping(rawData);
 
             return rawData;
         }
 
-        public bool IsValid(GPData rawData)
+
+        /// <summary>
+        /// Detects the transition from an invalid state (eye closed) to a valid state and initializes the recovery sample counter.
+        /// </summary>
+        private void BlinkRecovery(GPData data)
+        {
+            bool currentValid = IsValid(data);
+
+            if(currentValid && !_wasValid)
+            {
+                _recoveryCounter = _recoverySamples;
+            }
+            _wasValid = currentValid;
+        }
+
+
+        /// <summary>
+        /// Replaces current coordinates with the last known stable position and manage the countdown for the recovery period.
+        /// </summary>
+        private void FreezeToLastValid(GPData data)
+        {
+            data.BPOGX = _lastValidX;
+            data.BPOGY = _lastValidY;
+            data.BPOGV = 1;
+
+            if(_recoveryCounter > 0)
+            {
+                _recoveryCounter--;
+            }
+        }
+
+
+        /// <summary>
+        /// Updates the internal memory with the most recent stable gaze coordinates.
+        /// </summary>
+        private void UpdateData(GPData data)
+        {
+            _lastValidX = data.BPOGX;
+            _lastValidY = data.BPOGY;
+        }
+
+
+        /// <summary>
+        /// Restricts gaze coordinates within the configurated safe boundaries to prevent the cursor from leaving the designed screen area.
+        /// </summary>
+        private void Clamping(GPData data)
+        {
+            data.BPOGX = Math.Max(_minRange, Math.Min(_maxRange, data.BPOGX));
+            data.BPOGY = Math.Max(_minRange, Math.Min(_maxRange, data.BPOGY));
+        }
+
+
+        private bool IsValid(GPData rawData)
         {
             return rawData.BPOGV == 1;
         }
