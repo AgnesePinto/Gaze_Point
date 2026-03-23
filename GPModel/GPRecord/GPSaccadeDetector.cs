@@ -1,13 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gaze_Point.GPModel.GPRecord
 {
+
+    /// <summary>
+    /// Evaluates gaze data to detect significant saccadic movements.
+    /// Distinguishes btween intentional rapid eye shifts and involuntary micro-oscillations based on magnitude thresholds defined in pixels.
+    /// </summary>
+    /// <author>Agnese Pinto</author>
+     
+
     public class GPSaccadeDetector
     {
         private readonly double _saccadeThresholdMin;
@@ -22,17 +25,23 @@ namespace Gaze_Point.GPModel.GPRecord
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                _saccadeThresholdMin = double.Parse(config["Interaction:SaccadeThresholdMin"]);
-                _saccadeThresholdMax = double.Parse(config["Interaction:SaccadeThresholdMax"]);
+                _saccadeThresholdMin = double.Parse(config["Saccade:SaccadeThresholdMin"]);
+                _saccadeThresholdMax = double.Parse(config["Saccade:SaccadeThresholdMax"]);
             }
             catch
             {
-                _saccadeThresholdMin = 30.0; // Fallback
-                _saccadeThresholdMax = 100.0; // Fallback
+                // Fallback
+                _saccadeThresholdMin = 30.0; 
+                _saccadeThresholdMax = 100.0; 
             }
         }
 
-        // Rileva uno spostamento intenzionale rilevante
+
+        /// <summary>
+        /// Analyzes the saccade magnitude of the provided data record to determine if an intentional gaze shift has occurred.
+        /// </summary>
+        /// <param name="data">The gaze data record containign saccade metrics.</param>
+        /// <returns>True if the movement magnitude falls within the defines intentional range; otherwise false.</returns>
         public bool IsSignificantSaccade(GPData data)
         {
             if (data != null)

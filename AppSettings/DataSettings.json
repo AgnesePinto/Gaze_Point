@@ -12,12 +12,15 @@
     "DistanceThreshold": 0.02
   },
 
+  "Saccade": {
+    "SaccadeThresholdMax": 100.0,
+    "SaccadeThresholdMin": 30.0
+  },
+
   "Interaction": {
     "DwellTimeMs": 30,
     "DistanceTolerance": 35.0,                      
     "AngleTolerance": 45,
-    "SaccadeThresholdMin": 30.0,
-    "SaccadeThresholdMax": 100.0,
     "LockTime": 1500.0,
     "LargeMovementThreshold": 0.10,
     "SmallMovementThreshold": 0.03
