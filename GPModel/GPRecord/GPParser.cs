@@ -1,8 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Collections.Generic;
-using Gaze_Point.GPModel.GPRecord;
-
+﻿using System.Globalization;
 
 namespace Gaze_Point.GPModel.GPRecord
 {
