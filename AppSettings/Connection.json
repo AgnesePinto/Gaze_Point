@@ -1,4 +1,5 @@
 {
+  "BufferSize": 4096,
   "IpAddress": "127.0.0.1",
   "IpPort": 4242
 }
