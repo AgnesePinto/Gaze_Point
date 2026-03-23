@@ -1,32 +1,32 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Gaze_Point.GPModel.GPRecord
 {
-    public class GPConverter
+
+    /// <summary>
+    /// Provides spatial transformation methods to convert normalized gaze data into physical, logical and window-relative coordinate systems.
+    /// </summary>
+    /// <author>Agnese Pinto</author>
+     
+
+    public static class GPConverter
     {
         /// <summary>
-        /// Converte le coordinate normalizzate (0-1) in Pixel Fisici (interi).
-        /// Necessario per le API di sistema come SetCursorPos.
+        /// Converts normalized gaze coordinates (0.0 to 1.0) into physical screen pixels.
         /// </summary>
-
-        // Coordinate traduzione coordinate normalizzate in coordinate in pixel
+        /// <param name="data">The normalized gaze data record.</param>
+        /// <returns>A tuple containing the X and Y coordinates in physical pixels.</returns>
         public static (int X, int Y) ToPhysicalScreenPoint(GPData data)
         {
-            double gpX = data.BPOGX;  
-            double gpY = data.BPOGY;
+            if (data == null) return (0, 0);
 
-            // Inizializza i fattori di scala ad 1, cioè a 100% su windows
             double scaleX = 1.0;
             double scaleY = 1.0;
 
-            //Controlla se esiste una finestra attiva per calcolare lo scaling DPI
             if (Application.Current.MainWindow != null)
             {
-                // Ottiene la sorgene visiva, cioè il legame tra software e hardware visivo
                 var source = PresentationSource.FromVisual(Application.Current.MainWindow);
 
-                // Se il sistema di randering è attivo, vengono rcuperati gli zoom (M11 e M22)
                 if (source?.CompositionTarget != null)
                 {
                     scaleX = source.CompositionTarget.TransformToDevice.M11;
@@ -34,37 +34,42 @@ namespace Gaze_Point.GPModel.GPRecord
                 }
             }
 
-            // Calcolo: (Dato normalizzato * Larghezza Logica) * Scala = Pixel Fisici
-            // 1. (gpX * SystemParameters.PrimaryScreenWidth): Trova la posizione logica (es. 960 su 1920)
-            // 2. (* scaleX): Moltiplica per lo zoom per trovare il pixel fisico (es. 960 * 1.25 = 1200)
-            // 3. (int): Converte il decimale in numero intero (il cursore non sta tra due pixel)
-            int physX = (int)(gpX * SystemParameters.PrimaryScreenWidth * scaleX);
-            int physY = (int)(gpY * SystemParameters.PrimaryScreenHeight * scaleY);
+            int physX = (int)(data.BPOGX * SystemParameters.PrimaryScreenWidth * scaleX);
+            int physY = (int)(data.BPOGY * SystemParameters.PrimaryScreenHeight * scaleY);
 
             return (physX, physY);
         }
 
-        // Conversione coordinate da pixel a coordinate relative alla finestra attiva 
-        // Viene utilizzato dal target provider
+
+        /// <summary>
+        /// Translates a physical screen point into a point relative to the coordinates system of a specific window.
+        /// </summary>
+        /// <param name="physicalPoint">The screen point in physical pixels.</param>
+        /// <param name="window">The target window for coordinate mapping.</param>
+        /// <returns>A point object relative to window's top-left corner.</returns>
         public static Point ToWindowPoint(Point physicalPoint, Window window)
         {
-            // Prende il punto fisico dello schermo (pixel reali) 
-            // e lo traduce in un punto logico interno alla finestra.
-            // Gestisce da solo: posizione finestra e zoom di Windows (125%, 150%, ecc.)
+            if (window == null) return (new Point(0, 0));
+
             return window.PointFromScreen(physicalPoint);
         }
 
-        // Conversione coordinate da pixel a coordinate DPI
-        // Viene utilizzata dal gaze cursor
+
+        /// <summary>
+        /// Converts normalized gaze coordinates (0.0 to 1.0) into WPF logical pixels (DPI-indipendent).
+        /// </summary>
+        /// <param name="data">The normalized gaze data record.</param>
+        /// <returns>A tuple containing the X and Y coordinates in logical pixels.</returns>
         public static (double X, double Y) ToLogicalScreenPoint(GPData data)
         {
-            // Calcolo: Dato normalizzato (0-1) * Larghezza Schermo Logica
-            // SystemParameters.PrimaryScreenWidth restituisce già il valore "pulito" dallo zoom DPI
+            if (data == null) return (0.0, 0.0);
+
             double logX = data.BPOGX * SystemParameters.PrimaryScreenWidth;
             double logY = data.BPOGY * SystemParameters.PrimaryScreenHeight;
-
+            
             return (logX, logY);
         }
+
     }
 }
 
