@@ -135,6 +135,7 @@
     <Compile Include="GPModel\GPCursor\GPCursor.cs" />
     <Compile Include="GPModel\GPCursor\GPCursorController.cs" />
     <Compile Include="GPModel\GPInteraction\GPDwellManager.cs" />
+    <Compile Include="GPModel\GPInteraction\GPInteractiveElements.cs" />
     <Compile Include="GPModel\GPInteraction\GPMovementDetector.cs" />
     <Compile Include="GPModel\GPInteraction\GPTargetLocker.cs" />
     <Compile Include="GPModel\GPInteraction\GPTargetProvider.cs" />
