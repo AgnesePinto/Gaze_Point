@@ -7,16 +7,24 @@ using System.IO;
 
 namespace Gaze_Point.GPModel.GPInteraction
 {
+
+    /// <summary>
+    /// Temporarly locks interactive updates to collect a series of gaze samples.
+    /// This period allows for movement analysis without immediate re-triggering of UI elements.
+    /// </summary>
+    /// <author>Agnese Pinto</author>
+    
+
     public class GPTargetLocker
     {
         private readonly DispatcherTimer _timer;
-        private bool _isLocked;
         private readonly double _lockTime;
+
+        private bool _isLocked;
         private readonly List<Point> _collectedPoints = new List<Point>();
 
         public bool IsLocked => _isLocked;
 
-        // L'evento restituisce la lista di punti accumulati al termine del blocco
         public event Action<List<Point>> OnLockExpired;
 
         public GPTargetLocker()
@@ -28,10 +36,11 @@ namespace Gaze_Point.GPModel.GPInteraction
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                _lockTime = double.Parse(config["Interaction:LockTime"]);
+                _lockTime = double.Parse(config["TargetLocker:LockTime"]);
             }
             catch
             {
+                // Fallback
                 _lockTime = 1500.0;
             }
 
@@ -40,23 +49,28 @@ namespace Gaze_Point.GPModel.GPInteraction
             _timer.Tick += (s, e) => ReleaseLock();
         }
 
+
+        /// <summary>
+        /// Activates the lock, clearing previous data and starting countdown.
+        /// </summary>
         public void Activate()
         {
-            _collectedPoints.Clear(); // Reset automatico dei punti ad ogni nuova attivazione
+            _collectedPoints.Clear(); 
             _isLocked = true;
             _timer.Stop();
             _timer.Start();
         }
 
         /// <summary>
-        /// Metodo chiamato da GPService per passare i dati durante il blocco.
-        /// Gestisce internamente il filtro di validità (BPOGV == 1).
+        /// Processes and stores a gaze point if the lock is active and the data is valid.
         /// </summary>
+        /// <param name="x">The normalized X coordinate.</param>
+        /// <param name="y">The normalized Y coordinate.</param>
+        /// <param name="bpogv">The validity flag from the eye-tracker (1 = valid).</param>
         public void ProcessPoint(double x, double y, int bpogv)
         {
             if (!_isLocked) return;
 
-            // Filtro: scartiamo i dati di "riparazione" o invalidi (es. blink)
             if (bpogv == 1)
             {
                 _collectedPoints.Add(new Point(x, y));
@@ -68,7 +82,6 @@ namespace Gaze_Point.GPModel.GPInteraction
             _timer.Stop();
             _isLocked = false;
 
-            // Inviamo una copia della lista corretta aggiornata per evitare problemi di riferimento
             OnLockExpired?.Invoke(new List<Point>(_collectedPoints));
 
             _collectedPoints.Clear();
