@@ -10,7 +10,7 @@ namespace Gaze_Point.Connection
 
     /// <summary>
     /// Manages TCP/IP communication with the Gazepoint eye-tracker.
-    /// Handles the connestion lifecycle, command transiìmission and buffered data reconstruction using a line-terminated protocol.
+    /// Handles the connestion lifecycle, command transimission and buffered data reconstruction using a line-terminated protocol.
     /// </summary>
     /// <remarks>
     /// This implementation follows the Gazepoint API protocol (TCP/IP XML/String).
