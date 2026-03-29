@@ -1,4 +1,5 @@
 {
+
   "Validation": {
     "MaxRange": 0.99,
     "MinRange": 0.01,
@@ -17,13 +18,32 @@
     "SaccadeThresholdMin": 30.0
   },
 
-  "Interaction": {
-    "DwellTimeMs": 30,
-    "DistanceTolerance": 35.0,                      
+  "Cursor": {
+    "CursorSize": 40.0
+  },
+
+  "TargetProvider": {
+    "DistanceTolerance": 35.0,
     "AngleTolerance": 45,
-    "LockTime": 1500.0,
+    "CacheDuration": 300
+  },
+
+  "DwellTimeManager": {
+    "DwellTime": 30
+  },
+
+  "TargetLocker": {
+    "LockTime": 1500.0
+  },
+
+  "MovementDetector": {
     "LargeMovementThreshold": 0.10,
     "SmallMovementThreshold": 0.03
+  },
+
+  "Service": {
+    "RefreshInterval": 6.6
   }
+
 }
 
