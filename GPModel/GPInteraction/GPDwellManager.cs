@@ -6,15 +6,21 @@ using Microsoft.Extensions.Configuration;
 
 namespace Gaze_Point.GPModel.GPInteraction
 {
+
+    /// <summary>
+    /// Monitors gaze duration on UI elements to detect stable fixation (dwell time).
+    /// Triggers an event when the gaze remains on an element longer than the configured threshold.
+    /// </summary>
+    /// <author>Agnese Pinto</author>
+    
+
     public class GPDwellManager
     {
+        private readonly TimeSpan _dwellTime;
+
         private FrameworkElement _currentElement;
         private DateTime _focusStartTime;
 
-        // Tempo necessario per considerare un elemento "fissato" (es. 300ms)
-        private readonly TimeSpan _dwellTime;
-
-        // Evento che scatta quando un elemento è stato fissato per il tempo stabilito
         public event Action<FrameworkElement> OnElementFocused;
 
         public GPDwellManager()
@@ -26,54 +32,59 @@ namespace Gaze_Point.GPModel.GPInteraction
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                int ms = int.Parse(config["Interaction:DwellTimeMs"]);
+                int ms = int.Parse(config["DwellTimeManager:DwellTimeMs"]);
                 _dwellTime = TimeSpan.FromMilliseconds(ms);
             }
             catch
             {
-                _dwellTime = TimeSpan.FromMilliseconds(300);
+                // Fallback
+                _dwellTime = TimeSpan.FromMilliseconds(30);
             }
         }
 
+
+        /// <summary>
+        /// Evaluates the current element under gaze to track fixation progress.
+        /// </summary>
+        /// <param name="elementUnderGaze">The UI element currently targeted by the gaze provider.</param>
         public void Update(FrameworkElement elementUnderGaze)
         {
-            // CASO 1: Non stiamo guardando nulla di rilevante
             if (elementUnderGaze == null)
             {
                 _currentElement = null;
                 return;
             }
 
-            // CASO 2: Lo sguardo si è spostato su un NUOVO elemento
             if (elementUnderGaze != _currentElement)
             {
                 _currentElement = elementUnderGaze;
-                _focusStartTime = DateTime.Now; // Facciamo ripartire il cronometro
+                _focusStartTime = DateTime.Now; 
                 return;
             }
 
-            // CASO 3: Stiamo continuando a guardare lo stesso elemento
             var fixationTime = DateTime.Now - _focusStartTime;
             if (fixationTime >= _dwellTime)
             {
-                // Se il tempo trascorso supera la soglia, lanciamo l'evento di "Focus avvenuto"
                 OnElementFocused?.Invoke(_currentElement);
 
-                // Resettiamo il timer per lanciare l'evento una sola volta per fissazione
                 _focusStartTime = DateTime.MaxValue;
             }
         }
 
-        public void ResetDwellTimer()
-        {
-            // Resettiamo il tempo di inizio fissazione. 
-            _focusStartTime = DateTime.Now;
-        }
 
+        /// <summary>
+        /// Resets the internal state, clearing the current elements and timers.
+        /// </summary>
         public void Clear()
         {
             _currentElement = null;
             _focusStartTime = DateTime.MinValue;
+        }
+
+
+        public void ResetDwellTimer()
+        {
+            _focusStartTime = DateTime.Now;
         }
     }
 }
