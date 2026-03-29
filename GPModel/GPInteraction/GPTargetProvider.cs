@@ -37,10 +37,10 @@ namespace Gaze_Point.GPModel.GPInteraction
                     .AddJsonFile("AppSettings/DataSettings.json", true)
                     .Build();
 
-                _distanceTolerance = double.TryParse(config["TargetProvider:DistanceTolerance"]);
-                _angleTolerance = int.TryParse(config["TargetProvider:AngleTolerance"]);
+                _distanceTolerance = double.Parse(config["TargetProvider:DistanceTolerance"]);
+                _angleTolerance = int.Parse(config["TargetProvider:AngleTolerance"]);
 
-                int cacheMs = int.TryParse(config["TargetProvider:CacheDuration"]);
+                int cacheMs = int.Parse(config["TargetProvider:CacheDuration"]);
                 _cacheDuration = TimeSpan.FromSeconds(cacheMs);
 
             }
