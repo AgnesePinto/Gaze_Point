@@ -9,6 +9,14 @@ using System;
 
 namespace Gaze_Point.GPViewModel
 {
+
+    /// <summary>
+    /// Manages form interactions to decouple UI logic from gaze events.
+    /// Maps framework elements to specific handlers for focus and action execution.
+    /// </summary>
+    /// <author>Agnese Pinto</author>
+    
+
     public class FormViewModel : INotifyPropertyChanged
     {
         private readonly GPService _gpService;
@@ -27,20 +35,6 @@ namespace Gaze_Point.GPViewModel
         public ICommand StopCommand { get; }
         public ICommand PressEnterCommand { get; }
 
-        private string _nome;
-        public string Nome { get => _nome; set { _nome = value; OnPropertyChanged(nameof(Nome)); } }
-
-        private string _cognome;
-        public string Cognome { get => _cognome; set { _cognome = value; OnPropertyChanged(nameof(Cognome)); } }
-
-        private string _email;
-        public string Email { get => _email; set { _email = value; OnPropertyChanged(nameof(Email)); } }
-
-        private string _telefono;
-        public string Telefono { get => _telefono; set { _telefono = value; OnPropertyChanged(nameof(Telefono)); } }
-
-        private string _cap;
-        public string CAP { get => _cap; set { _cap = value; OnPropertyChanged(nameof(CAP)); } }
 
         public FormViewModel(GPService existingService)
         {
@@ -54,14 +48,10 @@ namespace Gaze_Point.GPViewModel
                     _currentGazeElement = element;
                     FocusedElementName = element?.Name;
 
-                    // FEEDBACK PER COMBOBOXITEM
                     if (element is ComboBoxItem item)
                     {
-                        // 'IsHighlighted' è la proprietà interna di WPF per l'elemento 
-                        // che l'utente sta "puntando" nella lista (senza averlo ancora cliccato).
-                        // Lo usiamo per attivare il feedback visivo.
-                        item.IsSelected = false; // Non lo selezioniamo ancora definitivamente
-                        item.Focus();          // Diamo il focus per attivare gli stili visivi
+                        item.IsSelected = false; 
+                        item.Focus();        
                     }
                 });
             };
@@ -75,25 +65,20 @@ namespace Gaze_Point.GPViewModel
             {
                 if (_currentGazeElement != null)
                 {
-                    // 1. Gestione TextBox
                     if (_currentGazeElement is TextBox tb)
                     {
                         tb.Focus();
                         tb.CaretIndex = tb.Text.Length;
                     }
-                    // 2. NOVITÀ: Gestione ComboBox (Apertura tendina)
                     else if (_currentGazeElement is ComboBox cb)
                     {
                         cb.IsDropDownOpen = !cb.IsDropDownOpen;
                         cb.Focus();
-                        // NOVITÀ: Se la tendina si è aperta, chiediamo al servizio di 
-                        // scansionare immediatamente i nuovi elementi (ComboBoxItem)
                         if (cb.IsDropDownOpen)
                         {
                             _gpService.RefreshInteractionTargets();
                         }
                     }
-                    // 3. NOVITÀ: Gestione ComboBoxItem (Selezione elemento nella tendina)
                     else if (_currentGazeElement is ComboBoxItem item)
                     {
                         var parentCombo = ItemsControl.ItemsControlFromItemContainer(item) as ComboBox;
@@ -102,20 +87,16 @@ namespace Gaze_Point.GPViewModel
                             parentCombo.SelectedItem = item;
                             parentCombo.IsDropDownOpen = false;
 
-                            // 1. Forza il focus fisico sulla combo
                             parentCombo.Focus();
 
-                            // 2. Resetta lo stato del servizio SENZA cancellare l'evento
                             _gpService.ResetInteractionState();
 
-                            // 3. Importante: pulisci il riferimento locale nel VM
                             _currentGazeElement = parentCombo;
                             FocusedElementName = parentCombo.Name;
                         }
                     }
                     else
                     {
-                        // 4. Gestione standard per altri elementi (Button, CheckBox, RadioButton)
                         _currentGazeElement.Focus();
 
                         if (_currentGazeElement is Button b)
