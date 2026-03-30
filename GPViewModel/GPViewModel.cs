@@ -9,26 +9,55 @@ using System;
 
 namespace Gaze_Point.GPViewModel
 {
+
+    /// <summary>
+    /// Coordinates the main application logic and handles navigation between the main screen and the form.
+    /// Manages high-level commands for starting and stopping the gaze tracking session.
+    /// </summary>
+    /// <author>Agnese Pinto</author>
+    
+
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly GPService _gpService;
+        private FrameworkElement _currentGazeElement;
+        private string _focusedElementName;
 
         public GPCursor MyGazeCursor => _gpService.GazeCursor;
         public bool IsCursorVisible => _gpService.IsCursorVisible;
 
-        private FrameworkElement _currentGazeElement;
-        private string _focusedElementName;
 
+        /// <summary>
+        /// Gets or sets the name of the UI element currently targeted by the gaze.
+        /// </summary>
         public string FocusedElementName
         {
             get => _focusedElementName;
             set { _focusedElementName = value; OnPropertyChanged(nameof(FocusedElementName)); }
         }
 
+
+        /// <summary>
+        /// Command to initiate the gaze tracking and open the form window.
+        /// </summary>
         public ICommand StartCommand { get; }
+
+
+        /// <summary>
+        /// Command to stop the service and shut down the application.
+        /// </summary>
         public ICommand StopCommand { get; }
+
+
+        /// <summary>
+        /// Command to simulate a click (Enter) on the focus UI element.
+        /// </summary>
         public ICommand PressEnterCommand { get; }
 
+
+        /// <summary>
+        /// Initialize a new instance of the MainViewModel and sets up service interactions.
+        /// </summary>
         public MainViewModel()
         {
             _gpService = new GPService();
@@ -51,7 +80,6 @@ namespace Gaze_Point.GPViewModel
 
                 var formWindow = new FormWindow();
 
-                // LOGICA IBRIDA: Reset immediato e scansione della nuova finestra
                 _gpService.UpdateWindowContext(formWindow);
 
                 var formViewModel = new FormViewModel(_gpService);
@@ -69,7 +97,6 @@ namespace Gaze_Point.GPViewModel
             });
         }
 
-        // Metodo per gestire l'aggiornamento del focus
         private void OnGazeFocusUpdate(FrameworkElement element)
         {
             Application.Current.Dispatcher.Invoke(() =>
