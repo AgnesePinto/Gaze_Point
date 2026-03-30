@@ -3,14 +3,26 @@ using System.Windows.Input;
 
 namespace Gaze_Point.GPViewModel
 {
-    // --- RelayCommand ---
-    // Questa è una classe standard per gestire i click in MVVM.
-    // Incapsula un'azione (Action) da eseguire quando viene premuto un bottone.
+    
+    /// <summary>
+    /// A standard implementation of the ICommand interface for the MVVM pattern.
+    /// Encapsulates a delegate (Action) to be executed by UI elements.
+    /// </summary>
+    /// <author>Agnese Pinto</author>
+    
+
     public class RelayCommand : ICommand
     {
         private readonly Action<object> _execute;
         private readonly Predicate<object> _canExecute;
 
+
+        /// <summary>
+        /// Initializes a new instance of the RelayCommand.
+        /// </summary>
+        /// <param name="execute">The logic to be executed.</param>
+        /// <param name="canExecute">The logic that determines if the command can execute.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
