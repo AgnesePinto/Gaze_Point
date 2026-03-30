@@ -19,7 +19,7 @@ using static System.Net.Mime.MediaTypeNames;
 namespace Gaze_Point
 {
     /// <summary>
-    /// Logica di interazione per MainWindow.xaml
+    /// Interaction logic MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {

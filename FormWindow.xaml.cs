@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace Gaze_Point
 {
     /// <summary>
-    /// Logica di interazione per FormWindow.xaml
+    /// Interaction Logic FormWindow.xaml
     /// </summary>
     public partial class FormWindow : Window
     {
@@ -28,10 +28,8 @@ namespace Gaze_Point
             FrameworkElement.GotFocusEvent, new RoutedEventHandler(OnElementFocusedByKeyboard));
         }
 
-        // 2. IL METODO "PONTE" (fuori dal costruttore)
         private void OnElementFocusedByKeyboard(object sender, RoutedEventArgs e)
         {
-            // Il Code-behind passa l'informazione al ViewModel
             if (DataContext is FormViewModel vm && e.OriginalSource is FrameworkElement fe)
             {
                 vm.SetFocusedElement(fe.Name);

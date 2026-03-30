@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 namespace Gaze_Point
 {
     /// <summary>
-    /// Logica di interazione per GazeCursorWindow.xaml
+    /// Interaction Logic GazeCursorWindow.xaml
     /// </summary>
     public partial class GazeCursorWindow : Window
     {
