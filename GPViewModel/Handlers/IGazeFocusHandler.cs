@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows;
 
 namespace Gaze_Point.GPViewModel.Handlers
 {
-    internal interface IGazeFocusHandler
+    public interface IGazeFocusHandler
     {
+        void OnFocus(FrameworkElement element);
     }
 }

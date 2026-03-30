@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace Gaze_Point.GPViewModel.Handlers
 {
-    internal class TextBoxHandler
+    public class TextBoxHandler : IGazeActionHandler, IGazeFocusHandler
     {
+        public void OnFocus(FrameworkElement element) { /* Standart feedback from XAML */ }
+
+        public void Execute (FrameworkElement element) 
+        {
+            if (element is TextBox tb)
+            {
+                tb.Focus();
+                tb.CaretIndex = tb.Text.Length;
+            }
+        }
     }
 }

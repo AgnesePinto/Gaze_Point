@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Gaze_Point.Services;
+using System.Windows;
 
 namespace Gaze_Point.GPViewModel.Handlers
 {
-    internal interface IGazeActionHandler
+    public interface IGazeActionHandler
     {
+        void Execute(FrameworkElement element, GPService service);
     }
 }
