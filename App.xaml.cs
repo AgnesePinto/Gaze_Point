@@ -8,9 +8,6 @@ using System.Windows;
 
 namespace Gaze_Point
 {
-    /// <summary>
-    /// Logica di interazione per App.xaml
-    /// </summary>
     public partial class App : Application
     {
     }
