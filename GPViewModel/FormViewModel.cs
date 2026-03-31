@@ -34,7 +34,7 @@ namespace Gaze_Point.GPViewModel
 
         public ICommand StopCommand { get; }
         public ICommand PressEnterCommand { get; }
-
+        public ICommand ReturnToMainCommand { get; }
 
         public FormViewModel(GPService existingService)
         {
@@ -59,6 +59,18 @@ namespace Gaze_Point.GPViewModel
             StopCommand = new RelayCommand(_ => {
                 _gpService.Stop();
                 Application.Current.Shutdown();
+            });
+
+            ReturnToMainCommand = new RelayCommand(_ =>
+            {
+                _gpService.Stop();
+                var mainWindow = new MainWindow();
+                _gpService.UpdateWindowContext(mainWindow);
+                var oldWindow = Application.Current.MainWindow;
+                Application.Current.MainWindow = mainWindow;
+                mainWindow.Show();
+                oldWindow?.Close();
+                _gpService.Start();        
             });
 
             PressEnterCommand = new RelayCommand(_ =>

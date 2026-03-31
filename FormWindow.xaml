@@ -818,8 +818,27 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                     </RadioButton>
                 </StackPanel>
 
-
-
+                <!-- Exit button -->
+                <Button x:Name="BtnBack" 
+        Content="ESCI" 
+        Command="{Binding ReturnToMainCommand}"
+        VerticalAlignment="Bottom" 
+        HorizontalAlignment="Right" 
+        Margin="0,0,0,0" 
+        Focusable="False">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnBack">
+                                    <Setter Property="Background" Value="Crimson"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="BorderBrush" Value="DarkRed"/>
+                                    <Setter Property="BorderThickness" Value="5"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
 
             </StackPanel>
 
