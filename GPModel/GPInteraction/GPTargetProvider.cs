@@ -201,9 +201,11 @@ namespace Gaze_Point.GPModel.GPInteraction
                 var child = VisualTreeHelper.GetChild(parent, i);
                 if (child is FrameworkElement fe)
                 {
-                    bool isTargetType = fe is Button || fe is TextBox || fe is CheckBox ||
-                                       fe is RadioButton || fe is ComboBox || fe is ComboBoxItem ||
-                                       fe is MenuItem;
+                    
+                    bool isTargetType = GPInteractiveElements.InteractiveTypes.Contains(fe.GetType());
+                    //bool isTargetType = GPInteractiveElements.InteractiveTypes
+                    //.Any(t => t.IsAssignableFrom(fe.GetType()));
+
 
                     if (isTargetType && fe.IsVisible && fe.ActualWidth > 0)
                     {
@@ -216,6 +218,39 @@ namespace Gaze_Point.GPModel.GPInteraction
                 FindInteractiveElements(child, list);
             }
         }
+
+
+
+        //private void FindInteractiveElements(DependencyObject parent, List<FrameworkElement> list)
+        //{
+        //    if (parent == null) return;
+
+        //    if (parent is Popup popup && popup.IsOpen && popup.Child != null)
+        //    {
+        //        FindInteractiveElements(popup.Child, list);
+        //    }
+
+        //    int count = VisualTreeHelper.GetChildrenCount(parent);
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        var child = VisualTreeHelper.GetChild(parent, i);
+        //        if (child is FrameworkElement fe)
+        //        {
+        //            bool isTargetType = fe is Button || fe is TextBox || fe is CheckBox ||
+        //                               fe is RadioButton || fe is ComboBox || fe is ComboBoxItem ||
+        //                               fe is MenuItem;
+
+        //            if (isTargetType && fe.IsVisible && fe.ActualWidth > 0)
+        //            {
+        //                if (!string.IsNullOrEmpty(fe.Name) || fe is ComboBoxItem || fe is MenuItem)
+        //                {
+        //                    if (!list.Contains(fe)) list.Add(fe);
+        //                }
+        //            }
+        //        }
+        //        FindInteractiveElements(child, list);
+        //    }
+        //}
 
         private Rect GetElementBounds(FrameworkElement fe, Window window)
         {
