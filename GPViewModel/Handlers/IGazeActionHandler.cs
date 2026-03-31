@@ -1,10 +1,11 @@
-﻿using Gaze_Point.Services;
-using System.Windows;
+﻿using System.Windows;
+using Gaze_Point.Services;
 
 namespace Gaze_Point.GPViewModel.Handlers
 {
     public interface IGazeActionHandler
     {
-        void Execute(FrameworkElement element, GPService service);
+        FrameworkElement Execute(FrameworkElement element, GPService service);
     }
 }
+

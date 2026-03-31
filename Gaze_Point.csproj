@@ -161,6 +161,7 @@
     <Compile Include="GPViewModel\GPViewModel.cs" />
     <Compile Include="GPViewModel\Handlers\ComboBoxHandler.cs" />
     <Compile Include="GPViewModel\Handlers\DefaultActionHandler.cs" />
+    <Compile Include="GPViewModel\Handlers\GazeHandlerFActory.cs" />
     <Compile Include="GPViewModel\Handlers\IGazeActionHandler.cs" />
     <Compile Include="GPViewModel\Handlers\IGazeFocusHandler.cs" />
     <Compile Include="GPViewModel\Handlers\TextBoxHandler.cs" />

@@ -7,3 +7,4 @@ namespace Gaze_Point.GPViewModel.Handlers
         void OnFocus(FrameworkElement element);
     }
 }
+

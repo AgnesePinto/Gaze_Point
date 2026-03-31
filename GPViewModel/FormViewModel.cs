@@ -1,11 +1,12 @@
 ﻿using Gaze_Point.GPModel.GPCursor;
+using Gaze_Point.GPViewModel.Handlers;
 using Gaze_Point.Services;
+using System;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
-using System;
 
 namespace Gaze_Point.GPViewModel
 {
@@ -73,59 +74,73 @@ namespace Gaze_Point.GPViewModel
                 _gpService.Start();        
             });
 
+
             PressEnterCommand = new RelayCommand(_ =>
             {
-                if (_currentGazeElement != null)
-                {
-                    if (_currentGazeElement is TextBox tb)
-                    {
-                        tb.Focus();
-                        tb.CaretIndex = tb.Text.Length;
-                    }
-                    else if (_currentGazeElement is ComboBox cb)
-                    {
-                        cb.IsDropDownOpen = !cb.IsDropDownOpen;
-                        cb.Focus();
-                        if (cb.IsDropDownOpen)
-                        {
-                            _gpService.RefreshInteractionTargets();
-                        }
-                    }
-                    else if (_currentGazeElement is ComboBoxItem item)
-                    {
-                        var parentCombo = ItemsControl.ItemsControlFromItemContainer(item) as ComboBox;
-                        if (parentCombo != null)
-                        {
-                            parentCombo.SelectedItem = item;
-                            parentCombo.IsDropDownOpen = false;
+                if (_currentGazeElement == null) return;
 
-                            parentCombo.Focus();
+                var handler = GazeHandlerFactory.GetHandler(_currentGazeElement.GetType());
 
-                            _gpService.ResetInteractionState();
+                var resultElement = handler.Execute(_currentGazeElement, _gpService);
 
-                            _currentGazeElement = parentCombo;
-                            FocusedElementName = parentCombo.Name;
-                        }
-                    }
-                    else
-                    {
-                        _currentGazeElement.Focus();
-
-                        if (_currentGazeElement is Button b)
-                        {
-                            b.Command?.Execute(b.CommandParameter);
-                        }
-                        else if (_currentGazeElement is RadioButton rb)
-                        {
-                            rb.IsChecked = true;
-                        }
-                        else if (_currentGazeElement is CheckBox chk)
-                        {
-                            chk.IsChecked = !chk.IsChecked;
-                        }
-                    }
-                }
+                _currentGazeElement = resultElement;
+                FocusedElementName = resultElement?.Name;
             });
+
+
+            //PressEnterCommand = new RelayCommand(_ =>
+            //{
+            //    if (_currentGazeElement != null)
+            //    {
+            //        if (_currentGazeElement is TextBox tb)
+            //        {
+            //            tb.Focus();
+            //            tb.CaretIndex = tb.Text.Length;
+            //        }
+            //        else if (_currentGazeElement is ComboBox cb)
+            //        {
+            //            cb.IsDropDownOpen = !cb.IsDropDownOpen;
+            //            cb.Focus();
+            //            if (cb.IsDropDownOpen)
+            //            {
+            //                _gpService.RefreshInteractionTargets();
+            //            }
+            //        }
+            //        else if (_currentGazeElement is ComboBoxItem item)
+            //        {
+            //            var parentCombo = ItemsControl.ItemsControlFromItemContainer(item) as ComboBox;
+            //            if (parentCombo != null)
+            //            {
+            //                parentCombo.SelectedItem = item;
+            //                parentCombo.IsDropDownOpen = false;
+
+            //                parentCombo.Focus();
+
+            //                _gpService.ResetInteractionState();
+
+            //                _currentGazeElement = parentCombo;
+            //                FocusedElementName = parentCombo.Name;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            _currentGazeElement.Focus();
+
+            //            if (_currentGazeElement is Button b)
+            //            {
+            //                b.Command?.Execute(b.CommandParameter);
+            //            }
+            //            else if (_currentGazeElement is RadioButton rb)
+            //            {
+            //                rb.IsChecked = true;
+            //            }
+            //            else if (_currentGazeElement is CheckBox chk)
+            //            {
+            //                chk.IsChecked = !chk.IsChecked;
+            //            }
+            //        }
+            //    }
+            //});
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

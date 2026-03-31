@@ -1,44 +1,36 @@
-﻿using Gaze_Point.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Gaze_Point.GPViewModel.Handlers;
+using Gaze_Point.Services;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Gaze_Point.GPViewModel.Handlers
 {
-    public class ComboBoxHandler : IGazeActionHandler, IGazeFocusHandler
+    public class ComboBoxHandler : IGazeActionHandler
     {
-        public void OnFocus(FrameworkElement element)
-        {
-            if (element is ComboBoxItem item)
-            {
-                item.IsSelected = false;
-                item.Focus();
-            }
-        }
-
-        public void Execute(FrameworkElement element, GPService service)
+        public FrameworkElement Execute(FrameworkElement element, GPService service)
         {
             if (element is ComboBox cb)
             {
                 cb.IsDropDownOpen = !cb.IsDropDownOpen;
                 cb.Focus();
                 if (cb.IsDropDownOpen) service.RefreshInteractionTargets();
+                return cb;
             }
-            else if (element is ComboBoxItem item)
+
+            if (element is ComboBoxItem item)
             {
-                var parent = ItemsControl.ItemsControlFromItemContainer(item) as ComboBox;
-                if (parent != null)
+                var parentCombo = ItemsControl.ItemsControlFromItemContainer(item) as ComboBox;
+                if (parentCombo != null)
                 {
-                    parent.SelectedItem = item;
-                    parent.IsDropDownOpen = false;
-                    parent.Focus();
+                    parentCombo.SelectedItem = item;
+                    parentCombo.IsDropDownOpen = false;
+                    parentCombo.Focus();
                     service.ResetInteractionState();
+                    return parentCombo;
                 }
             }
+            return element;
         }
     }
 }
+
