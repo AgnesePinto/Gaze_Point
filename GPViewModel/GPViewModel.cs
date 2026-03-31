@@ -44,6 +44,12 @@ namespace Gaze_Point.GPViewModel
 
 
         /// <summary>
+        /// Command to initiate the gaze tracking and open the form window.
+        /// </summary>
+        public ICommand StartStressTestCommand { get; }
+
+
+        /// <summary>
         /// Command to stop the service and shut down the application.
         /// </summary>
         public ICommand StopCommand { get; }
@@ -74,7 +80,25 @@ namespace Gaze_Point.GPViewModel
                 }
             });
 
+
             StartCommand = new RelayCommand(_ =>
+            {
+                _gpService.Start();
+
+                var form = new Form();
+
+                _gpService.UpdateWindowContext(form);
+
+                var formViewModel = new FormViewModel(_gpService);
+                form.DataContext = formViewModel;
+                form.Show();
+
+                Application.Current.MainWindow.Close();
+                Application.Current.MainWindow = form;
+            });
+
+
+            StartStressTestCommand = new RelayCommand(_ =>
             {
                 _gpService.Start();
 
@@ -89,6 +113,7 @@ namespace Gaze_Point.GPViewModel
                 Application.Current.MainWindow.Close();
                 Application.Current.MainWindow = formWindow;
             });
+
 
             StopCommand = new RelayCommand(_ =>
             {

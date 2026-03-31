@@ -7,7 +7,7 @@
         WindowState="Maximized" 
         ResizeMode="CanMinimize">
 
-    <!-- Comandi associati ai tasti: INVIO, ESC -->
+    <!-- Command: ENTER, EXIT -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
         <KeyBinding Key="Esc" Command="{Binding StopCommand}"/>
@@ -16,20 +16,40 @@
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
-            <TextBlock Text="Premi il pulsante per avviare il form" FontSize="28" Margin="0,0,0,10" HorizontalAlignment="Center" FontWeight="Bold"/>
-            <TextBlock Text="{Binding Status}" FontSize="20" Margin="10" HorizontalAlignment="Center" Foreground="Gray"/>
+            <TextBlock Text="Scegli il form da compilare:" FontSize="28" Margin="0,0,0,10" HorizontalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Foreground="Gray"/>
 
-            <!-- BOTTONE AVVIA FORM -->
-            <Button Content="AVVIA FORM" 
-                    Command="{Binding StartCommand}" 
-                    x:Name="BtnStart" 
-                    Width="400" Height="150" Margin="30"
+            <!-- Start form button -->
+            <Button Content="FORM" 
+        Command="{Binding StartCommand}" 
+        x:Name="BtnTestForm" 
+        Width="200" Height="90" Margin="30"
+        Focusable="False">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnTestForm">
+                                <Setter Property="Background" Value="LightBlue"/>
+                                <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                <Setter Property="BorderThickness" Value="6"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <!-- Start stress test button -->
+            <Button Content="STRESS TEST FORM" 
+                    Command="{Binding StartStressTestCommand}" 
+                    x:Name="BtnStressTestForm" 
+                    Width="200" Height="90" Margin="30"
                     Focusable="False">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="LightGray"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnStart">
+                            <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnStressTestForm">
                                 <Setter Property="Background" Value="LightBlue"/>
                                 <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
                                 <Setter Property="BorderThickness" Value="6"/>
@@ -40,5 +60,6 @@
             </Button>
         </StackPanel>
     </Grid>
+
 </Window>
 

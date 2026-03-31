@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Gaze_Point.Services;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Gaze_Point.GPViewModel.Handlers
@@ -7,7 +8,7 @@ namespace Gaze_Point.GPViewModel.Handlers
     {
         public void OnFocus(FrameworkElement element) { /* Standart feedback from XAML */ }
 
-        public void Execute (FrameworkElement element) 
+        public void Execute (FrameworkElement element, GPService service) 
         {
             if (element is TextBox tb)
             {
