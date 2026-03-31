@@ -16,7 +16,6 @@
             <Setter Property="Padding" Value="10"/>
             <Setter Property="FontSize" Value="16"/>
             <Style.Triggers>
-                <!-- Trigger per item.Focus() -->
                 <Trigger Property="IsFocused" Value="True">
                     <Setter Property="Background" Value="DeepSkyBlue"/>
                     <Setter Property="Foreground" Value="White"/>
@@ -28,89 +27,68 @@
         </Style>
     </Window.Resources>
 
-    <!-- Comandi associati ai tasti: INVIO, ESC -->
+    <!-- Command: ENTER, EXIT -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
         <KeyBinding Key="Esc" Command="{Binding StopCommand}"/>
     </Window.InputBindings>
 
     <Grid>
-        <!-- PANEL PRINCIPALE -->
+        <!-- Main Panel -->
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Width="1000">
 
-            <!-- PANEL ANAGRAFICA E UNIVERSITA' -->
+            <!-- Personal datas and university panel -->
             <StackPanel Width="480" Margin="0,0,20,0">
                 <TextBlock Text="ANAGRAFICA" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
 
-                <!-- Panel orizzontale 1 -->
+                <!-- Horizontal panel 1.1 -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
 
-                    <!-- Nome -->
+                    <!-- Name -->
                     <StackPanel Orientation="Vertical" Margin="0,0,10,0">
-                        <TextBlock Text="Nome" FontSize="15" Margin="0,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
-                        <TextBox x:Name="TxtNome" Width="180" Height="30" FontSize="15"
-                                 HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                                 Text="{Binding Nome, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock Text="Nome" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="TxtNome" Width="180">
                             <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtNome">
                                             <Setter Property="BorderThickness" Value="4"/>
-                                            <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         </DataTrigger>
-                                        <Trigger Property="IsFocused" Value="True">
-                                            <Setter Property="Background" Value="LightYellow"/>
-                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </TextBox.Style>
                         </TextBox>
                     </StackPanel>
 
-                    <!-- Cognome -->
+                    <!-- Surname -->
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Cognome" FontSize="15" Margin="0,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
-                        <TextBox x:Name="TxtCognome" Width="180" Height="30" FontSize="15"
-                                 HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                                 Text="{Binding Cognome, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock Text="Cognome" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="TxtCognome" Width="180">
                             <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtCognome">
                                             <Setter Property="BorderThickness" Value="4"/>
-                                            <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         </DataTrigger>
-                                        <Trigger Property="IsFocused" Value="True">
-                                            <Setter Property="Background" Value="LightYellow"/>
-                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </TextBox.Style>
                         </TextBox>
                     </StackPanel>
 
-                    <!-- Età -->
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Età" FontSize="15" Margin="10,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
-                        <TextBox x:Name="TxtEta" Margin="10,0,0,0" Width="90" Height="30" FontSize="15"
-                 HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                 Text="{Binding CAP, UpdateSourceTrigger=PropertyChanged}">
+                    <!-- Age -->
+                    <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+                        <TextBlock Text="Età" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="TxtEta" Width="90">
                             <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtEta">
                                             <Setter Property="BorderThickness" Value="4"/>
-                                            <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         </DataTrigger>
-                                        <Trigger Property="IsFocused" Value="True">
-                                            <Setter Property="Background" Value="LightYellow"/>
-                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </TextBox.Style>
@@ -118,138 +96,102 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Panel orizzontale 2 -->
+                <!-- Horizontal panel 1.2 -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
-                  
-                    <!-- Luogo di nascita -->
+
+                    <!-- Place of birth -->
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Luogo nascita" FontSize="15" Margin="0,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
-                        <TextBox x:Name="TxtLuogoNascita" Width="180" Height="30" FontSize="15" Margin="0,0,0,0"
-                                 HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                                 Text="{Binding LuogoNascita, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock Text="Luogo nascita" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="TxtLuogoNascita" Width="180" HorizontalAlignment="Left">
                             <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtLuogoNascita">
                                             <Setter Property="BorderThickness" Value="4"/>
-                                            <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         </DataTrigger>
-                                        <Trigger Property="IsFocused" Value="True">
-                                            <Setter Property="Background" Value="LightYellow"/>
-                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </TextBox.Style>
                         </TextBox>
                     </StackPanel>
 
-                    <!-- Anno di nascita -->
+                    <!-- Year of birth -->
                     <StackPanel Orientation="Vertical" Margin="10,0,0,0">
-                        <TextBlock Text="Anno nascita" FontSize="15" Margin="0,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
-                        <TextBox x:Name="TxtAnnoNascita" Width="90" Height="30" FontSize="15"
-             HorizontalAlignment="Left" VerticalContentAlignment="Center"
-             Text="{Binding AnnoNascita, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock Text="Anno nascita" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="TxtAnnoNascita" Width="90" HorizontalAlignment="Left">
                             <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtAnnoNascita">
                                             <Setter Property="BorderThickness" Value="4"/>
-                                            <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         </DataTrigger>
-                                        <Trigger Property="IsFocused" Value="True">
-                                            <Setter Property="Background" Value="LightYellow"/>
-                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </TextBox.Style>
                         </TextBox>
                     </StackPanel>
 
-                    <!-- Sesso -->
+                    <!-- Gender -->
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="Sesso" FontSize="15" Margin="15,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
-                        <ComboBox x:Name="CmbSesso" 
-Margin="15,0,0,0" Width="180" Height="30" FontSize="15" 
-HorizontalAlignment="Left" VerticalContentAlignment="Center">
-
+                        <ComboBox x:Name="CmbSesso" Width="180" Margin="15,0,0,0">
                             <ComboBox.Style>
-                                <Style TargetType="ComboBox">
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                <Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBoxStyle}">
                                     <Style.Triggers>
-
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="CmbSesso">
                                             <Setter Property="BorderThickness" Value="4"/>
-                                            <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
-                                            <Setter Property="Background" Value="AliceBlue"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
+                                            <Setter Property="Background" Value="#F0F8FF"/>
                                         </DataTrigger>
-
-
-                                        <Trigger Property="IsFocused" Value="True">
-                                            <Setter Property="Background" Value="LightYellow"/>
-                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </ComboBox.Style>
-
-                            <!-- ComboBox Item Sesso -->
                             <ComboBoxItem Content="Maschio"/>
                             <ComboBoxItem Content="Femmina"/>
                             <ComboBoxItem Content="Altro"/>
                         </ComboBox>
                     </StackPanel>
-
-
                 </StackPanel>
 
-                <!-- Panel orizzontale 3 -->
+                <!-- Horizontal panel 1.3 -->
                 <StackPanel Orientation="Horizontal" Margin="0,35,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
                     <TextBlock Text="UNIVERSITÀ" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
                 </StackPanel>
 
-                <!-- Università frequentata -->
+                <!-- University attended -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="In quale università sei attualmente isritto/a?" FontSize="15" Margin="0,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
-                            <TextBox x:Name="TxtUniversita" Width="290" Height="30" FontSize="15"
-                                     HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                                     Text="{Binding Universita, UpdateSourceTrigger=PropertyChanged}">
-                                <TextBox.Style>
-                                    <Style TargetType="TextBox">
-                                        <Setter Property="BorderThickness" Value="1"/>
-                                        <Setter Property="BorderBrush" Value="Gray"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtUniversita">
-                                                <Setter Property="BorderThickness" Value="4"/>
-                                                <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
-                                            </DataTrigger>
-                                            <Trigger Property="IsFocused" Value="True">
-                                                <Setter Property="Background" Value="LightYellow"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
+                        <TextBlock Text="In quale università sei attualmente isritto/a?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="TxtUniversita" Width="290" HorizontalAlignment="Left">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtUniversita">
+                                            <Setter Property="BorderThickness" Value="4"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Panel orizzontale 4 -->
+                <!-- Horizontal panel 1.4 -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
 
-                    <!-- SEZIONE CORSO DI STUDI -->
+                    <!-- Courses -->
                     <StackPanel Orientation="Vertical" Margin="0,0,70,0">
                         <TextBlock Text="Corso di studi" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
 
-                        <RadioButton x:Name="RbTriennale" Content="Laurea Triennale" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,0,0,0" GroupName="Corso">
+                        <RadioButton x:Name="RbTriennale" Content="Laurea Triennale" GroupName="Corso">
                             <RadioButton.Style>
-                                <Style TargetType="RadioButton">
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="RbTriennale">
-                                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="FontWeight" Value="Bold"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -257,12 +199,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbMagistrale" Content="Laurea Magistrale" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0" GroupName="Corso">
+                        <RadioButton x:Name="RbMagistrale" Content="Laurea Magistrale" GroupName="Corso" Margin="0,10,0,0">
                             <RadioButton.Style>
-                                <Style TargetType="RadioButton">
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="RbMagistrale">
-                                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="FontWeight" Value="Bold"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -270,12 +212,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbCicloUnico" Content="Laurea a Ciclo Unico" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0" GroupName="Corso">
+                        <RadioButton x:Name="RbCicloUnico" Content="Laurea a Ciclo Unico" GroupName="Corso" Margin="0,10,0,0">
                             <RadioButton.Style>
-                                <Style TargetType="RadioButton">
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="RbCicloUnico">
-                                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="FontWeight" Value="Bold"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -283,12 +225,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbMaster" Content="Master (di I o II livello)" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0" GroupName="Corso">
+                        <RadioButton x:Name="RbMaster" Content="Master (di I o II livello)" GroupName="Corso" Margin="0,10,0,0">
                             <RadioButton.Style>
-                                <Style TargetType="RadioButton">
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="RbMaster">
-                                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="FontWeight" Value="Bold"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -296,12 +238,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbDottorato" Content="Dottorato di Ricerca" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0" GroupName="Corso">
+                        <RadioButton x:Name="RbDottorato" Content="Dottorato di Ricerca" GroupName="Corso" Margin="0,10,0,0">
                             <RadioButton.Style>
-                                <Style TargetType="RadioButton">
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="RbDottorato">
-                                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="FontWeight" Value="Bold"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -309,12 +251,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbAltro" Content="Altro" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0" GroupName="Corso">
+                        <RadioButton x:Name="RbAltro" Content="Altro" GroupName="Corso" Margin="0,10,0,0">
                             <RadioButton.Style>
-                                <Style TargetType="RadioButton">
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="RbAltro">
-                                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="FontWeight" Value="Bold"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -323,23 +265,18 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </RadioButton>
                     </StackPanel>
 
-                    <!-- SEZIONE AREA DISCIPLINARE -->
+                    <!-- Area of studies -->
                     <StackPanel Orientation="Vertical" VerticalAlignment="Top">
                         <TextBlock Text="Area Disciplinare" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
-                        <ComboBox x:Name="CmbArea" Width="200" Height="30" FontSize="15" HorizontalAlignment="Left" VerticalContentAlignment="Center">
+                        <ComboBox x:Name="CmbArea" Width="200" HorizontalAlignment="Left">
                             <ComboBox.Style>
-                                <Style TargetType="ComboBox">
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                <Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBoxStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="CmbArea">
                                             <Setter Property="BorderThickness" Value="4"/>
-                                            <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="Background" Value="AliceBlue"/>
                                         </DataTrigger>
-                                        <Trigger Property="IsFocused" Value="True">
-                                            <Setter Property="Background" Value="LightYellow"/>
-                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </ComboBox.Style>
@@ -351,16 +288,17 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Panel orizzontale 5 -->
-                <!-- Conseguimento laurea -->
+                <!-- Horizontal panel 1.5 -->
+                <!-- Degrees -->
                 <TextBlock Text="Hai già conseguito una laurea?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Vertical" Margin="0,0,0,0">
-                    <RadioButton x:Name="RbNoLaurea" Content="No" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,0,0" GroupName="Laurea">
+
+                    <RadioButton x:Name="RbNoLaurea" Content="No" GroupName="Laurea" Margin="0,7,0,0">
                         <RadioButton.Style>
-                            <Style TargetType="RadioButton">
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="RbNoLaurea">
-                                        <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="FontWeight" Value="Bold"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -368,12 +306,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbABreveLaurea" Content="No, la conseguirò a breve" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,0,0" GroupName="Laurea">
+                    <RadioButton x:Name="RbABreveLaurea" Content="No, la conseguirò a breve" GroupName="Laurea" Margin="0,7,0,0">
                         <RadioButton.Style>
-                            <Style TargetType="RadioButton">
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="RbABreveLaurea">
-                                        <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="FontWeight" Value="Bold"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -381,12 +319,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbSiLaurea" Content="Si" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,0,0" GroupName="Laurea">
+                    <RadioButton x:Name="RbSiLaurea" Content="Si" GroupName="Laurea" Margin="0,7,0,0">
                         <RadioButton.Style>
-                            <Style TargetType="RadioButton">
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="RbSiLaurea">
-                                        <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="FontWeight" Value="Bold"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -394,12 +332,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbPiuLaurea" Content="Si, più di una" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,0,0" GroupName="Laurea">
+                    <RadioButton x:Name="RbPiuLaurea" Content="Si, più di una" GroupName="Laurea" Margin="0,7,0,0">
                         <RadioButton.Style>
-                            <Style TargetType="RadioButton">
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="RbPiuLaurea">
-                                        <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="FontWeight" Value="Bold"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -408,14 +346,16 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                     </RadioButton>
                 </StackPanel>
 
+                <!-- Horizontal panel 1.6 -->
+                <!-- Exchange student -->
                 <TextBlock Text="Sei uno studente fuorisede?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,280,0">
-                    <RadioButton x:Name="RbNoFuorisede" Content="No" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,80,0" GroupName="Fuorisede">
+                    <RadioButton x:Name="RbNoFuorisede" Content="No" GroupName="Fuorisede" Margin="0,7,80,0">
                         <RadioButton.Style>
-                            <Style TargetType="RadioButton">
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="RbNoFuorisede">
-                                        <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="FontWeight" Value="Bold"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -423,12 +363,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbSiFuorisede" Content="Si" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,0,0" GroupName="Fuorisede">
+                    <RadioButton x:Name="RbSiFuorisede" Content="Si" GroupName="Fuorisede" Margin="0,7,0,0">
                         <RadioButton.Style>
-                            <Style TargetType="RadioButton">
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="RbSiFuorisede">
-                                        <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="FontWeight" Value="Bold"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -437,15 +377,16 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                     </RadioButton>
                 </StackPanel>
 
-                <!-- PANEL PROFESSIONE -->
+                <!-- Horizontal panel 1.7 -->
+                <!-- Worker or student -->
                 <TextBlock Text="Professione" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                    <CheckBox x:Name="ChkLavoratore" Content="Lavoratore" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,30,0">
+                    <CheckBox x:Name="ChkLavoratore" Content="Lavoratore" Margin="0,7,30,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkLavoratore">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -454,12 +395,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkStudente" Content="Studente" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,0,0">
+                    <CheckBox x:Name="ChkStudente" Content="Studente" Margin="0,7,0,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkStudente">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -470,21 +411,23 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                 </StackPanel>
             </StackPanel>
 
-            <!-- PANEL ATTIVITÀ FISICA -->
+            <!-- Sport panel -->
             <StackPanel Width="480" Margin="20,0,0,0">
                 <TextBlock Text="ATTIVIÀ FISICA" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
 
+                <!-- Horizontal panel 2.1 -->
+                <!-- Frequency -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
 
                     <StackPanel Orientation="Vertical" Margin="0,0,35,0">
-                        <TextBlock Text="Frequenza attività fisica a settimana?" FontSize="15" Margin="0,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Frequenza attività fisica a settimana?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
 
-                        <RadioButton x:Name="RbMaiFrequenza" Content="Mai" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0" GroupName="Frequenza">
+                        <RadioButton x:Name="RbMaiFrequenza" Content="Mai" GroupName="Frequenza" Margin="0,10,0,0">
                             <RadioButton.Style>
-                                <Style TargetType="RadioButton">
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="RbMaiFrequenza">
-                                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="FontWeight" Value="Bold"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -492,12 +435,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="Rb12Frequenza" Content="1-2 volte" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0" GroupName="Frequenza">
+                        <RadioButton x:Name="Rb12Frequenza" Content="1-2 volte" GroupName="Frequenza" Margin="0,10,0,0">
                             <RadioButton.Style>
-                                <Style TargetType="RadioButton">
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="Rb12Frequenza">
-                                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="FontWeight" Value="Bold"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -505,12 +448,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="Rb34Frequenza" Content="3-4 volte" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0" GroupName="Frequenza">
+                        <RadioButton x:Name="Rb34Frequenza" Content="3-4 volte" GroupName="Frequenza" Margin="0,10,0,0">
                             <RadioButton.Style>
-                                <Style TargetType="RadioButton">
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="Rb34Frequenza">
-                                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="FontWeight" Value="Bold"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -518,12 +461,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="Rb5Frequenza" Content="5 o più volte" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0" GroupName="Frequenza">
+                        <RadioButton x:Name="Rb5Frequenza" Content="5 o più volte" GroupName="Frequenza" Margin="0,10,0,0">
                             <RadioButton.Style>
-                                <Style TargetType="RadioButton">
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="Rb5Frequenza">
-                                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="FontWeight" Value="Bold"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -531,24 +474,18 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                             </RadioButton.Style>
                         </RadioButton>
                     </StackPanel>
-                    
-                    
+
                     <StackPanel Orientation="Vertical" VerticalAlignment="Top">
-                        <TextBlock Text="Intensità allenamento" FontSize="15" Margin="0,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
-                        <ComboBox x:Name="CmbIntensita" Width="200" Height="30" FontSize="15" HorizontalAlignment="Left" VerticalContentAlignment="Center">
+                        <TextBlock Text="Intensità allenamento" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <ComboBox x:Name="CmbIntensita" Width="200" HorizontalAlignment="Left">
                             <ComboBox.Style>
-                                <Style TargetType="ComboBox">
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                <Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBoxStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding FocusedElementName}" Value="CmbIntensita">
                                             <Setter Property="BorderThickness" Value="4"/>
-                                            <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="Background" Value="AliceBlue"/>
                                         </DataTrigger>
-                                        <Trigger Property="IsFocused" Value="True">
-                                            <Setter Property="Background" Value="LightYellow"/>
-                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </ComboBox.Style>
@@ -560,14 +497,16 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                     </StackPanel>
                 </StackPanel>
 
+                <!-- Horizontal panel 2.2 -->
+                <!-- Type of sports -->
                 <TextBlock Text="Quale attività pratichi abitualmente?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Vertical" Margin="0,0,0,0">
-                    <CheckBox x:Name="ChkCardio" Content="Cardio" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,30,0">
+                    <CheckBox x:Name="ChkCardio" Content="Cardio" Margin="0,10,30,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkCardio">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -576,12 +515,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkPesi" Content="Potenziamento muscolare / pesi" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkPesi" Content="Potenziamento muscolare / pesi" Margin="0,10,0,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkPesi">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -590,12 +529,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkFlessibilita" Content="Flessibilità" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkFlessibilita" Content="Flessibilità" Margin="0,10,0,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkFlessibilita">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -604,12 +543,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkSquadra" Content="Sport di squadra" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkSquadra" Content="Sport di squadra" Margin="0,10,0,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkSquadra">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -618,12 +557,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkAltroSport" Content="Altro" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkAltroSport" Content="Altro" Margin="0,10,0,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkAltroSport">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -632,12 +571,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkNessunaSport" Content="Nessuna" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkNessunaSport" Content="Nessuna" Margin="0,10,0,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkNessunaSport">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -647,15 +586,16 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                     </CheckBox>
                 </StackPanel>
 
-            
+                <!-- Horizontal panel 2.3 -->
+                <!-- Goals -->
                 <TextBlock Text="Quali sono/sarebbero i tuoi obiettivi principali?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                    <CheckBox x:Name="ChkPeso" Content="Perdita di&#x0a;peso" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,20,0">
+                    <CheckBox x:Name="ChkPeso" Content="Perdita di&#x0a;peso" Margin="0,7,20,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkPeso">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -664,12 +604,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkMuscoli" Content="Aumento massa&#x0a;muscolare" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,20,0">
+                    <CheckBox x:Name="ChkMuscoli" Content="Aumento massa&#x0a;muscolare" Margin="0,7,20,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkMuscoli">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -678,12 +618,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkStress" Content="Riduzione&#x0a;dello stress" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,20,0">
+                    <CheckBox x:Name="ChkStress" Content="Riduzione&#x0a;dello stress" Margin="0,7,20,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkStress">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -692,12 +632,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkCompetizioni" Content="Preparazione&#x0a;competizioni" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,0,0">
+                    <CheckBox x:Name="ChkCompetizioni" Content="Preparazione&#x0a;competizioni" Margin="0,7,0,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkCompetizioni">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -707,37 +647,34 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                     </CheckBox>
                 </StackPanel>
 
+                <!-- Horizontal panel 2.4 -->
+                <!-- Favourite sport -->
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Qual è il tuo sport preferito?" FontSize="15" Margin="0,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
-                    <TextBox x:Name="TxtSport" Width="300" Height="30" FontSize="15"
-                 HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                 Text="{Binding Universita, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock Text="Qual è il tuo sport preferito?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="TxtSport" Width="300" HorizontalAlignment="Left">
                         <TextBox.Style>
-                            <Style TargetType="TextBox">
-                                <Setter Property="BorderThickness" Value="1"/>
-                                <Setter Property="BorderBrush" Value="Gray"/>
+                            <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtSport">
                                         <Setter Property="BorderThickness" Value="4"/>
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                     </DataTrigger>
-                                    <Trigger Property="IsFocused" Value="True">
-                                        <Setter Property="Background" Value="LightYellow"/>
-                                    </Trigger>
                                 </Style.Triggers>
                             </Style>
                         </TextBox.Style>
                     </TextBox>
                 </StackPanel>
 
+                <!-- Horizontal panel 2.5 -->
+                <!-- Training time -->
                 <TextBlock Text="In quali momenti della giornata preferisci/preferiresti allenarti??" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
-                <StackPanel Orientation="Vertical" Margin="0,0,0,0">
-                    <CheckBox x:Name="ChkMattino" Content="Mattino" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,30,0">
+                <StackPanel Orientation="Vertical">
+                    <CheckBox x:Name="ChkMattino" Content="Mattino" Margin="0,10,30,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkMattino">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -746,12 +683,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkPausaPranzo" Content="Pausa pranzo" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkPausaPranzo" Content="Pausa pranzo" Margin="0,10,0,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkPausaPranzo">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -760,12 +697,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkPomeriggio" Content="Pomeriggio" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkPomeriggio" Content="Pomeriggio" Margin="0,10,0,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkPomeriggio">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -774,12 +711,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkSera" Content="Sera" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkSera" Content="Sera" Margin="0,10,0,0">
                         <CheckBox.Style>
-                            <Style TargetType="CheckBox">
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkSera">
-                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
@@ -789,14 +726,16 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                     </CheckBox>
                 </StackPanel>
 
+                <!-- Horizontal panel 2.6 -->
+                <!-- Team or individual sport -->
                 <TextBlock Text="Preferisci sport di squadra o individuali?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-                    <RadioButton x:Name="RbSquadra" Content="Squadra" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,80,0" GroupName="Sport">
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton x:Name="RbSquadra" Content="Squadra" GroupName="Sport" Margin="0,7,80,0">
                         <RadioButton.Style>
-                            <Style TargetType="RadioButton">
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="RbSquadra">
-                                        <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="FontWeight" Value="Bold"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -804,12 +743,12 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbIndividuali" Content="Individuali" FocusVisualStyle="{x:Null}" FontSize="15" Margin="0,7,0,0" GroupName="Sport">
+                    <RadioButton x:Name="RbIndividuali" Content="Individuali" GroupName="Sport" Margin="0,7,0,0">
                         <RadioButton.Style>
-                            <Style TargetType="RadioButton">
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElementName}" Value="RbIndividuali">
-                                        <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                         <Setter Property="FontWeight" Value="Bold"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -817,33 +756,34 @@ HorizontalAlignment="Left" VerticalContentAlignment="Center">
                         </RadioButton.Style>
                     </RadioButton>
                 </StackPanel>
+            </StackPanel>
 
-                <!-- Exit button -->
-                <Button x:Name="BtnBack" 
+        </StackPanel>
+
+        <!-- Exit button -->
+        <Button x:Name="BtnBack" 
         Content="ESCI" 
         Command="{Binding ReturnToMainCommand}"
         VerticalAlignment="Bottom" 
         HorizontalAlignment="Right" 
-        Margin="0,0,0,0" 
+        Margin="20" 
         Focusable="False">
-                    <Button.Style>
-                        <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnBack">
-                                    <Setter Property="Background" Value="Crimson"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                    <Setter Property="BorderBrush" Value="DarkRed"/>
-                                    <Setter Property="BorderThickness" Value="5"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnBack">
+                            <Setter Property="Background" Value="Crimson"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="BorderBrush" Value="DarkRed"/>
+                            <Setter Property="BorderThickness" Value="5"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
 
-            </StackPanel>
-
-        </StackPanel>
     </Grid>
+
 </Window>
 
     
