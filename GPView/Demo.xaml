@@ -1,0 +1,163 @@
+﻿<Window x:Class="Gaze_Point.GPView.Demo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gaze_Point.GPView"
+        mc:Ignorable="d"
+        Title="Demo" 
+        Height="450" Width="800"
+        WindowStyle="SingleBorderWindow" 
+        WindowState="Maximized" 
+        ResizeMode="CanMinimize">
+
+    <Window.Resources>
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Style.Triggers>
+                <!-- Trigger item.Focus() -->
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Background" Value="DeepSkyBlue"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="BorderBrush" Value="Navy"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <!-- Command: ENTER, ESC -->
+    <Window.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
+        <KeyBinding Key="Esc" Command="{Binding StopCommand}"/>
+    </Window.InputBindings>
+
+    <Grid>
+        <!-- MAIN PANEL -->
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Width="800">
+
+            <!-- PERSONAL DATAS AND UNIVERSITY PANEL -->
+            <StackPanel Width="480" Margin="0,0,20,0">
+                <TextBlock Text="ANAGRAFICA" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
+
+                <!-- Horizontal panel 1.1 -->
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
+
+                    <!-- Name -->
+                    <StackPanel Orientation="Vertical" Margin="0,0,10,0">
+                        <TextBlock Text="Nome" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TxtNome" Width="180">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtNome">
+                                            <Setter Property="BorderThickness" Value="4"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </StackPanel>
+                </StackPanel>
+
+
+
+                
+
+                <!-- Horizontal panel 1.4 -->
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
+
+
+
+                    <!-- Area of study -->
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+                        <TextBlock Text="Area Disciplinare" FontSize="15" Margin="0,10,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <ComboBox x:Name="CmbArea" Width="200" HorizontalAlignment="Left">
+                            <ComboBox.Style>
+                                <Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBoxStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="CmbArea">
+                                            <Setter Property="BorderThickness" Value="4"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
+                                            <Setter Property="Background" Value="AliceBlue"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.Style>
+                            <ComboBoxItem Content="Umanistica"/>
+                            <ComboBoxItem Content="Tecnico-Scientifica"/>
+                            <ComboBoxItem Content="Socio-Economica"/>
+                            <ComboBoxItem Content="Sanitaria"/>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+
+
+                <TextBlock Text="Sei uno studente fuorisede?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,280,0">
+                    <RadioButton x:Name="RbNoFuorisede" Content="No" GroupName="Fuorisede" Margin="0,7,80,0">
+                        <RadioButton.Style>
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="RbNoFuorisede">
+                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                    </RadioButton>
+
+                    <RadioButton x:Name="RbSiFuorisede" Content="Si" GroupName="Fuorisede" Margin="0,7,0,0">
+                        <RadioButton.Style>
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="RbSiFuorisede">
+                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                    </RadioButton>
+                </StackPanel>
+
+                <!-- Job -->
+                <TextBlock Text="Professione" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <CheckBox x:Name="ChkLavoratore" Content="Lavoratore" Margin="0,7,30,0">
+                        <CheckBox.Style>
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkLavoratore">
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
+                                        <Setter Property="BorderThickness" Value="3"/>
+                                        <Setter Property="Background" Value="AliceBlue"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </CheckBox.Style>
+                    </CheckBox>
+
+                    <CheckBox x:Name="ChkStudente" Content="Studente" Margin="0,7,0,0">
+                        <CheckBox.Style>
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkStudente">
+                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
+                                        <Setter Property="BorderThickness" Value="3"/>
+                                        <Setter Property="Background" Value="AliceBlue"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </CheckBox.Style>
+                    </CheckBox>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</Window>
