@@ -20,7 +20,7 @@
             <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Foreground="Gray"/>
 
             <!-- Start form button -->
-            <Button Content="FORM" 
+            <Button Content="FORM TEST" 
         Command="{Binding StartCommand}" 
         x:Name="BtnTestForm" 
         Width="200" Height="90" Margin="30"
@@ -40,7 +40,7 @@
             </Button>
 
             <!-- Start stress test button -->
-            <Button Content="STRESS TEST FORM" 
+            <Button Content="STRESS TEST" 
                     Command="{Binding StartStressTestCommand}" 
                     x:Name="BtnStressTestForm" 
                     Width="200" Height="90" Margin="30"
