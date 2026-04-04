@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Gaze_Point.GPModel.GPCursor;
 using System;
+using Gaze_Point.GPView;
 
 namespace Gaze_Point.GPViewModel
 {

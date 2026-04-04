@@ -109,15 +109,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Form.xaml">
+    <Page Include="GPView\Form.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="FormWindow.xaml">
+    <Page Include="GPView\FormWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GazeCursorWindow.xaml">
+    <Page Include="GPView\GazeCursorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -125,7 +125,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="GPView\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -133,13 +133,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Form.xaml.cs">
+    <Compile Include="GPView\Form.xaml.cs">
       <DependentUpon>Form.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FormWindow.xaml.cs">
+    <Compile Include="GPView\FormWindow.xaml.cs">
       <DependentUpon>FormWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GazeCursorWindow.xaml.cs">
+    <Compile Include="GPView\GazeCursorWindow.xaml.cs">
       <DependentUpon>GazeCursorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GPConnection\GPClient.cs" />
@@ -166,7 +166,7 @@
     <Compile Include="GPViewModel\Handlers\IGazeFocusHandler.cs" />
     <Compile Include="GPViewModel\Handlers\TextBoxHandler.cs" />
     <Compile Include="GPViewModel\RelayCommand.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="GPView\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>

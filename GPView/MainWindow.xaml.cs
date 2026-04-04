@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Gaze_Point.GPViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,18 +12,23 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
-namespace Gaze_Point
+namespace Gaze_Point.GPView
 {
     /// <summary>
-    /// Interaction Logic GazeCursorWindow.xaml
+    /// Interaction logic MainWindow.xaml
     /// </summary>
-    public partial class GazeCursorWindow : Window
+    public partial class MainWindow : Window
     {
-        public GazeCursorWindow()
+        public MainWindow()
         {
             InitializeComponent();
+
+            this.DataContext = new MainViewModel();
+
         }
     }
 }

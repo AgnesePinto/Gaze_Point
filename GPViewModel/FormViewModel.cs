@@ -1,4 +1,5 @@
 ﻿using Gaze_Point.GPModel.GPCursor;
+using Gaze_Point.GPView;
 using Gaze_Point.GPViewModel.Handlers;
 using Gaze_Point.Services;
 using System;

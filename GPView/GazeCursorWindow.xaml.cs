@@ -12,14 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Gaze_Point
+namespace Gaze_Point.GPView
 {
     /// <summary>
-    /// Interaction Logic Form.xaml
+    /// Interaction Logic GazeCursorWindow.xaml
     /// </summary>
-    public partial class Form : Window
+    public partial class GazeCursorWindow : Window
     {
-        public Form()
+        public GazeCursorWindow()
         {
             InitializeComponent();
         }

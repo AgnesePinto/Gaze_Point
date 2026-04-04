@@ -1,11 +1,11 @@
-﻿<Window x:Class="Gaze_Point.FormWindow"
+﻿<Window x:Class="Gaze_Point.GPView.Form"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Gaze_Point"
+        xmlns:local="clr-namespace:Gaze_Point.GPView"
         mc:Ignorable="d"
-        Title="FormWindow" 
+        Title="Form" 
         Height="800" Width="1200"
         WindowStyle="SingleBorderWindow" 
         WindowState="Maximized" 
@@ -16,6 +16,7 @@
             <Setter Property="Padding" Value="10"/>
             <Setter Property="FontSize" Value="16"/>
             <Style.Triggers>
+                <!-- Trigger item.Focus() -->
                 <Trigger Property="IsFocused" Value="True">
                     <Setter Property="Background" Value="DeepSkyBlue"/>
                     <Setter Property="Foreground" Value="White"/>
@@ -27,17 +28,17 @@
         </Style>
     </Window.Resources>
 
-    <!-- Command: ENTER, EXIT -->
+    <!-- Command: ENTER, ESC -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
         <KeyBinding Key="Esc" Command="{Binding StopCommand}"/>
     </Window.InputBindings>
 
     <Grid>
-        <!-- Main Panel -->
+        <!-- MAIN PANEL -->
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Width="1000">
 
-            <!-- Personal datas and university panel -->
+            <!-- PERSONAL DATAS AND UNIVERSITY PANEL -->
             <StackPanel Width="480" Margin="0,0,20,0">
                 <TextBlock Text="ANAGRAFICA" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
 
@@ -160,7 +161,7 @@
                     <TextBlock Text="UNIVERSITÀ" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
                 </StackPanel>
 
-                <!-- University attended -->
+                <!-- University -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="In quale università sei attualmente isritto/a?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
@@ -182,9 +183,9 @@
                 <!-- Horizontal panel 1.4 -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
 
-                    <!-- Courses -->
+                    <!-- Academic coureses -->
                     <StackPanel Orientation="Vertical" Margin="0,0,70,0">
-                        <TextBlock Text="Corso di studi" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Corso di studi" FontSize="15" Margin="0,0,0,10" Foreground="DimGray" HorizontalAlignment="Left"/>
 
                         <RadioButton x:Name="RbTriennale" Content="Laurea Triennale" GroupName="Corso">
                             <RadioButton.Style>
@@ -199,7 +200,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbMagistrale" Content="Laurea Magistrale" GroupName="Corso" Margin="0,10,0,0">
+                        <RadioButton x:Name="RbMagistrale" Content="Laurea Magistrale" GroupName="Corso" Margin="0,17,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -212,33 +213,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbCicloUnico" Content="Laurea a Ciclo Unico" GroupName="Corso" Margin="0,10,0,0">
-                            <RadioButton.Style>
-                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="RbCicloUnico">
-                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
-                                            <Setter Property="FontWeight" Value="Bold"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </RadioButton.Style>
-                        </RadioButton>
-
-                        <RadioButton x:Name="RbMaster" Content="Master (di I o II livello)" GroupName="Corso" Margin="0,10,0,0">
-                            <RadioButton.Style>
-                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="RbMaster">
-                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
-                                            <Setter Property="FontWeight" Value="Bold"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </RadioButton.Style>
-                        </RadioButton>
-
-                        <RadioButton x:Name="RbDottorato" Content="Dottorato di Ricerca" GroupName="Corso" Margin="0,10,0,0">
+                        <RadioButton x:Name="RbDottorato" Content="Dottorato di Ricerca" GroupName="Corso" Margin="0,17,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -251,7 +226,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbAltro" Content="Altro" GroupName="Corso" Margin="0,10,0,0">
+                        <RadioButton x:Name="RbAltro" Content="Altro" GroupName="Corso" Margin="0,17,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -265,7 +240,7 @@
                         </RadioButton>
                     </StackPanel>
 
-                    <!-- Area of studies -->
+                    <!-- Area of study -->
                     <StackPanel Orientation="Vertical" VerticalAlignment="Top">
                         <TextBlock Text="Area Disciplinare" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
                         <ComboBox x:Name="CmbArea" Width="200" HorizontalAlignment="Left">
@@ -289,11 +264,11 @@
                 </StackPanel>
 
                 <!-- Horizontal panel 1.5 -->
-                <!-- Degrees -->
+                <!-- Degree -->
                 <TextBlock Text="Hai già conseguito una laurea?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Vertical" Margin="0,0,0,0">
 
-                    <RadioButton x:Name="RbNoLaurea" Content="No" GroupName="Laurea" Margin="0,7,0,0">
+                    <RadioButton x:Name="RbNoLaurea" Content="No" GroupName="Laurea" Margin="0,10,0,0">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
@@ -306,20 +281,7 @@
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbABreveLaurea" Content="No, la conseguirò a breve" GroupName="Laurea" Margin="0,7,0,0">
-                        <RadioButton.Style>
-                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="RbABreveLaurea">
-                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
-                                        <Setter Property="FontWeight" Value="Bold"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RadioButton.Style>
-                    </RadioButton>
-
-                    <RadioButton x:Name="RbSiLaurea" Content="Si" GroupName="Laurea" Margin="0,7,0,0">
+                    <RadioButton x:Name="RbSiLaurea" Content="Si" GroupName="Laurea" Margin="0,17,0,0">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
@@ -332,7 +294,7 @@
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbPiuLaurea" Content="Si, più di una" GroupName="Laurea" Margin="0,7,0,0">
+                    <RadioButton x:Name="RbPiuLaurea" Content="Si, più di una" GroupName="Laurea" Margin="0,17,0,0">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
@@ -344,10 +306,10 @@
                             </Style>
                         </RadioButton.Style>
                     </RadioButton>
+
                 </StackPanel>
 
-                <!-- Horizontal panel 1.6 -->
-                <!-- Exchange student -->
+
                 <TextBlock Text="Sei uno studente fuorisede?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,280,0">
                     <RadioButton x:Name="RbNoFuorisede" Content="No" GroupName="Fuorisede" Margin="0,7,80,0">
@@ -377,8 +339,7 @@
                     </RadioButton>
                 </StackPanel>
 
-                <!-- Horizontal panel 1.7 -->
-                <!-- Worker or student -->
+                <!-- Job -->
                 <TextBlock Text="Professione" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                     <CheckBox x:Name="ChkLavoratore" Content="Lavoratore" Margin="0,7,30,0">
@@ -411,14 +372,15 @@
                 </StackPanel>
             </StackPanel>
 
-            <!-- Sport panel -->
+
+            <!-- SPORT PANEL -->
             <StackPanel Width="480" Margin="20,0,0,0">
                 <TextBlock Text="ATTIVIÀ FISICA" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
 
-                <!-- Horizontal panel 2.1 -->
-                <!-- Frequency -->
+                <!-- Vertical panel 2.1 -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
 
+                    <!-- Frequency -->
                     <StackPanel Orientation="Vertical" Margin="0,0,35,0">
                         <TextBlock Text="Frequenza attività fisica a settimana?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
 
@@ -435,7 +397,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="Rb12Frequenza" Content="1-2 volte" GroupName="Frequenza" Margin="0,10,0,0">
+                        <RadioButton x:Name="Rb12Frequenza" Content="1-2 volte" GroupName="Frequenza" Margin="0,17,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -448,7 +410,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="Rb34Frequenza" Content="3-4 volte" GroupName="Frequenza" Margin="0,10,0,0">
+                        <RadioButton x:Name="Rb3Frequenza" Content="3 o più volte" GroupName="Frequenza" Margin="0,17,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -460,21 +422,9 @@
                                 </Style>
                             </RadioButton.Style>
                         </RadioButton>
-
-                        <RadioButton x:Name="Rb5Frequenza" Content="5 o più volte" GroupName="Frequenza" Margin="0,10,0,0">
-                            <RadioButton.Style>
-                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="Rb5Frequenza">
-                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
-                                            <Setter Property="FontWeight" Value="Bold"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </RadioButton.Style>
-                        </RadioButton>
                     </StackPanel>
 
+                    <!-- Intensity -->
                     <StackPanel Orientation="Vertical" VerticalAlignment="Top">
                         <TextBlock Text="Intensità allenamento" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
                         <ComboBox x:Name="CmbIntensita" Width="200" HorizontalAlignment="Left">
@@ -497,9 +447,9 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Horizontal panel 2.2 -->
-                <!-- Type of sports -->
-                <TextBlock Text="Quale attività pratichi abitualmente?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
+                <!-- Vertical panel 2.2 -->
+                <!-- Sports -->
+                <TextBlock Text="Quale attività pratichi abitualmente?" FontSize="15" Foreground="DimGray" Margin="0,10,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Vertical" Margin="0,0,0,0">
                     <CheckBox x:Name="ChkCardio" Content="Cardio" Margin="0,10,30,0">
                         <CheckBox.Style>
@@ -515,7 +465,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkPesi" Content="Potenziamento muscolare / pesi" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkPesi" Content="Potenziamento muscolare" Margin="0,17,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -529,35 +479,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkFlessibilita" Content="Flessibilità" Margin="0,10,0,0">
-                        <CheckBox.Style>
-                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkFlessibilita">
-                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
-                                        <Setter Property="BorderThickness" Value="3"/>
-                                        <Setter Property="Background" Value="AliceBlue"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </CheckBox.Style>
-                    </CheckBox>
-
-                    <CheckBox x:Name="ChkSquadra" Content="Sport di squadra" Margin="0,10,0,0">
-                        <CheckBox.Style>
-                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkSquadra">
-                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
-                                        <Setter Property="BorderThickness" Value="3"/>
-                                        <Setter Property="Background" Value="AliceBlue"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </CheckBox.Style>
-                    </CheckBox>
-
-                    <CheckBox x:Name="ChkAltroSport" Content="Altro" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkAltroSport" Content="Altro" Margin="0,17,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -571,7 +493,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkNessunaSport" Content="Nessuna" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkNessunaSport" Content="Nessuna" Margin="0,17,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -586,7 +508,7 @@
                     </CheckBox>
                 </StackPanel>
 
-                <!-- Horizontal panel 2.3 -->
+                <!-- Vertical panel 2.3 -->
                 <!-- Goals -->
                 <TextBlock Text="Quali sono/sarebbero i tuoi obiettivi principali?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
@@ -646,8 +568,8 @@
                         </CheckBox.Style>
                     </CheckBox>
                 </StackPanel>
-
-                <!-- Horizontal panel 2.4 -->
+                
+                <!-- Vertical panel 2.4 -->
                 <!-- Favourite sport -->
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Qual è il tuo sport preferito?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
@@ -665,8 +587,8 @@
                     </TextBox>
                 </StackPanel>
 
-                <!-- Horizontal panel 2.5 -->
-                <!-- Training time -->
+                <!-- Vertical panel 2.5 -->
+                <!-- Training -->
                 <TextBlock Text="In quali momenti della giornata preferisci/preferiresti allenarti??" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Vertical">
                     <CheckBox x:Name="ChkMattino" Content="Mattino" Margin="0,10,30,0">
@@ -683,21 +605,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkPausaPranzo" Content="Pausa pranzo" Margin="0,10,0,0">
-                        <CheckBox.Style>
-                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkPausaPranzo">
-                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
-                                        <Setter Property="BorderThickness" Value="3"/>
-                                        <Setter Property="Background" Value="AliceBlue"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </CheckBox.Style>
-                    </CheckBox>
-
-                    <CheckBox x:Name="ChkPomeriggio" Content="Pomeriggio" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkPomeriggio" Content="Pomeriggio" Margin="0,17,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -711,7 +619,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkSera" Content="Sera" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkSera" Content="Sera" Margin="0,17,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -726,8 +634,8 @@
                     </CheckBox>
                 </StackPanel>
 
-                <!-- Horizontal panel 2.6 -->
-                <!-- Team or individual sport -->
+                <!-- Vertical panel 2.6 -->
+                <!-- Team or Individual -->
                 <TextBlock Text="Preferisci sport di squadra o individuali?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton x:Name="RbSquadra" Content="Squadra" GroupName="Sport" Margin="0,7,80,0">
@@ -756,6 +664,7 @@
                         </RadioButton.Style>
                     </RadioButton>
                 </StackPanel>
+
             </StackPanel>
 
         </StackPanel>
@@ -785,5 +694,3 @@
     </Grid>
 
 </Window>
-
-    
