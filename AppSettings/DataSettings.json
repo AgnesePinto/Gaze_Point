@@ -29,7 +29,7 @@
   },
 
   "DwellTimeManager": {
-    "DwellTime": 30
+    "DwellTime": 300
   },
 
   "TargetLocker": {

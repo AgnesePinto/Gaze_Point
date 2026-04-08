@@ -95,11 +95,14 @@ namespace Gaze_Point.Services
             _client.Connect();
             if (_client.IsConnected)
             {
+                if (Application.Current.MainWindow != null)
+                    _targetProvider.ForceRefreshCache(Application.Current.MainWindow);
                 _client.SendCommand("<SET ID=\"ENABLE_SEND_POG_BEST\" STATE=\"1\" />");
                 _client.SendCommand("<SET ID=\"ENABLE_SEND_SACCADE\" STATE=\"1\" />");
                 _client.SendCommand("<SET ID=\"ENABLE_SEND_DATA\" STATE=\"1\" />");
                 _timer.Start();
             }
+            //_client.Connect();
         }
 
         // --- METODO CORRETTO PER IL RESET (NON CANCELLA GLI EVENTI) ---
@@ -118,12 +121,14 @@ namespace Gaze_Point.Services
 
         public void UpdateWindowContext(Window newWindow)
         {
+            System.Diagnostics.Debug.WriteLine($"[SERVICE] Cambio contesto su finestra: {newWindow.Title}");
             // Forza il TargetProvider a rifare l'inventario degli elementi sulla nuova finestra
             _targetProvider.ForceRefreshCache(newWindow);
 
             // Resetta lo stato interno (fissazioni, elementi precedenti) 
             // SENZA cancellare l'evento OnElementFocused
             ResetInteractionState();
+
         }
 
 
@@ -169,8 +174,22 @@ namespace Gaze_Point.Services
         //        {
         //            if (Application.Current.MainWindow is Window window)
         //            {
-        //                var (physX, py) = GPConverter.ToPhysicalScreenPoint(lastValidData);
-        //                Point winPt = GPConverter.ToWindowPoint(new Point(physX, py), window);
+        //                //var (physX, py) = GPConverter.ToPhysicalScreenPoint(lastValidData);
+        //                //Point winPt = GPConverter.ToWindowPoint(new Point(physX, py), window);
+
+        //                //if (isSaccade)
+        //                //{
+        //                //    _dwellManager.Update(null);
+        //                //}
+        //                //else
+        //                //{
+        //                //    FrameworkElement target = _targetProvider.GetElementAtPoint(winPt, window);
+        //                //    _dwellManager.Update(target);
+        //                //}
+
+        //                // In OnTick, sostituisci la logica del target con questa:
+        //                var (logX, logY) = GPConverter.ToLogicalScreenPoint(lastValidData);
+        //                Point logicalPoint = new Point(logX, logY);
 
         //                if (isSaccade)
         //                {
@@ -178,9 +197,11 @@ namespace Gaze_Point.Services
         //                }
         //                else
         //                {
-        //                    FrameworkElement target = _targetProvider.GetElementAtPoint(winPt, window);
+        //                    // Passa il punto logico assoluto
+        //                    FrameworkElement target = _targetProvider.GetElementAtPoint(logicalPoint, window);
         //                    _dwellManager.Update(target);
         //                }
+
         //            }
         //        }), DispatcherPriority.Input);
         //    }
@@ -189,74 +210,56 @@ namespace Gaze_Point.Services
         private void OnTick(object sender, EventArgs e)
         {
             List<string> packets = _client.ReadData();
+
+            // LOG DI DEBUG
+            if (packets.Count > 0)
+                System.Diagnostics.Debug.WriteLine($"[SERVICE] Ricevuti {packets.Count} pacchetti.");
+            else
+                return;
+
+
             if (packets.Count == 0) return;
 
             GPData lastValidData = null;
-            GPData lastRawData = null;
-
             foreach (string packet in packets)
             {
                 GPData rawData = GPParser.Parse(packet);
                 GPData validData = _validationFilter.ValidationFilter(rawData);
-
-                if (validData != null)
-                {
-                    lastValidData = _smoothingFilter.AdaptiveSmoothing(validData);
-                    lastRawData = rawData;
-
-                    // Alimenta il Locker se è attivo
-                    if (_targetLocker.IsLocked)
-                    {
-                        _targetLocker.ProcessPoint(rawData.BPOGX, rawData.BPOGY, rawData.BPOGV);
-                    }
-                }
+                if (validData != null) lastValidData = _smoothingFilter.AdaptiveSmoothing(validData);
             }
 
-            if (lastValidData != null && lastRawData != null)
+            if (lastValidData != null)
             {
-                // Se il locker è attivo, non cerchiamo nuovi target, aspettiamo che scada
-                if (_targetLocker.IsLocked) return;
-
+                // 1. Ottieni il punto logico (già calcolato correttamente dal tuo converter)
                 var (logX, logY) = GPConverter.ToLogicalScreenPoint(lastValidData);
-                bool isSaccade = _saccadeDetector.IsSignificantSaccade(lastRawData);
+                Point gazePoint = new Point(logX, logY);
 
+                // 2. Aggiorna il cursore visivo
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    // Aggiorna posizione cursore
                     _cursorController.UpdatePosition(logX, logY);
 
                     if (Application.Current.MainWindow is Window window)
                     {
-                        //var (physX, py) = GPConverter.ToPhysicalScreenPoint(lastValidData);
-                        //Point winPt = GPConverter.ToWindowPoint(new Point(physX, py), window);
-                        // Prova a sostituire la riga di winPt con questa:
-                        Point winPt = new Point(logX, logY);
+                        // 3. Usa direttamente gazePoint (è coerente con i bounds dello Step 1)
+                        FrameworkElement target = _targetProvider.GetElementAtPoint(gazePoint, window);
+
+                        // LOG DI DEBUG
+                        if (target == null)
+                            System.Diagnostics.Debug.WriteLine($"[SERVICE] Nessun target alle coordinate: {logX}, {logY}");
 
 
-                        if (isSaccade)
-                        {
-                            // Non resettare brutalmente, aggiorna solo se non c'è una fissazione solida
-                            _dwellManager.Update(null);
-                        }
-                        else
-                        {
-                            FrameworkElement target = _targetProvider.GetElementAtPoint(winPt, window);
-
-                            if (target != null)
-                            {
-                                System.Diagnostics.Debug.WriteLine($"[HIT-TEST] Elemento trovato: {target.GetType().Name} - Name: {target.Name}");
-                            }
-                            else
-                            {
-                                // Utile per capire se stai puntando nel vuoto
-                                System.Diagnostics.Debug.WriteLine("[HIT-TEST] Nessun elemento alle coordinate: " + winPt);
-                            }
-
-                            _dwellManager.Update(target);
-                        }
+                        _dwellManager.Update(target);
                     }
-                }), DispatcherPriority.Normal); // Usa Normal per garantire che il click venga processato
+                }), DispatcherPriority.Render);
             }
+        }
+
+
+
+        public void UnsubscribeAllFromElementFocused()
+        {
+            OnElementFocused = null;
         }
 
 

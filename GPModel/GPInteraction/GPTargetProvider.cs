@@ -75,6 +75,12 @@ namespace Gaze_Point.GPModel.GPInteraction
             FindInteractiveElements(window, _interactiveElementsCache);
 
             _lastCacheUpdate = DateTime.Now;
+
+            // LOG DI DEBUG
+            System.Diagnostics.Debug.WriteLine($"[TARGET PROVIDER] Cache aggiornata: {_interactiveElementsCache.Count} elementi trovati.");
+            foreach (var el in _interactiveElementsCache)
+                System.Diagnostics.Debug.WriteLine($" -> Elemento: {el.GetType().Name} Name: {el.Name}");
+
         }
 
 
@@ -84,52 +90,84 @@ namespace Gaze_Point.GPModel.GPInteraction
         /// <param name="windowPoint">Gaze position relative to the window.</param>
         /// <param name="window">The reference window foe coordinate mapping.</param>
         /// <returns>The most relevant FrameworkElement or null if none are within range.</returns>
-        public FrameworkElement GetElementAtPoint(Point windowPoint, Window window)
+        //public FrameworkElement GetElementAtPoint(Point windowPoint, Window window)
+        //{
+        //    if (DateTime.Now - _lastCacheUpdate > _cacheDuration) ForceRefreshCache(window);
+
+        //    FrameworkElement bestTarget = null;
+        //    double minDistance = double.MaxValue;
+        //    bool foundInside = false;
+
+        //    foreach (var element in _interactiveElementsCache)
+        //    {
+        //        Rect bounds = GetElementBounds(element, window);
+        //        if (bounds.IsEmpty) continue;
+
+        //        bool isInside = bounds.Contains(windowPoint);
+
+        //        if (foundInside && !isInside) continue;
+
+        //        double distance;
+        //        if (isInside)
+        //        {
+        //            Point center = new Point(bounds.Left + bounds.Width / 2, bounds.Top + bounds.Height / 2);
+        //            distance = ComputeDistanceToPoint(windowPoint, center);
+
+        //            if (element is ComboBoxItem) distance -= 1000;
+
+        //            if (!foundInside)
+        //            {
+        //                foundInside = true;
+        //                minDistance = distance;
+        //                bestTarget = element;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            distance = ComputeDistanceToRect(windowPoint, bounds);
+        //        }
+
+        //        if (distance < minDistance && (isInside || distance < _distanceTolerance))
+        //        {
+        //            minDistance = distance;
+        //            bestTarget = element;
+        //        }
+        //    }
+        //    return bestTarget;
+        //}
+
+        public FrameworkElement GetElementAtPoint(Point absoluteScreenPoint, Window window)
         {
             if (DateTime.Now - _lastCacheUpdate > _cacheDuration) ForceRefreshCache(window);
 
             FrameworkElement bestTarget = null;
             double minDistance = double.MaxValue;
-            bool foundInside = false;
 
             foreach (var element in _interactiveElementsCache)
             {
                 Rect bounds = GetElementBounds(element, window);
                 if (bounds.IsEmpty) continue;
 
-                bool isInside = bounds.Contains(windowPoint);
-
-                if (foundInside && !isInside) continue;
-
-                double distance;
-                if (isInside)
+                // Adesso confrontiamo il punto dello sguardo con i bordi reali dell'elemento sullo schermo
+                if (bounds.Contains(absoluteScreenPoint))
                 {
-                    Point center = new Point(bounds.Left + bounds.Width / 2, bounds.Top + bounds.Height / 2);
-                    distance = ComputeDistanceToPoint(windowPoint, center);
+                    double dist = ComputeDistanceToPoint(absoluteScreenPoint,
+                                  new Point(bounds.Left + bounds.Width / 2, bounds.Top + bounds.Height / 2));
 
-                    if (element is ComboBoxItem) distance -= 1000;
-
-                    if (!foundInside)
+                    if (dist < minDistance)
                     {
-                        foundInside = true;
-                        minDistance = distance;
+                        minDistance = dist;
                         bestTarget = element;
                     }
                 }
-                else
-                {
-                    distance = ComputeDistanceToRect(windowPoint, bounds);
-                }
-
-                if (distance < minDistance && (isInside || distance < _distanceTolerance))
-                {
-                    minDistance = distance;
-                    bestTarget = element;
-                }
             }
+
+            // LOG DI DEBUG (Solo se non è null per non intasare la console)
+            if (bestTarget != null)
+                System.Diagnostics.Debug.WriteLine($"[TARGET PROVIDER] Sguardo su: {bestTarget.Name} ({bestTarget.GetType().Name})");
+
             return bestTarget;
         }
-
 
         /// <summary>
         /// Searches for the next interactive element in specific angular direction relative to a starting element.
@@ -187,41 +225,6 @@ namespace Gaze_Point.GPModel.GPInteraction
         }
 
 
-        private void FindInteractiveElements(DependencyObject parent, List<FrameworkElement> list)
-        {
-            if (parent == null) return;
-
-            if (parent is Popup popup && popup.IsOpen && popup.Child != null)
-            {
-                FindInteractiveElements(popup.Child, list);
-            }
-
-            int count = VisualTreeHelper.GetChildrenCount(parent);
-            for (int i = 0; i < count; i++)
-            {
-                var child = VisualTreeHelper.GetChild(parent, i);
-                if (child is FrameworkElement fe)
-                {
-                    
-                    bool isTargetType = GPInteractiveElements.InteractiveTypes.Contains(fe.GetType());
-                    //bool isTargetType = GPInteractiveElements.InteractiveTypes
-                    //.Any(t => t.IsAssignableFrom(fe.GetType()));
-
-
-                    if (isTargetType && fe.IsVisible && fe.ActualWidth > 0)
-                    {
-                        if (!string.IsNullOrEmpty(fe.Name) || fe is ComboBoxItem || fe is MenuItem)
-                        {
-                            if (!list.Contains(fe)) list.Add(fe);
-                        }
-                    }
-                }
-                FindInteractiveElements(child, list);
-            }
-        }
-
-
-
         //private void FindInteractiveElements(DependencyObject parent, List<FrameworkElement> list)
         //{
         //    if (parent == null) return;
@@ -237,9 +240,11 @@ namespace Gaze_Point.GPModel.GPInteraction
         //        var child = VisualTreeHelper.GetChild(parent, i);
         //        if (child is FrameworkElement fe)
         //        {
-        //            bool isTargetType = fe is Button || fe is TextBox || fe is CheckBox ||
-        //                               fe is RadioButton || fe is ComboBox || fe is ComboBoxItem ||
-        //                               fe is MenuItem;
+
+        //            bool isTargetType = GPInteractiveElements.InteractiveTypes.Contains(fe.GetType());
+        //            //bool isTargetType = GPInteractiveElements.InteractiveTypes
+        //            //.Any(t => t.IsAssignableFrom(fe.GetType()));
+
 
         //            if (isTargetType && fe.IsVisible && fe.ActualWidth > 0)
         //            {
@@ -253,20 +258,71 @@ namespace Gaze_Point.GPModel.GPInteraction
         //    }
         //}
 
+        private void FindInteractiveElements(DependencyObject parent, List<FrameworkElement> list)
+        {
+            if (parent == null) return;
+
+            // 1. Gestione specifica per i PopUp
+            if (parent is Popup popup)
+            {
+                if (popup.IsOpen && popup.Child != null)
+                    FindInteractiveElements(popup.Child, list);
+                return;
+            }
+
+            // 2. Controlla se l'elemento stesso è interattivo
+            if (parent is FrameworkElement fe)
+            {
+                bool isTargetType = GPInteractiveElements.InteractiveTypes.Any(t => t.IsAssignableFrom(fe.GetType()));
+
+                if (isTargetType && fe.IsVisible)
+                {
+                    if (!list.Contains(fe))
+                    {
+                        list.Add(fe);
+                        System.Diagnostics.Debug.WriteLine($"[TARGET SCAN] Aggiunto: {fe.GetType().Name} - Name: {fe.Name}");
+                    }
+                }
+            }
+
+            // 3. Scansione ricorsiva di TUTTI i figli nel VisualTree
+            int count = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                FindInteractiveElements(child, list);
+            }
+        }
+
+
+
+
+        //private Rect GetElementBounds(FrameworkElement fe, Window window)
+        //{
+        //    try
+        //    {
+        //        if (!fe.IsLoaded || !fe.IsVisible) return Rect.Empty;
+
+        //        Point screenPoint = fe.PointToScreen(new Point(0, 0));
+
+        //        Point windowPoint = window.PointFromScreen(screenPoint);
+
+        //        return new Rect(windowPoint.X, windowPoint.Y, fe.ActualWidth, fe.ActualHeight);
+        //    }
+        //    catch { return Rect.Empty; }
+        //}
+
         private Rect GetElementBounds(FrameworkElement fe, Window window)
         {
             try
             {
                 if (!fe.IsLoaded || !fe.IsVisible) return Rect.Empty;
-
-                Point screenPoint = fe.PointToScreen(new Point(0, 0));
-
-                Point windowPoint = window.PointFromScreen(screenPoint);
-
-                return new Rect(windowPoint.X, windowPoint.Y, fe.ActualWidth, fe.ActualHeight);
+                Point screenPt = fe.PointToScreen(new Point(0, 0));
+                return new Rect(screenPt.X, screenPt.Y, fe.ActualWidth, fe.ActualHeight);
             }
             catch { return Rect.Empty; }
         }
+
 
 
         private double ComputeDistanceToPoint(Point p1, Point p2)

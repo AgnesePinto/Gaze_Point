@@ -87,61 +87,6 @@ namespace Gaze_Point.GPViewModel
                 _currentGazeElement = resultElement;
                 FocusedElementName = resultElement?.Name;
             });
-
-
-            //PressEnterCommand = new RelayCommand(_ =>
-            //{
-            //    if (_currentGazeElement != null)
-            //    {
-            //        if (_currentGazeElement is TextBox tb)
-            //        {
-            //            tb.Focus();
-            //            tb.CaretIndex = tb.Text.Length;
-            //        }
-            //        else if (_currentGazeElement is ComboBox cb)
-            //        {
-            //            cb.IsDropDownOpen = !cb.IsDropDownOpen;
-            //            cb.Focus();
-            //            if (cb.IsDropDownOpen)
-            //            {
-            //                _gpService.RefreshInteractionTargets();
-            //            }
-            //        }
-            //        else if (_currentGazeElement is ComboBoxItem item)
-            //        {
-            //            var parentCombo = ItemsControl.ItemsControlFromItemContainer(item) as ComboBox;
-            //            if (parentCombo != null)
-            //            {
-            //                parentCombo.SelectedItem = item;
-            //                parentCombo.IsDropDownOpen = false;
-
-            //                parentCombo.Focus();
-
-            //                _gpService.ResetInteractionState();
-
-            //                _currentGazeElement = parentCombo;
-            //                FocusedElementName = parentCombo.Name;
-            //            }
-            //        }
-            //        else
-            //        {
-            //            _currentGazeElement.Focus();
-
-            //            if (_currentGazeElement is Button b)
-            //            {
-            //                b.Command?.Execute(b.CommandParameter);
-            //            }
-            //            else if (_currentGazeElement is RadioButton rb)
-            //            {
-            //                rb.IsChecked = true;
-            //            }
-            //            else if (_currentGazeElement is CheckBox chk)
-            //            {
-            //                chk.IsChecked = !chk.IsChecked;
-            //            }
-            //        }
-            //    }
-            //});
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

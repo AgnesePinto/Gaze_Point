@@ -87,25 +87,48 @@ namespace Gaze_Point.GPViewModel
                 }
             });
 
-            StartDemoCommand = new RelayCommand(_ =>
+            // In MainViewModel.cs, nel comando StartDemoCommand:
+            StartDemoCommand = new RelayCommand(async _ => // Nota: aggiunto async
             {
                 _gpService.Start();
+                _gpService.UnsubscribeAllFromElementFocused();
 
                 var demo = new Demo();
-
-                _gpService.UpdateWindowContext(demo);
-
+                Application.Current.MainWindow = demo;
                 var formViewModel = new FormViewModel(_gpService);
                 demo.DataContext = formViewModel;
                 demo.Show();
 
-                Application.Current.MainWindow.Close();
-                Application.Current.MainWindow = demo;
+                // ASPETTA 200ms che la finestra sia renderizzata prima di scansionare
+                await System.Threading.Tasks.Task.Delay(200);
+                _gpService.UpdateWindowContext(demo);
             });
+
+
+            StartDemoCommand = new RelayCommand(_ =>
+            {
+                _gpService.Start();
+                _gpService.UnsubscribeAllFromElementFocused();
+
+                var demo = new Demo();
+
+                Application.Current.MainWindow = demo;
+
+                var formViewModel = new FormViewModel(_gpService);
+                demo.DataContext = formViewModel;
+
+                _gpService.UpdateWindowContext(demo);
+
+                demo.Show();
+
+            });
+
 
             StartCommand = new RelayCommand(_ =>
             {
                 _gpService.Start();
+
+                _gpService.UnsubscribeAllFromElementFocused();
 
                 var form = new Form();
 
@@ -123,6 +146,8 @@ namespace Gaze_Point.GPViewModel
             StartStressTestCommand = new RelayCommand(_ =>
             {
                 _gpService.Start();
+
+                _gpService.UnsubscribeAllFromElementFocused();
 
                 var formWindow = new FormWindow();
 

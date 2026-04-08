@@ -39,7 +39,7 @@ namespace Gaze_Point.GPModel.GPInteraction
             catch
             {
                 // Fallback
-                _dwellTime = TimeSpan.FromMilliseconds(30);
+                _dwellTime = TimeSpan.FromMilliseconds(300);
             }
         }
 
@@ -48,29 +48,60 @@ namespace Gaze_Point.GPModel.GPInteraction
         /// Evaluates the current element under gaze to track fixation progress.
         /// </summary>
         /// <param name="elementUnderGaze">The UI element currently targeted by the gaze provider.</param>
+        //public void Update(FrameworkElement elementUnderGaze)
+        //{
+        //    if (elementUnderGaze == null)
+        //    {
+        //        _currentElement = null;
+        //        return;
+        //    }
+
+        //    if (elementUnderGaze != _currentElement)
+        //    {
+        //        _currentElement = elementUnderGaze;
+        //        _focusStartTime = DateTime.Now; 
+        //        return;
+        //    }
+
+        //    var fixationTime = DateTime.Now - _focusStartTime;
+        //    if (fixationTime >= _dwellTime)
+        //    {
+        //        OnElementFocused?.Invoke(_currentElement);
+
+        //        _focusStartTime = DateTime.MaxValue;
+        //    }
+        //}
+
         public void Update(FrameworkElement elementUnderGaze)
         {
             if (elementUnderGaze == null)
             {
+                if (_currentElement != null) System.Diagnostics.Debug.WriteLine("[DWELL] Fissazione persa.");
                 _currentElement = null;
                 return;
             }
 
             if (elementUnderGaze != _currentElement)
             {
+                System.Diagnostics.Debug.WriteLine($"[DWELL] Inizio fissazione su: {elementUnderGaze.Name}");
                 _currentElement = elementUnderGaze;
-                _focusStartTime = DateTime.Now; 
+                _focusStartTime = DateTime.Now;
                 return;
             }
 
-            var fixationTime = DateTime.Now - _focusStartTime;
-            if (fixationTime >= _dwellTime)
-            {
-                OnElementFocused?.Invoke(_currentElement);
+            var fixationTime = (DateTime.Now - _focusStartTime).TotalMilliseconds;
+            // Logga ogni 100ms di progresso
+            if (fixationTime > 0)
+                System.Diagnostics.Debug.WriteLine($"[DWELL] Progresso fissazione su {_currentElement.Name}: {fixationTime}ms");
 
+            if (DateTime.Now - _focusStartTime >= _dwellTime)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DWELL] SOGLIA RAGGIUNTA per {_currentElement.Name}!");
+                OnElementFocused?.Invoke(_currentElement);
                 _focusStartTime = DateTime.MaxValue;
             }
         }
+
 
 
         /// <summary>
