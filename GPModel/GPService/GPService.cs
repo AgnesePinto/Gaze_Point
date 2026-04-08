@@ -6,6 +6,7 @@ using Gaze_Point.Connection;
 using Gaze_Point.GPModel.GPRecord;
 using Gaze_Point.GPModel.GPInteraction;
 using Gaze_Point.GPModel.GPCursor;
+using Gaze_Point.GPViewModel.Handlers;
 
 namespace Gaze_Point.Services
 {
@@ -49,9 +50,13 @@ namespace Gaze_Point.Services
 
             _dwellManager.OnElementFocused += (element) =>
             {
+                System.Diagnostics.Debug.WriteLine($"[DWELL] Fissazione completata su: {element.GetType().Name} ({element.Name})");
                 _lastSelectedElement = element;
                 _targetLocker.Activate();
                 OnElementFocused?.Invoke(element);
+
+                var handler = new StandardControlHandler();
+                handler.Execute(element, this);
             };
 
             _targetLocker.OnLockExpired += (points) =>
@@ -130,6 +135,57 @@ namespace Gaze_Point.Services
             }
         }
 
+        //private void OnTick(object sender, EventArgs e)
+        //{
+        //    List<string> packets = _client.ReadData();
+        //    if (packets.Count == 0) return;
+
+        //    GPData lastValidData = null;
+        //    GPData lastRawData = null;
+
+        //    foreach (string packet in packets)
+        //    {
+        //        GPData rawData = GPParser.Parse(packet);
+        //        GPData validData = _validationFilter.ValidationFilter(rawData);
+
+        //        if (validData != null)
+        //        {
+        //            lastValidData = _smoothingFilter.AdaptiveSmoothing(validData);
+        //            lastRawData = rawData;
+
+        //            var (logX, logY) = GPConverter.ToLogicalScreenPoint(lastValidData);
+        //            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+        //            {
+        //                _cursorController.UpdatePosition(logX, logY);
+        //            }), DispatcherPriority.Render);
+        //        }
+        //    }
+
+        //    if (lastValidData != null && lastRawData != null)
+        //    {
+        //        bool isSaccade = _saccadeDetector.IsSignificantSaccade(lastRawData);
+
+        //        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+        //        {
+        //            if (Application.Current.MainWindow is Window window)
+        //            {
+        //                var (physX, py) = GPConverter.ToPhysicalScreenPoint(lastValidData);
+        //                Point winPt = GPConverter.ToWindowPoint(new Point(physX, py), window);
+
+        //                if (isSaccade)
+        //                {
+        //                    _dwellManager.Update(null);
+        //                }
+        //                else
+        //                {
+        //                    FrameworkElement target = _targetProvider.GetElementAtPoint(winPt, window);
+        //                    _dwellManager.Update(target);
+        //                }
+        //            }
+        //        }), DispatcherPriority.Input);
+        //    }
+        //}
+
         private void OnTick(object sender, EventArgs e)
         {
             List<string> packets = _client.ReadData();
@@ -148,38 +204,61 @@ namespace Gaze_Point.Services
                     lastValidData = _smoothingFilter.AdaptiveSmoothing(validData);
                     lastRawData = rawData;
 
-                    var (logX, logY) = GPConverter.ToLogicalScreenPoint(lastValidData);
-                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    // Alimenta il Locker se è attivo
+                    if (_targetLocker.IsLocked)
                     {
-                        _cursorController.UpdatePosition(logX, logY);
-                    }), DispatcherPriority.Render);
+                        _targetLocker.ProcessPoint(rawData.BPOGX, rawData.BPOGY, rawData.BPOGV);
+                    }
                 }
             }
 
             if (lastValidData != null && lastRawData != null)
             {
+                // Se il locker è attivo, non cerchiamo nuovi target, aspettiamo che scada
+                if (_targetLocker.IsLocked) return;
+
+                var (logX, logY) = GPConverter.ToLogicalScreenPoint(lastValidData);
                 bool isSaccade = _saccadeDetector.IsSignificantSaccade(lastRawData);
 
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
+                    // Aggiorna posizione cursore
+                    _cursorController.UpdatePosition(logX, logY);
+
                     if (Application.Current.MainWindow is Window window)
                     {
-                        var (physX, py) = GPConverter.ToPhysicalScreenPoint(lastValidData);
-                        Point winPt = GPConverter.ToWindowPoint(new Point(physX, py), window);
+                        //var (physX, py) = GPConverter.ToPhysicalScreenPoint(lastValidData);
+                        //Point winPt = GPConverter.ToWindowPoint(new Point(physX, py), window);
+                        // Prova a sostituire la riga di winPt con questa:
+                        Point winPt = new Point(logX, logY);
+
 
                         if (isSaccade)
                         {
+                            // Non resettare brutalmente, aggiorna solo se non c'è una fissazione solida
                             _dwellManager.Update(null);
                         }
                         else
                         {
                             FrameworkElement target = _targetProvider.GetElementAtPoint(winPt, window);
+
+                            if (target != null)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"[HIT-TEST] Elemento trovato: {target.GetType().Name} - Name: {target.Name}");
+                            }
+                            else
+                            {
+                                // Utile per capire se stai puntando nel vuoto
+                                System.Diagnostics.Debug.WriteLine("[HIT-TEST] Nessun elemento alle coordinate: " + winPt);
+                            }
+
                             _dwellManager.Update(target);
                         }
                     }
-                }), DispatcherPriority.Input);
+                }), DispatcherPriority.Normal); // Usa Normal per garantire che il click venga processato
             }
         }
+
 
         public void Stop()
         {
