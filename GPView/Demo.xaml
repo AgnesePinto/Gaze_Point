@@ -16,7 +16,6 @@
             <Setter Property="Padding" Value="10"/>
             <Setter Property="FontSize" Value="16"/>
             <Style.Triggers>
-                <!-- Trigger item.Focus() -->
                 <Trigger Property="IsFocused" Value="True">
                     <Setter Property="Background" Value="DeepSkyBlue"/>
                     <Setter Property="Foreground" Value="White"/>
@@ -28,31 +27,29 @@
         </Style>
     </Window.Resources>
 
-    <!-- Command: ENTER, ESC -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
         <KeyBinding Key="Esc" Command="{Binding StopCommand}"/>
     </Window.InputBindings>
 
     <Grid>
-        <!-- MAIN PANEL -->
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Width="800">
+        <!-- CONTENITORE CENTRATO -->
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
-            <!-- PERSONAL DATAS AND UNIVERSITY PANEL -->
-            <StackPanel Width="480" Margin="0,0,20,0">
-                <TextBlock Text="ANAGRAFICA" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
+            <!-- COLONNE (SINISTRA E DESTRA) -->
+            <StackPanel Orientation="Horizontal">
 
-                <!-- Horizontal panel 1.1 -->
-                <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
+                <!-- COLONNA SINISTRA -->
+                <StackPanel Width="400" Margin="0,0,20,0">
 
-                    <!-- Name -->
-                    <StackPanel Orientation="Vertical" Margin="0,0,10,0">
-                        <TextBlock Text="Nome" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left" Margin="0,0,0,5"/>
-                        <TextBox x:Name="TxtNome" Width="180">
+                    <!-- Colore -->
+                    <StackPanel Orientation="Vertical" Margin="0,0,0,20">
+                        <TextBlock Text="Qual è il tuo animale preferito?" FontSize="25" Foreground="DimGray" HorizontalAlignment="Left" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TxtAnimale" Width="300" Height="50" HorizontalAlignment="Left">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtNome">
+                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="TxtAnimale">
                                             <Setter Property="BorderThickness" Value="4"/>
                                             <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
                                         </DataTrigger>
@@ -61,103 +58,130 @@
                             </TextBox.Style>
                         </TextBox>
                     </StackPanel>
-                </StackPanel>
 
-
-
-                
-
-                <!-- Horizontal panel 1.4 -->
-                <StackPanel Orientation="Horizontal" Margin="0,15,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
-
-
-
-                    <!-- Area of study -->
-                    <StackPanel Orientation="Vertical" VerticalAlignment="Top">
-                        <TextBlock Text="Area Disciplinare" FontSize="15" Margin="0,10,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
-                        <ComboBox x:Name="CmbArea" Width="200" HorizontalAlignment="Left">
-                            <ComboBox.Style>
-                                <Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBoxStyle}">
+                    <!-- Animali a casa -->
+                    <TextBlock Text="Hai un animale domestico?" FontSize="25" Foreground="DimGray" Margin="0,20,0,5" HorizontalAlignment="Left"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                        <RadioButton x:Name="RbNoAnimale" Content="No" GroupName="Animale" FontSize="25" Margin="0,7,40,0">
+                            <RadioButton.Style>
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="CmbArea">
-                                            <Setter Property="BorderThickness" Value="4"/>
+                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="RbNoAnimale">
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </RadioButton.Style>
+                        </RadioButton>
+
+                        <RadioButton x:Name="RbSiAnimale" Content="Si" GroupName="Animale" FontSize="25" Margin="0,7,0,0">
+                            <RadioButton.Style>
+                                <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="RbSiFuorisede">
+                                            <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </RadioButton.Style>
+                        </RadioButton>
+                    </StackPanel>
+
+                    <!-- Animale domestico -->
+                    <TextBlock Text="Quali animali hai o vorresti avere?" FontSize="25" Foreground="DimGray" Margin="0,20,0,5" HorizontalAlignment="Left"/>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="ChkGatto" Content="Gatto" FontSize="25" Margin="0,7,30,0">
+                            <CheckBox.Style>
+                                <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkGatto">
                                             <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
+                                            <Setter Property="BorderThickness" Value="3"/>
                                             <Setter Property="Background" Value="AliceBlue"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </ComboBox.Style>
-                            <ComboBoxItem Content="Umanistica"/>
-                            <ComboBoxItem Content="Tecnico-Scientifica"/>
-                            <ComboBoxItem Content="Socio-Economica"/>
-                            <ComboBoxItem Content="Sanitaria"/>
-                        </ComboBox>
+                            </CheckBox.Style>
+                        </CheckBox>
+
+                        <CheckBox x:Name="ChkCane" Content="Cane" FontSize="25" Margin="0,7,30,0">
+                            <CheckBox.Style>
+                                <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkCane">
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
+                                            <Setter Property="BorderThickness" Value="3"/>
+                                            <Setter Property="Background" Value="AliceBlue"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </CheckBox.Style>
+                        </CheckBox>
+
+                        <CheckBox x:Name="ChkAltro" Content="Altro" FontSize="25" Margin="0,7,30,0">
+                            <CheckBox.Style>
+                                <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkAltro">
+                                            <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
+                                            <Setter Property="BorderThickness" Value="3"/>
+                                            <Setter Property="Background" Value="AliceBlue"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </CheckBox.Style>
+                        </CheckBox>
                     </StackPanel>
                 </StackPanel>
 
-
-                <TextBlock Text="Sei uno studente fuorisede?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
-                <StackPanel Orientation="Horizontal" Margin="0,0,280,0">
-                    <RadioButton x:Name="RbNoFuorisede" Content="No" GroupName="Fuorisede" Margin="0,7,80,0">
-                        <RadioButton.Style>
-                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
+                <!-- Colore -->
+                <StackPanel Width="300" VerticalAlignment="Top">
+                    <TextBlock Text="Colore preferito:" FontSize="25" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
+                    <ComboBox x:Name="CmbColore" Width="300" Height="50" HorizontalAlignment="Left">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBoxStyle}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="RbNoFuorisede">
-                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
-                                        <Setter Property="FontWeight" Value="Bold"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RadioButton.Style>
-                    </RadioButton>
-
-                    <RadioButton x:Name="RbSiFuorisede" Content="Si" GroupName="Fuorisede" Margin="0,7,0,0">
-                        <RadioButton.Style>
-                            <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="RbSiFuorisede">
-                                        <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
-                                        <Setter Property="FontWeight" Value="Bold"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RadioButton.Style>
-                    </RadioButton>
-                </StackPanel>
-
-                <!-- Job -->
-                <TextBlock Text="Professione" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                    <CheckBox x:Name="ChkLavoratore" Content="Lavoratore" Margin="0,7,30,0">
-                        <CheckBox.Style>
-                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkLavoratore">
+                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="CmbColore">
+                                        <Setter Property="BorderThickness" Value="4"/>
                                         <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
-                                        <Setter Property="BorderThickness" Value="3"/>
                                         <Setter Property="Background" Value="AliceBlue"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </CheckBox.Style>
-                    </CheckBox>
-
-                    <CheckBox x:Name="ChkStudente" Content="Studente" Margin="0,7,0,0">
-                        <CheckBox.Style>
-                            <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding FocusedElementName}" Value="ChkStudente">
-                                        <Setter Property="BorderBrush" Value="{StaticResource GazeFocusBrush}"/>
-                                        <Setter Property="BorderThickness" Value="3"/>
-                                        <Setter Property="Background" Value="AliceBlue"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </CheckBox.Style>
-                    </CheckBox>
+                        </ComboBox.Style>
+                        <ComboBoxItem Content="Rosso"/>
+                        <ComboBoxItem Content="Arancione"/>
+                        <ComboBoxItem Content="Giallo"/>
+                        <ComboBoxItem Content="Verde"/>
+                        <ComboBoxItem Content="Blu"/>
+                        <ComboBoxItem Content="Viola"/>
+                    </ComboBox>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
 
+        <!-- Exit button -->
+        <Button x:Name="BtnBack" 
+                Content="ESCI" 
+                Command="{Binding ReturnToMainCommand}"
+                VerticalAlignment="Bottom" 
+                HorizontalAlignment="Right" 
+                Margin="20" 
+                Focusable="False">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnBack">
+                            <Setter Property="Background" Value="Crimson"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="BorderBrush" Value="DarkRed"/>
+                            <Setter Property="BorderThickness" Value="5"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </Window>

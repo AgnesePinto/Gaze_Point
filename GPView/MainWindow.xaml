@@ -16,15 +16,35 @@
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
-            <TextBlock Text="Scegli il form da compilare:" FontSize="28" Margin="0,0,0,10" HorizontalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock Text="Scegli il form da compilare:" FontSize="28" Margin="0,0,0,0" HorizontalAlignment="Center" FontWeight="Bold"/>
             <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Foreground="Gray"/>
 
             <!-- Start form button -->
-            <Button Content="FORM TEST" 
-        Command="{Binding StartCommand}" 
-        x:Name="BtnTestForm" 
-        Width="200" Height="90" Margin="30"
-        Focusable="False">
+            <Button Content="DEMO" FontSize="20"
+                    Command="{Binding StartCommand}" 
+                    x:Name="BtnDemo" 
+                    Width="200" Height="90" Margin="20"
+                    Focusable="False">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding FocusedElementName}" Value="BtnDemo">
+                                <Setter Property="Background" Value="LightBlue"/>
+                                <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                <Setter Property="BorderThickness" Value="6"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            
+            <!-- Start form button -->
+            <Button Content="FORM TEST" FontSize="20"
+                    Command="{Binding StartCommand}" 
+                    x:Name="BtnTestForm" 
+                    Width="200" Height="90" Margin="30"
+                    Focusable="False">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="LightGray"/>
@@ -40,7 +60,7 @@
             </Button>
 
             <!-- Start stress test button -->
-            <Button Content="STRESS TEST" 
+            <Button Content="STRESS TEST" FontSize="20"
                     Command="{Binding StartStressTestCommand}" 
                     x:Name="BtnStressTestForm" 
                     Width="200" Height="90" Margin="30"
