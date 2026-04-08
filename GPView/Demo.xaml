@@ -79,7 +79,7 @@
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="RbSiFuorisede">
+                                        <DataTrigger Binding="{Binding FocusedElementName}" Value="RbSiAnimale">
                                             <Setter Property="Foreground" Value="{StaticResource GazeFocusBrush}"/>
                                             <Setter Property="FontWeight" Value="Bold"/>
                                         </DataTrigger>
