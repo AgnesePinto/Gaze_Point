@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Globalization;
 using System.IO;
 
 namespace Gaze_Point.GPModel.GPRecord
@@ -25,8 +26,8 @@ namespace Gaze_Point.GPModel.GPRecord
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                _saccadeThresholdMin = double.Parse(config["Saccade:SaccadeThresholdMin"]);
-                _saccadeThresholdMax = double.Parse(config["Saccade:SaccadeThresholdMax"]);
+                _saccadeThresholdMin = double.Parse(config["Saccade:SaccadeThresholdMin"], CultureInfo.InvariantCulture);
+                _saccadeThresholdMax = double.Parse(config["Saccade:SaccadeThresholdMax"], CultureInfo.InvariantCulture);
             }
             catch
             {

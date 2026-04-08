@@ -26,7 +26,6 @@ namespace Gaze_Point.Services
         public GPCursor GazeCursor { get; } = new GPCursor();
         public bool IsCursorVisible { get; }
 
-        // Questo evento deve rimanere VIVO per tutta la durata dell'app
         public event Action<FrameworkElement> OnElementFocused;
 
         public GPService()
@@ -52,7 +51,6 @@ namespace Gaze_Point.Services
             {
                 _lastSelectedElement = element;
                 _targetLocker.Activate();
-                // Notifichiamo il ViewModel (che rimarrà sempre in ascolto)
                 OnElementFocused?.Invoke(element);
             };
 

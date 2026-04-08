@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 
@@ -36,9 +37,9 @@ namespace Gaze_Point.GPModel.GPRecord
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                _minRange = double.Parse(config["Validation:MinRange"]);
-                _maxRange = double.Parse(config["Validation:MaxRange"]);
-                _recoverySamples = int.Parse(config["Validation:SamplesBlankingPeriod"]);
+                _minRange = double.Parse(config["Validation:MinRange"], CultureInfo.InvariantCulture);
+                _maxRange = double.Parse(config["Validation:MaxRange"], CultureInfo.InvariantCulture);
+                _recoverySamples = int.Parse(config["Validation:SamplesBlankingPeriod"], CultureInfo.InvariantCulture);
             }
             catch
             {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -44,8 +45,8 @@ namespace Gaze_Point.GPModel.GPInteraction
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                _largeMovementThreshold = double.Parse(config["MovementDetector:LargeMovementThreshold"]);
-                _smallMovementThreshold = double.Parse(config["MovementDetector:SmallMovementThreshold"]);
+                _largeMovementThreshold = double.Parse(config["MovementDetector:LargeMovementThreshold"], CultureInfo.InvariantCulture);
+                _smallMovementThreshold = double.Parse(config["MovementDetector:SmallMovementThreshold"], CultureInfo.InvariantCulture);
             }
             catch
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 
@@ -32,10 +33,10 @@ namespace Gaze_Point.GPModel.GPRecord
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                _alphaMin = double.Parse(config["Smoothing:AlphaMin"]);
-                _alphaMax = double.Parse(config["Smoothing:AlphaMax"]);
-                _sensitivity = double.Parse(config["Smoothing:Sensitivity"]);
-                _distanceThreshold = double.Parse(config["Smoothing:DistanceThreshold"]);
+                _alphaMin = double.Parse(config["Smoothing:AlphaMin"], CultureInfo.InvariantCulture);
+                _alphaMax = double.Parse(config["Smoothing:AlphaMax"], CultureInfo.InvariantCulture);
+                _sensitivity = double.Parse(config["Smoothing:Sensitivity"], CultureInfo.InvariantCulture);
+                _distanceThreshold = double.Parse(config["Smoothing:DistanceThreshold"], CultureInfo.InvariantCulture);
             }
             catch
             {

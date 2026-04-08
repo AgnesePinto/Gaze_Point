@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.IO;
 using Gaze_Point.GPView;
+using System.Globalization;
 
 namespace Gaze_Point.Services
 {
@@ -46,7 +47,7 @@ namespace Gaze_Point.Services
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                double _cursorSize = double.Parse(config["Cursor:CursorSize"]);
+                double _cursorSize = double.Parse(config["Cursor:CursorSize"], CultureInfo.InvariantCulture);
                 _halfSize = _cursorSize / 2.0;
             }
             catch 

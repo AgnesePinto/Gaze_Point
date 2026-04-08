@@ -8,6 +8,7 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System.Windows.Interop;
+using System.Globalization;
 
 namespace Gaze_Point.GPModel.GPInteraction
 {
@@ -37,10 +38,10 @@ namespace Gaze_Point.GPModel.GPInteraction
                     .AddJsonFile("AppSettings/DataSettings.json", true)
                     .Build();
 
-                _distanceTolerance = double.Parse(config["TargetProvider:DistanceTolerance"]);
-                _angleTolerance = int.Parse(config["TargetProvider:AngleTolerance"]);
+                _distanceTolerance = double.Parse(config["TargetProvider:DistanceTolerance"], CultureInfo.InvariantCulture);
+                _angleTolerance = int.Parse(config["TargetProvider:AngleTolerance"], CultureInfo.InvariantCulture);
 
-                int cacheMs = int.Parse(config["TargetProvider:CacheDuration"]);
+                int cacheMs = int.Parse(config["TargetProvider:CacheDuration"], CultureInfo.InvariantCulture);
                 _cacheDuration = TimeSpan.FromSeconds(cacheMs);
 
             }
