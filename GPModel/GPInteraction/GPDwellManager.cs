@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
+using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
-using System.IO;
-using Microsoft.Extensions.Configuration;
 
 namespace Gaze_Point.GPModel.GPInteraction
 {
@@ -28,7 +29,7 @@ namespace Gaze_Point.GPModel.GPInteraction
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                int ms = int.Parse(config["DwellTimeManager:DwellTimeMs"]);
+                int ms = int.Parse(config["DwellTimeManager:DwellTime"], CultureInfo.InvariantCulture);
                 _dwellTime = TimeSpan.FromMilliseconds(ms);
             }
             catch

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
-using Microsoft.Extensions.Configuration;
-using System.IO;
 
 namespace Gaze_Point.GPModel.GPInteraction
 {
@@ -31,7 +32,7 @@ namespace Gaze_Point.GPModel.GPInteraction
                     .AddJsonFile("AppSettings/DataSettings.json")
                     .Build();
 
-                _lockTime = double.Parse(config["TargetLocker:LockTime"]);
+                _lockTime = double.Parse(config["TargetLocker:LockTime"], CultureInfo.InvariantCulture);
             }
             catch
             {
