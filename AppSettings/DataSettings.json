@@ -29,11 +29,11 @@
   },
 
   "DwellTimeManager": {
-    "DwellTime": 300
+    "DwellTime": 30
   },
 
   "TargetLocker": {
-    "LockTime": 1500.0
+    "LockTime": 300.0
   },
 
   "MovementDetector": {

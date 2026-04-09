@@ -16,6 +16,7 @@
             <Setter Property="Padding" Value="10"/>
             <Setter Property="FontSize" Value="16"/>
             <Style.Triggers>
+                
                 <Trigger Property="IsFocused" Value="True">
                     <Setter Property="Background" Value="DeepSkyBlue"/>
                     <Setter Property="Foreground" Value="White"/>
@@ -23,10 +24,12 @@
                     <Setter Property="BorderBrush" Value="Navy"/>
                     <Setter Property="BorderThickness" Value="0,0,0,2"/>
                 </Trigger>
+                
             </Style.Triggers>
         </Style>
     </Window.Resources>
 
+    <!-- Command: ENTER, ESC -->
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding PressEnterCommand}"/>
         <KeyBinding Key="Esc" Command="{Binding StopCommand}"/>

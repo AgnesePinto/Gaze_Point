@@ -23,16 +23,7 @@ namespace Gaze_Point.GPView
         public Demo()
         {
             InitializeComponent();
-            EventManager.RegisterClassHandler(typeof(FrameworkElement),
-                FrameworkElement.GotFocusEvent, new RoutedEventHandler(OnElementFocusedByKeyboard));
         }
 
-        private void OnElementFocusedByKeyboard(object sender, RoutedEventArgs e)
-        {
-            if (DataContext is FormViewModel vm && e.OriginalSource is FrameworkElement fe)
-            {
-                vm.SetFocusedElement(fe.Name);
-            }
-        }
     }
 }

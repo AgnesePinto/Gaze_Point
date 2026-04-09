@@ -42,9 +42,10 @@ namespace Gaze_Point.GPViewModel
         {
             _gpService = existingService;
 
+
             _gpService.OnElementFocused += (element) =>
             {
-                System.Diagnostics.Debug.WriteLine($"Sguardo su elemento: {element?.Name ?? "Senza Nome"} (Tipo: {element?.GetType().Name})");
+                //System.Diagnostics.Debug.WriteLine($"Sguardo su elemento: {element?.Name ?? "Senza Nome"} (Tipo: {element?.GetType().Name})");
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     _currentGazeElement = element;
@@ -58,10 +59,12 @@ namespace Gaze_Point.GPViewModel
                 });
             };
 
+
             StopCommand = new RelayCommand(_ => {
                 _gpService.Stop();
                 Application.Current.Shutdown();
             });
+
 
             ReturnToMainCommand = new RelayCommand(_ =>
             {

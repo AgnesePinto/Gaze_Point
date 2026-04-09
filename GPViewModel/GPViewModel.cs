@@ -44,13 +44,18 @@ namespace Gaze_Point.GPViewModel
 
 
         /// <summary>
+        /// Command to initiate the gaze tracking and open the demo window.
+        /// </summary>
+        public ICommand StartDemoCommand { get; }
+
+        /// <summary>
         /// Command to initiate the gaze tracking and open the form window.
         /// </summary>
         public ICommand StartCommand { get; }
 
 
         /// <summary>
-        /// Command to initiate the gaze tracking and open the form window.
+        /// Command to initiate the gaze tracking and open the stress test form window.
         /// </summary>
         public ICommand StartStressTestCommand { get; }
 
@@ -89,6 +94,21 @@ namespace Gaze_Point.GPViewModel
                 }
             });
 
+
+            StartDemoCommand = new RelayCommand(_ =>
+            {
+                _gpService.Start();
+                var demo = new Demo();
+
+                var oldWindow = Application.Current.MainWindow;
+                Application.Current.MainWindow = demo;
+
+                _gpService.UpdateWindowContext(demo);
+                demo.DataContext = new FormViewModel(_gpService);
+                demo.Show();
+
+                oldWindow.Close();
+            });
 
             StartCommand = new RelayCommand(_ =>
             {

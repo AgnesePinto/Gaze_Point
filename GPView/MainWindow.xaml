@@ -19,7 +19,7 @@
             <TextBlock Text="Scegli il form da compilare:" FontSize="28" Margin="0,0,0,0" HorizontalAlignment="Center" FontWeight="Bold"/>
             <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Foreground="Gray"/>
 
-            <!-- Start form button -->
+            <!-- START DEMO BUTTON -->
             <Button Content="DEMO" FontSize="20"
                     Command="{Binding StartDemoCommand}" 
                     x:Name="BtnDemo" 
@@ -39,7 +39,7 @@
                 </Button.Style>
             </Button>
             
-            <!-- Start form button -->
+            <!-- START FORM BUTTON -->
             <Button Content="FORM TEST" FontSize="20"
                     Command="{Binding StartCommand}" 
                     x:Name="BtnTestForm" 
