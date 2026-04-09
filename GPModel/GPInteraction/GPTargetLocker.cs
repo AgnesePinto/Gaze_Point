@@ -40,7 +40,7 @@ namespace Gaze_Point.GPModel.GPInteraction
             catch
             {
                 // Fallback 
-                _lockTime = 1500.0;
+                _lockTime = 400.0;
             }
 
             _timer = new DispatcherTimer();

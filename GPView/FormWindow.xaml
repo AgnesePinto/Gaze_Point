@@ -39,14 +39,14 @@
 
             <!-- Personal datas and university panel -->
             <StackPanel Width="480" Margin="0,0,20,0">
-                <TextBlock Text="ANAGRAFICA" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
+                <TextBlock Text="PERSONAL DETAILS" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
 
                 <!-- Horizontal panel 1.1 -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
 
                     <!-- Name -->
                     <StackPanel Orientation="Vertical" Margin="0,0,10,0">
-                        <TextBlock Text="Nome" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Name" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
                         <TextBox x:Name="TxtNome" Width="180">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
@@ -63,7 +63,7 @@
 
                     <!-- Surname -->
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Cognome" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Surname" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
                         <TextBox x:Name="TxtCognome" Width="180">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
@@ -80,7 +80,7 @@
 
                     <!-- Age -->
                     <StackPanel Orientation="Vertical" Margin="10,0,0,0">
-                        <TextBlock Text="Età" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Age" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
                         <TextBox x:Name="TxtEta" Width="90">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
@@ -101,7 +101,7 @@
 
                     <!-- Place of birth -->
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Luogo nascita" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Place of birth" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
                         <TextBox x:Name="TxtLuogoNascita" Width="180" HorizontalAlignment="Left">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
@@ -118,7 +118,7 @@
 
                     <!-- Year of birth -->
                     <StackPanel Orientation="Vertical" Margin="10,0,0,0">
-                        <TextBlock Text="Anno nascita" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Year of birth" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
                         <TextBox x:Name="TxtAnnoNascita" Width="90" HorizontalAlignment="Left">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
@@ -135,7 +135,7 @@
 
                     <!-- Gender -->
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Sesso" FontSize="15" Margin="15,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Gender" FontSize="15" Margin="15,0,0,0" Foreground="DimGray" HorizontalAlignment="Left"/>
                         <ComboBox x:Name="CmbSesso" Width="180" Margin="15,0,0,0">
                             <ComboBox.Style>
                                 <Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBoxStyle}">
@@ -148,22 +148,22 @@
                                     </Style.Triggers>
                                 </Style>
                             </ComboBox.Style>
-                            <ComboBoxItem Content="Maschio"/>
-                            <ComboBoxItem Content="Femmina"/>
-                            <ComboBoxItem Content="Altro"/>
+                            <ComboBoxItem Content="Male"/>
+                            <ComboBoxItem Content="Female"/>
+                            <ComboBoxItem Content="Other"/>
                         </ComboBox>
                     </StackPanel>
                 </StackPanel>
 
                 <!-- Horizontal panel 1.3 -->
                 <StackPanel Orientation="Horizontal" Margin="0,35,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
-                    <TextBlock Text="UNIVERSITÀ" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
+                    <TextBlock Text="UNIVERSITY" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
                 </StackPanel>
 
                 <!-- University attended -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="In quale università sei attualmente isritto/a?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="What is the name of your university?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
                         <TextBox x:Name="TxtUniversita" Width="290" HorizontalAlignment="Left">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
@@ -184,9 +184,9 @@
 
                     <!-- Courses -->
                     <StackPanel Orientation="Vertical" Margin="0,0,70,0">
-                        <TextBlock Text="Corso di studi" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Degree program" FontSize="15" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
 
-                        <RadioButton x:Name="RbTriennale" Content="Laurea Triennale" GroupName="Corso">
+                        <RadioButton x:Name="RbTriennale" Content="Bachelor's degree" GroupName="Corso">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -199,7 +199,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbMagistrale" Content="Laurea Magistrale" GroupName="Corso" Margin="0,10,0,0">
+                        <RadioButton x:Name="RbMagistrale" Content="Master's degree" GroupName="Corso" Margin="0,10,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -212,7 +212,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbCicloUnico" Content="Laurea a Ciclo Unico" GroupName="Corso" Margin="0,10,0,0">
+                        <RadioButton x:Name="RbCicloUnico" Content="Single-cycle degree" GroupName="Corso" Margin="0,10,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -225,7 +225,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbMaster" Content="Master (di I o II livello)" GroupName="Corso" Margin="0,10,0,0">
+                        <RadioButton x:Name="RbMaster" Content="Postgraduated Diploma" GroupName="Corso" Margin="0,10,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -238,7 +238,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbDottorato" Content="Dottorato di Ricerca" GroupName="Corso" Margin="0,10,0,0">
+                        <RadioButton x:Name="RbDottorato" Content="Ph.D" GroupName="Corso" Margin="0,10,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -251,7 +251,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbAltro" Content="Altro" GroupName="Corso" Margin="0,10,0,0">
+                        <RadioButton x:Name="RbAltro" Content="Other" GroupName="Corso" Margin="0,10,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -290,7 +290,7 @@
 
                 <!-- Horizontal panel 1.5 -->
                 <!-- Degrees -->
-                <TextBlock Text="Hai già conseguito una laurea?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
+                <TextBlock Text="Have you already graduated?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Vertical" Margin="0,0,0,0">
 
                     <RadioButton x:Name="RbNoLaurea" Content="No" GroupName="Laurea" Margin="0,7,0,0">
@@ -306,7 +306,7 @@
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbABreveLaurea" Content="No, la conseguirò a breve" GroupName="Laurea" Margin="0,7,0,0">
+                    <RadioButton x:Name="RbABreveLaurea" Content="No, I will graduated soon" GroupName="Laurea" Margin="0,7,0,0">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
@@ -319,7 +319,7 @@
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbSiLaurea" Content="Si" GroupName="Laurea" Margin="0,7,0,0">
+                    <RadioButton x:Name="RbSiLaurea" Content="Yes" GroupName="Laurea" Margin="0,7,0,0">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
@@ -332,7 +332,7 @@
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbPiuLaurea" Content="Si, più di una" GroupName="Laurea" Margin="0,7,0,0">
+                    <RadioButton x:Name="RbPiuLaurea" Content="Yes, more than one" GroupName="Laurea" Margin="0,7,0,0">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
@@ -348,7 +348,7 @@
 
                 <!-- Horizontal panel 1.6 -->
                 <!-- Exchange student -->
-                <TextBlock Text="Sei uno studente fuorisede?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
+                <TextBlock Text="Do you live away from home?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,280,0">
                     <RadioButton x:Name="RbNoFuorisede" Content="No" GroupName="Fuorisede" Margin="0,7,80,0">
                         <RadioButton.Style>
@@ -363,7 +363,7 @@
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbSiFuorisede" Content="Si" GroupName="Fuorisede" Margin="0,7,0,0">
+                    <RadioButton x:Name="RbSiFuorisede" Content="Yes" GroupName="Fuorisede" Margin="0,7,0,0">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
@@ -379,9 +379,9 @@
 
                 <!-- Horizontal panel 1.7 -->
                 <!-- Worker or student -->
-                <TextBlock Text="Professione" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
+                <TextBlock Text="Occupation" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                    <CheckBox x:Name="ChkLavoratore" Content="Lavoratore" Margin="0,7,30,0">
+                    <CheckBox x:Name="ChkLavoratore" Content="Employed" Margin="0,7,30,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -395,7 +395,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkStudente" Content="Studente" Margin="0,7,0,0">
+                    <CheckBox x:Name="ChkStudente" Content="Student" Margin="0,7,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -413,16 +413,16 @@
 
             <!-- Sport panel -->
             <StackPanel Width="480" Margin="20,0,0,0">
-                <TextBlock Text="ATTIVIÀ FISICA" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
+                <TextBlock Text="SPORT" FontWeight="Bold" Margin="0,0,0,0" FontSize="15"/>
 
                 <!-- Horizontal panel 2.1 -->
                 <!-- Frequency -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" KeyboardNavigation.DirectionalNavigation="Cycle">
 
                     <StackPanel Orientation="Vertical" Margin="0,0,35,0">
-                        <TextBlock Text="Frequenza attività fisica a settimana?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="How many times do you workout?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
 
-                        <RadioButton x:Name="RbMaiFrequenza" Content="Mai" GroupName="Frequenza" Margin="0,10,0,0">
+                        <RadioButton x:Name="RbMaiFrequenza" Content="Never" GroupName="Frequenza" Margin="0,10,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -435,7 +435,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="Rb12Frequenza" Content="1-2 volte" GroupName="Frequenza" Margin="0,10,0,0">
+                        <RadioButton x:Name="Rb12Frequenza" Content="1-2 times a week" GroupName="Frequenza" Margin="0,10,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -448,7 +448,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="Rb34Frequenza" Content="3-4 volte" GroupName="Frequenza" Margin="0,10,0,0">
+                        <RadioButton x:Name="Rb34Frequenza" Content="3-4 times a week" GroupName="Frequenza" Margin="0,10,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -461,7 +461,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="Rb5Frequenza" Content="5 o più volte" GroupName="Frequenza" Margin="0,10,0,0">
+                        <RadioButton x:Name="Rb5Frequenza" Content="5 or more times" GroupName="Frequenza" Margin="0,10,0,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -476,7 +476,7 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Vertical" VerticalAlignment="Top">
-                        <TextBlock Text="Intensità allenamento" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Workout intensity" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
                         <ComboBox x:Name="CmbIntensita" Width="200" HorizontalAlignment="Left">
                             <ComboBox.Style>
                                 <Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBoxStyle}">
@@ -489,17 +489,17 @@
                                     </Style.Triggers>
                                 </Style>
                             </ComboBox.Style>
-                            <ComboBoxItem Content="Nessuna attività fisica"/>
-                            <ComboBoxItem Content="Bassa"/>
-                            <ComboBoxItem Content="Moderata"/>
-                            <ComboBoxItem Content="Alta"/>
+                            <ComboBoxItem Content="No phisical activity"/>
+                            <ComboBoxItem Content="low"/>
+                            <ComboBoxItem Content="Moderate"/>
+                            <ComboBoxItem Content="High"/>
                         </ComboBox>
                     </StackPanel>
                 </StackPanel>
 
                 <!-- Horizontal panel 2.2 -->
                 <!-- Type of sports -->
-                <TextBlock Text="Quale attività pratichi abitualmente?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
+                <TextBlock Text="What acticity do you usually do?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Vertical" Margin="0,0,0,0">
                     <CheckBox x:Name="ChkCardio" Content="Cardio" Margin="0,10,30,0">
                         <CheckBox.Style>
@@ -515,7 +515,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkPesi" Content="Potenziamento muscolare / pesi" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkPesi" Content="Weightlifting" Margin="0,10,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -529,7 +529,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkFlessibilita" Content="Flessibilità" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkFlessibilita" Content="Flexibility" Margin="0,10,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -543,7 +543,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkSquadra" Content="Sport di squadra" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkSquadra" Content="Team sports" Margin="0,10,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -557,7 +557,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkAltroSport" Content="Altro" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkAltroSport" Content="Other" Margin="0,10,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -571,7 +571,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkNessunaSport" Content="Nessuna" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkNessunaSport" Content="None" Margin="0,10,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -588,9 +588,9 @@
 
                 <!-- Horizontal panel 2.3 -->
                 <!-- Goals -->
-                <TextBlock Text="Quali sono/sarebbero i tuoi obiettivi principali?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
+                <TextBlock Text="What are (or would be) your main goals?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                    <CheckBox x:Name="ChkPeso" Content="Perdita di&#x0a;peso" Margin="0,7,20,0">
+                    <CheckBox x:Name="ChkPeso" Content="Weight&#x0a;loss" Margin="0,7,30,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -604,7 +604,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkMuscoli" Content="Aumento massa&#x0a;muscolare" Margin="0,7,20,0">
+                    <CheckBox x:Name="ChkMuscoli" Content="Muscle&#x0a;gain" Margin="0,7,30,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -618,7 +618,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkStress" Content="Riduzione&#x0a;dello stress" Margin="0,7,20,0">
+                    <CheckBox x:Name="ChkStress" Content="Stress&#x0a;relief" Margin="0,7,30,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -632,7 +632,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkCompetizioni" Content="Preparazione&#x0a;competizioni" Margin="0,7,0,0">
+                    <CheckBox x:Name="ChkCompetizioni" Content="Preparing for&#x0a;competition" Margin="0,7,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -650,7 +650,7 @@
                 <!-- Horizontal panel 2.4 -->
                 <!-- Favourite sport -->
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Qual è il tuo sport preferito?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
+                    <TextBlock Text="What's your favorite sport?" FontSize="15" Foreground="DimGray" HorizontalAlignment="Left"/>
                     <TextBox x:Name="TxtSport" Width="300" HorizontalAlignment="Left">
                         <TextBox.Style>
                             <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
@@ -667,9 +667,9 @@
 
                 <!-- Horizontal panel 2.5 -->
                 <!-- Training time -->
-                <TextBlock Text="In quali momenti della giornata preferisci/preferiresti allenarti??" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
+                <TextBlock Text="When do you prefer exercise during the day?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Vertical">
-                    <CheckBox x:Name="ChkMattino" Content="Mattino" Margin="0,10,30,0">
+                    <CheckBox x:Name="ChkMattino" Content="Moring" Margin="0,10,30,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -683,7 +683,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkPausaPranzo" Content="Pausa pranzo" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkPausaPranzo" Content="Lunch break" Margin="0,10,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -697,7 +697,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkPomeriggio" Content="Pomeriggio" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkPomeriggio" Content="Afternoon" Margin="0,10,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -711,7 +711,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkSera" Content="Sera" Margin="0,10,0,0">
+                    <CheckBox x:Name="ChkSera" Content="Evening" Margin="0,10,0,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
@@ -728,9 +728,9 @@
 
                 <!-- Horizontal panel 2.6 -->
                 <!-- Team or individual sport -->
-                <TextBlock Text="Preferisci sport di squadra o individuali?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
+                <TextBlock Text="What kind of sporrts do you prefer?" FontSize="15" Foreground="DimGray" Margin="0,15,0,0" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton x:Name="RbSquadra" Content="Squadra" GroupName="Sport" Margin="0,7,80,0">
+                    <RadioButton x:Name="RbSquadra" Content="Team sports" GroupName="Sport" Margin="0,7,80,0">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
@@ -743,7 +743,7 @@
                         </RadioButton.Style>
                     </RadioButton>
 
-                    <RadioButton x:Name="RbIndividuali" Content="Individuali" GroupName="Sport" Margin="0,7,0,0">
+                    <RadioButton x:Name="RbIndividuali" Content="Individual sports" GroupName="Sport" Margin="0,7,0,0">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                 <Style.Triggers>
@@ -762,7 +762,7 @@
 
         <!-- Exit button -->
         <Button x:Name="BtnBack" 
-        Content="ESCI" 
+        Content="EXIT" 
         Command="{Binding ReturnToMainCommand}"
         VerticalAlignment="Bottom" 
         HorizontalAlignment="Right" 

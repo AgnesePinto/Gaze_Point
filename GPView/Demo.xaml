@@ -47,7 +47,7 @@
 
                     <!-- Colore -->
                     <StackPanel Orientation="Vertical" Margin="0,0,0,20">
-                        <TextBlock Text="Qual è il tuo animale preferito?" FontSize="25" Foreground="DimGray" HorizontalAlignment="Left" Margin="0,0,0,5"/>
+                        <TextBlock Text="What's your favorite animal?" FontSize="25" Foreground="DimGray" HorizontalAlignment="Left" Margin="0,0,0,5"/>
                         <TextBox x:Name="TxtAnimale" Width="300" Height="50" HorizontalAlignment="Left">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
@@ -63,7 +63,7 @@
                     </StackPanel>
 
                     <!-- Animali a casa -->
-                    <TextBlock Text="Hai un animale domestico?" FontSize="25" Foreground="DimGray" Margin="0,20,0,5" HorizontalAlignment="Left"/>
+                    <TextBlock Text="Do you have a pet?" FontSize="25" Foreground="DimGray" Margin="0,20,0,5" HorizontalAlignment="Left"/>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                         <RadioButton x:Name="RbNoAnimale" Content="No" GroupName="Animale" FontSize="25" Margin="0,7,40,0">
                             <RadioButton.Style>
@@ -78,7 +78,7 @@
                             </RadioButton.Style>
                         </RadioButton>
 
-                        <RadioButton x:Name="RbSiAnimale" Content="Si" GroupName="Animale" FontSize="25" Margin="0,7,0,0">
+                        <RadioButton x:Name="RbSiAnimale" Content="Yes" GroupName="Animale" FontSize="25" Margin="0,7,40,0">
                             <RadioButton.Style>
                                 <Style TargetType="RadioButton" BasedOn="{StaticResource BaseRadioButtonStyle}">
                                     <Style.Triggers>
@@ -93,9 +93,9 @@
                     </StackPanel>
 
                     <!-- Animale domestico -->
-                    <TextBlock Text="Quali animali hai o vorresti avere?" FontSize="25" Foreground="DimGray" Margin="0,20,0,5" HorizontalAlignment="Left"/>
+                    <TextBlock Text="What pets do you have or want?" FontSize="25" Foreground="DimGray" Margin="0,20,0,5" HorizontalAlignment="Left"/>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox x:Name="ChkGatto" Content="Gatto" FontSize="25" Margin="0,7,30,0">
+                        <CheckBox x:Name="ChkGatto" Content="Cat" FontSize="25" Margin="0,7,50,0">
                             <CheckBox.Style>
                                 <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                     <Style.Triggers>
@@ -109,7 +109,7 @@
                             </CheckBox.Style>
                         </CheckBox>
 
-                        <CheckBox x:Name="ChkCane" Content="Cane" FontSize="25" Margin="0,7,30,0">
+                        <CheckBox x:Name="ChkCane" Content="Dog" FontSize="25" Margin="0,7,50,0">
                             <CheckBox.Style>
                                 <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                     <Style.Triggers>
@@ -123,7 +123,7 @@
                             </CheckBox.Style>
                         </CheckBox>
 
-                        <CheckBox x:Name="ChkAltro" Content="Altro" FontSize="25" Margin="0,7,30,0">
+                        <CheckBox x:Name="ChkAltro" Content="Other" FontSize="25" Margin="0,7,30,0">
                             <CheckBox.Style>
                                 <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                     <Style.Triggers>
@@ -141,7 +141,7 @@
 
                 <!-- Colore -->
                 <StackPanel Width="300" VerticalAlignment="Top">
-                    <TextBlock Text="Colore preferito:" FontSize="25" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
+                    <TextBlock Text="What's your favorite color?" FontSize="24" Margin="0,0,0,5" Foreground="DimGray" HorizontalAlignment="Left"/>
                     <ComboBox x:Name="CmbColore" Width="300" Height="50" HorizontalAlignment="Left">
                         <ComboBox.Style>
                             <Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBoxStyle}">
@@ -154,12 +154,12 @@
                                 </Style.Triggers>
                             </Style>
                         </ComboBox.Style>
-                        <ComboBoxItem Content="Rosso"/>
-                        <ComboBoxItem Content="Arancione"/>
-                        <ComboBoxItem Content="Giallo"/>
-                        <ComboBoxItem Content="Verde"/>
+                        <ComboBoxItem Content="Red"/>
+                        <ComboBoxItem Content="Orange"/>
+                        <ComboBoxItem Content="Yellow"/>
+                        <ComboBoxItem Content="Green"/>
                         <ComboBoxItem Content="Blu"/>
-                        <ComboBoxItem Content="Viola"/>
+                        <ComboBoxItem Content="Purple"/>
                     </ComboBox>
                 </StackPanel>
             </StackPanel>
@@ -167,7 +167,7 @@
 
         <!-- Exit button -->
         <Button x:Name="BtnBack" 
-                Content="ESCI" 
+                Content="EXIT" 
                 Command="{Binding ReturnToMainCommand}"
                 VerticalAlignment="Bottom" 
                 HorizontalAlignment="Right" 

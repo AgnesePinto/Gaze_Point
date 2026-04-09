@@ -38,7 +38,7 @@ namespace Gaze_Point.GPModel.GPInteraction
             catch
             {
                 // Fallback
-                _dwellTime = TimeSpan.FromMilliseconds(30);
+                _dwellTime = TimeSpan.FromMilliseconds(40);
             }
         }
 

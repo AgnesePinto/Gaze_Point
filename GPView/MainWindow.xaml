@@ -16,7 +16,7 @@
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
-            <TextBlock Text="Scegli il form da compilare:" FontSize="28" Margin="0,0,0,0" HorizontalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock Text="Choose the form to fill in:" FontSize="28" Margin="0,0,0,0" HorizontalAlignment="Center" FontWeight="Bold"/>
             <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Foreground="Gray"/>
 
             <!-- START DEMO BUTTON -->
