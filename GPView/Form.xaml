@@ -540,7 +540,7 @@
                         </CheckBox.Style>
                     </CheckBox>
 
-                    <CheckBox x:Name="ChkStress" Content="Riduzione&#x0a;dello stress" Margin="0,10,23,0">
+                    <CheckBox x:Name="ChkStress" Content="Riduzione&#x0a;dello stress" Margin="0,10,22,0">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource BaseCheckBoxStyle}">
                                 <Style.Triggers>
