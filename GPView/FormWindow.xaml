@@ -280,10 +280,10 @@
                                     </Style.Triggers>
                                 </Style>
                             </ComboBox.Style>
-                            <ComboBoxItem Content="Umanistica"/>
-                            <ComboBoxItem Content="Tecnico-Scientifica"/>
-                            <ComboBoxItem Content="Socio-Economica"/>
-                            <ComboBoxItem Content="Sanitaria"/>
+                            <ComboBoxItem Content="Humanities"/>
+                            <ComboBoxItem Content="STEM"/>
+                            <ComboBoxItem Content="Socio-Economics"/>
+                            <ComboBoxItem Content="Health Sciences"/>
                         </ComboBox>
                     </StackPanel>
                 </StackPanel>
